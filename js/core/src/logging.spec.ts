@@ -1,16 +1,18 @@
+import { jest, describe, test, expect } from '@jest/globals'
 import { configure, log, alert } from './logging'
 
-describe(`Common Logging`, () => {
-    test(`logging passes all arguments to adapter`, () => {        
-        const adapter = { log: jest.fn() }
-        configure(adapter)
+describe(`Logging`, () => {
+    test(`logging uses configured logger to log`, () => {        
+        const logger = jest.fn()
+        configure(logger)
 
-        const toBeLogged = [`message 1`,`message 2`]        
-        log(...toBeLogged)
+        const toBeLogged = { message: `message 1`, otherStuff: { times: 4 } }
+        log(toBeLogged)
 
-        expect(adapter.log).toHaveBeenCalledWith(...toBeLogged)
+        expect(logger).toHaveBeenCalledWith(toBeLogged)
     })
 
+/*
     test(`alerts are logged`, () => {
         const adapter = { log: jest.fn() }
         configure(adapter)
@@ -22,5 +24,5 @@ describe(`Common Logging`, () => {
         alert(the_code, the_message, the_error, the_additional_info)
         
         expect(adapter.log).toHaveBeenCalledWith({ additionalInfo: the_additional_info, exceptionDetail: the_error, code: the_code, message: the_message })
-    })
+    })*/
 })
