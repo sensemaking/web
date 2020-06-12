@@ -5,5 +5,5 @@ export function configure(logger : (entry: object) => void) { write = logger }
 export function log(entry : object) { write(entry) }
 
 export function alert(code : string, message : string, error : Error, info : object) { 
-    write({ additionalInfo: info, exceptionDetail: error, code, message }) 
+    write({ code, message, exceptionDetail: error, additionalInfo: info  }) 
 }

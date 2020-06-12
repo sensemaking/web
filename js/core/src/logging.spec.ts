@@ -12,10 +12,9 @@ describe(`Logging`, () => {
         expect(logger).toHaveBeenCalledWith(toBeLogged)
     })
 
-/*
     test(`alerts are logged`, () => {
-        const adapter = { log: jest.fn() }
-        configure(adapter)
+        const logger = jest.fn()
+        configure(logger)
 
         const the_code = `0097`
         const the_message = `a message`
@@ -23,6 +22,6 @@ describe(`Logging`, () => {
         const the_additional_info = { info: `something else` }
         alert(the_code, the_message, the_error, the_additional_info)
         
-        expect(adapter.log).toHaveBeenCalledWith({ additionalInfo: the_additional_info, exceptionDetail: the_error, code: the_code, message: the_message })
-    })*/
+        expect(logger).toHaveBeenCalledWith({ code: the_code, message: the_message, exceptionDetail: the_error, additionalInfo: the_additional_info })
+    })
 })
