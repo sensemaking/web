@@ -10,6 +10,7 @@
     "typescript": "^3.9.5"
   },
   "scripts": {
+    "prebuild": "yarn",
     "build": "tsc",
     "pretest": "yarn build",
     "test": "jest ./build"
