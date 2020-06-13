@@ -16,21 +16,31 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
+const url = `http://myapi.com/`
+
+describe(`All http requests`, () => {
+    test(`Adds an accept header for application/json`, async () => {        
+        server.use(
+            rest.get(`${url}`, async (req, res, ctx) => res(req.headers.get(`Accept`) === jsonMediaType ? ctx.status(200) : ctx.status(500))),
+            rest.put(url, async (req, res, ctx) => res(req.headers.get(`Accept`) === jsonMediaType ? ctx.status(200) : ctx.status(500))),
+            rest.post(url, async (req, res, ctx) => res(req.headers.get(`Accept`) === jsonMediaType ? ctx.status(200) : ctx.status(500))),
+            rest.delete(url, async (req, res, ctx) => res(req.headers.get(`Accept`) === jsonMediaType ? ctx.status(200) : ctx.status(500)))
+        )
+
+        await http.get(url)
+        await http.put(url, {})
+        await http.post(url, {})
+        await http.del(url)
+    })
+})
+
 describe(`Get`, () => {
-    const url = `http://myapi.com/get`
     test(`GETs from a url`, async () => {        
         const result = { wibble: `wobble` }
         server.use(
             rest.get(`${url}`, async (req, res, ctx) => res(ctx.status(200), ctx.json(result))))
 
         return expect(await http.get(url)).toEqual(result)
-    })
-
-    test(`Adds an accept header for application/json`, async () => {        
-        server.use(
-            rest.get(`${url}`, async (req, res, ctx) => res(req.headers.get(`Accept`) === jsonMediaType ? ctx.status(200) : ctx.status(500))))
-
-        await http.get(url)
     })
 })
 
