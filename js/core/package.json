@@ -7,12 +7,15 @@
   "devDependencies": {
     "@jest/globals": "^26.0.1",
     "jest": "^26.0.1",
-    "typescript": "^3.9.5"
+    "msw": "^0.19.3",
+    "typescript": "^3.9.5",
+    "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
     "prebuild": "yarn",
     "build": "tsc",
     "pretest": "yarn build",
     "test": "jest ./build"
-  }
+  },
+  "dependencies": {}
 }

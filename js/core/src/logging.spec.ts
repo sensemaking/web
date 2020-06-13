@@ -2,7 +2,7 @@ import { jest, describe, test, expect } from '@jest/globals'
 import { configure, log, alert } from './logging'
 
 describe(`Logging`, () => {
-    test(`logging uses configured logger to log`, () => {        
+    test(`logging uses configured logger to log`, async () => {        
         const logger = jest.fn()
         configure(logger)
 
@@ -12,7 +12,7 @@ describe(`Logging`, () => {
         expect(logger).toHaveBeenCalledWith(toBeLogged)
     })
 
-    test(`alerts are logged`, () => {
+    test(`alerts are logged`, async () => {
         const logger = jest.fn()
         configure(logger)
 

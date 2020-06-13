@@ -3,14 +3,8 @@ export const post = (url : string, body : object) => api(Method.Post, url, body)
 export const put = (url : string, body : object) => api(Method.Put, url, body)
 export const del = (url : string) => api(Method.Delete, url)
 
+enum Method { Get = `GET`, Post = `POST`, Put = `PUT`, Delete = `DELETE` }
 const mediaType = `application/json`
-
-enum Method {
-    Get = `GET`,
-    Post = `POST`,
-    Put = `PUT`,
-    Delete = `DELETE`
-}
 
 function api(method : Method, url : string, body? : object) {
     return fetch(url, {
