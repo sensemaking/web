@@ -4,7 +4,6 @@ import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 import * as http from './http'
 
-const jsonMediaType = `application/json`;
 const server  = setupServer(
     rest.get(`*`, async (req, res, ctx) => { 
         console.log(`No mocked handler setup for ${req.url}`) 
@@ -17,9 +16,10 @@ afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 const url = `http://myapi.com/`
+const jsonMediaType = `application/json`;
 
 describe(`All http requests`, () => {
-    test(`Adds an accept header for application/json`, async () => {        
+    test(`Add an accept header for application/json`, async () => {        
         server.use(
             rest.get(`${url}`, async (req, res, ctx) => res(req.headers.get(`Accept`) === jsonMediaType ? ctx.status(200) : ctx.status(500))),
             rest.put(url, async (req, res, ctx) => res(req.headers.get(`Accept`) === jsonMediaType ? ctx.status(200) : ctx.status(500))),
@@ -31,6 +31,18 @@ describe(`All http requests`, () => {
         await http.put(url, {})
         await http.post(url, {})
         await http.del(url)
+    })
+})
+
+describe(`Put & Post`, () => {
+    test(`Add a content-type header for application/json`, async () => { 
+        server.use(
+            rest.put(url, async (req, res, ctx) => res(req.headers.get(`Content-Type`) === jsonMediaType ? ctx.status(200) : ctx.status(500))),
+            rest.post(url, async (req, res, ctx) => res(req.headers.get(`Content-Type`) === jsonMediaType ? ctx.status(200) : ctx.status(500))),
+        )
+
+        await http.put(url, {})
+        await http.post(url, {})
     })
 })
 
@@ -46,8 +58,6 @@ describe(`Get`, () => {
 
 describe(`Put`, () => {
     test(`PUTs a body at a url`, async () => { })
-    test(`Adds a content-type header for application/json`, async () => { })
-    test(`Adds an accept header for application/json`, async () => { })
 })
 
 describe(`Post`, () => {})
