@@ -3,6 +3,7 @@ import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
 import { rest as mock, response } from 'msw'
 import { get, put, post, del } from './http'
+import HttpStatusCode from './http-status-codes'
 
 const noHandler = async (req: any, res: any, ctx: any) => {
     console.log(`No mocked handler setup for ${req.method} at ${req.url}`)
@@ -81,17 +82,17 @@ describe(`Headers`, () => {
 })
 
 describe(`Error Handling`, () => {
-    /*test(`401s provide the requested url, 'Access Denied' and any problem returned in the http response`, async () => verifyResponse(401, `Access Denied`))
-    test(`403s provide the requested url, 'Access Denied' and any problem returned in the http response`, async () => verifyResponse(403, `Access Denied`))
+    test(`401s provide the requested url, 'Access Denied' and any problem returned in the http response`, async () => verifyResponse(HttpStatusCode.Unauthorized, `Access Denied`))
+    test(`403s provide the requested url, 'Access Denied' and any problem returned in the http response`, async () => verifyResponse(HttpStatusCode.Forbidden, `Access Denied`))
 
     const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space tiem continuum`] }
-    const verifyResponse = (status: number, message: string) => {
-        server.use(mock.get(url, (req, res, ctx) => res(ctx.status(401), ctx.json(problem))))
-        return get(url).catch((response: any) => {
-            expect(response.status).toBe(status)
-            expect(response.message).toBe(message)
-            expect(response.url).toBe(url)
-            return expect(response.problem).toStrictEqual(problem)
+    async function verifyResponse (status : HttpStatusCode, message: string) {
+        server.use(mock.get(url, (req, res, ctx) => res(ctx.status(status), ctx.json(problem))))
+        return get(url).catch((response: Error) => {
+            expect(JSON.parse(response.message).status).toBe(status)
+            return expect(JSON.parse(response.message).message).toBe(message)
+            //expect(JSON.parse(response.message).url).toBe(url)
+            //return expect(JSON.parse(response.message).problem).toStrictEqual(problem)
         })
-    }*/
+    }
 })
