@@ -8,20 +8,20 @@ export const del : any = (url: string) => call(HttpMethod.Delete, url)
 const mediaType = `application/json`
 
 async function call(method: HttpMethod, url: string, payload?: object) {
-    const request: RequestInit = {
+    const response = await fetch(url, {
         method: method,
         headers:  payload ? { 'Content-Type': mediaType, 'Accept': mediaType } : { 'Accept': mediaType },
         body: (payload ? JSON.stringify(payload) : null)
     }
-    const response = await fetch(url, request)
-    return await jsonOrError(url, request, response)
+)
+    return await jsonOrError(response, url, method, payload)
 }
 
-async function jsonOrError(url : string, request : RequestInit, response : Response) {    
+async function jsonOrError(response : Response, url : string, method: HttpMethod, payload? : object) {    
     const json = await response.json().then(json => json).catch(_ => null)
     
     if(response.ok)
         return json
     else      
-        throw { request: { url, method: request.method, payload: request.body }, status: { code: response.status, text: response.statusText }, problem: json }
+        throw { request: { url, method, payload }, status: { code: response.status, text: response.statusText }, problem: json }
 }

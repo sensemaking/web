@@ -92,7 +92,7 @@ describe(`Error Handling`, () => {
         return put(url, payload).catch((apiError: any) => {
             expect(apiError.request.url).toBe(url)
             expect(apiError.request.method).toBe(HttpMethod.Put)
-            expect(apiError.request.payload).toBe(JSON.stringify(payload))
+            expect(apiError.request.payload).toBe(payload)
             expect(apiError.status.code).toBe(status)
             expect(apiError.status.text).toBe(HttpStatusCode[status])
             return expect(apiError.problem).toStrictEqual(problem)
