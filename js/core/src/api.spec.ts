@@ -25,7 +25,7 @@ const failure = { success: false }
 
 const successfulWhen = (predicate: Function) => (req: any, res: any, ctx: any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
 const hasPayload = (payload: Payload) => (req: MockedRequest) => (req.body as Payload).wibble === payload.wibble
-const isJson = (header: string) => (req: any) => req.headers.get(header) === `application/json`
+const isJson = (header: string) => (req: MockedRequest) => req.headers.get(header) === `application/json`
 
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {
