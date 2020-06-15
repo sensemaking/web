@@ -8,12 +8,14 @@ export const del : any = (url: string) => api(Method.Delete, url)
 enum Method { Get = `GET`, Post = `POST`, Put = `PUT`, Delete = `DELETE` }
 const mediaType = `application/json`
 
-function api(method: Method, url: string, payload?: object) {
-    return fetch(url, {
+async function api(method: Method, url: string, payload?: object) {
+    const response = await fetch(url, {
         method: method,
         headers:  payload ? { 'Content-Type': mediaType, 'Accept': mediaType } : { 'Accept': mediaType },
         body: (payload ? JSON.stringify(payload) : null)
-    }).then(response => jsonOrApiError(url, response))
+    })
+    
+    return await jsonOrApiError(url, response)
 }
 
 async function jsonOrApiError(url : string, response : Response) {    
