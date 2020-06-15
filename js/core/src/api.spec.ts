@@ -2,7 +2,7 @@ import { describe, test, expect, beforeAll, afterAll, afterEach } from '@jest/gl
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
 import { rest as mock, response } from 'msw'
-import { get, put, post, del } from './http'
+import { get, put, post, del } from './api'
 import HttpStatusCode from './http-status-codes'
 
 const noHandler = async (req: any, res: any, ctx: any) => {
@@ -82,18 +82,18 @@ describe(`Headers`, () => {
 })
 
 describe(`Error Handling`, () => {
-    test(`Errors provide the http status code and its text, the requested url and its body, and any problems detailed in the http response`, async () => {
+    test(`Errors provide the requested url, method and payload, the http status code and its text, and any problems detailed in the http response`, async () => {
         const payload = { wibble: `wobble` }
         const status = HttpStatusCode.Forbidden
         const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space time continuum`] }
-    
+
         server.use(mock.put(url, (_, res, ctx) => res(ctx.status(status), ctx.json(problem))))
 
-        return put(url, payload).catch((response: {status: number, statusText: string, url: string, problem: object}) => {
-            expect(response.status).toBe(status)
-            expect(response.statusText).toBe(HttpStatusCode[status])
-            expect(response.url).toBe(url)
-            return expect(response.problem).toStrictEqual(problem)
+        return put(url, payload).catch((apiError: any) => {
+            expect(apiError.request.url).toBe(url)
+            expect(apiError.status.code).toBe(status)
+            expect(apiError.status.text).toBe(HttpStatusCode[status])
+            return expect(apiError.problem).toStrictEqual(problem)
         })
     })
 })
