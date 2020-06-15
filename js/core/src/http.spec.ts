@@ -30,19 +30,19 @@ describe(`Methods`, () => {
         const body = { wibble: `wobble` }
         server.use(mock.put(url, async (req, res, ctx) => { return res(ctx.status(200), (req.body as any).wibble === body.wibble ? ctx.json(success) : ctx.json(failure))}))
 
-        await put(url, body)
+        return expect(await put(url, body)).toEqual(success)
     })
 
     test(`POSTs a body to a url`, async () => { 
         const body = { wibble: `wobble` }
         server.use(mock.post(url, async (req, res, ctx) => { return res(ctx.status(200), (req.body as any).wibble === body.wibble ? ctx.json(success) : ctx.json(failure))}))
 
-        await post(url, body)
+        return expect(await post(url, body)).toEqual(success)
     })
 
     test(`DELETEs from a url`, async () => { 
-        server.use(mock.delete(url, async (req, res, ctx) => res(ctx.status(200))))
-        await del(url)
+        server.use(mock.delete(url, async (req, res, ctx) => res(ctx.status(200), ctx.json(success))))        
+        return expect(await del(url)).toEqual(success)
     })
 })
 
