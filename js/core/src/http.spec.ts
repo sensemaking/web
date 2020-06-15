@@ -17,6 +17,8 @@ afterAll(() => server.close())
 
 const url = `http://myapi.com/`
 
+    const success = { success: true }
+    const failure = { success: false }
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {        
         const result = { wibble: `wobble` }
@@ -45,23 +47,23 @@ describe(`Methods`, () => {
     })
 })
 
-describe(`Headers`, () => {
-    const checkForJson = (header : string) => (req : any, res : any, ctx : any) => res(req.headers.get(header) === `application/json` ? ctx.status(200) : ctx.status(500))
+describe(`Headers`, () => {        
+    const checkForJson = (header : string) => (req : any, res : any, ctx : any) => res(ctx.status(200), req.headers.get(header) === `application/json` ? ctx.json(success) : ctx.json(failure))
 
     test(`All http requests add accept header for application/json`, async () => {        
         server.use(mock.get(url, checkForJson(`Accept`)), mock.put(url, checkForJson(`Accept`)), mock.post(url, checkForJson(`Accept`)), mock.delete(url, checkForJson(`Accept`)))
 
-        await get(url)
-        await put(url, {})
-        await post(url, {})
-        await del(url)
+        expect(await get(url)).toEqual(success)
+        expect(await put(url, {})).toEqual(success)
+        expect(await post(url, {})).toEqual(success)
+        return expect(await del(url)).toEqual(success)
     })
 
     test(`PUT & POST add content-type header for application/json`, async () => { 
         server.use(mock.put(url, checkForJson(`Content-Type`)), mock.post(url, checkForJson(`Content-Type`)))
 
-        await put(url, {})
-        await post(url, {})
+        expect(await put(url, {})).toEqual(success)
+        return expect(await post(url, {})).toEqual(success)
     })
 })
 
