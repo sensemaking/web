@@ -1,4 +1,4 @@
-import { describe, test, expect, afterAll, afterEach, beforeAll } from '@jest/globals'
+import { describe, test, expect, beforeAll, beforeEach, afterAll, afterEach } from '@jest/globals'
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
 import { rest as mock, response } from 'msw'
@@ -20,31 +20,33 @@ const success = { success: true }
 const failure = { success: false }
 
 const successfulWhen = (predicate : Function) => (req : any, res : any, ctx : any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
-const hasBody = (payload : any) => (req : any) => req.body.wibble === payload.wibble
+const hasPayload = (payload : any) => (req : any) => req.body.wibble === payload.wibble
 const isJson = (header : string) => (req : any) => req.headers.get(header) === `application/json` 
 
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {        
         server.use(mock.get(url, successfulWhen(() => true)))
-        return expect(await get(url)).toEqual(success)
+        return expect(await get(url)).toStrictEqual(success)
     })
 
     test(`PUTs a body to a url`, async () => { 
         const payload = { wibble: `wobble` }
-        server.use(mock.put(url, successfulWhen(hasBody(payload))))
-        return expect(await put(url, payload)).toEqual(success)
+        server.use(mock.put(url, successfulWhen(hasPayload(payload))))
+        return expect(await put(url, payload)).toStrictEqual(success)
     })
 
     test(`POSTs a body to a url`, async () => { 
         const payload = { wibble: `wobble` }
-        server.use(mock.post(url, successfulWhen(hasBody(payload))))
-        return expect(await post(url, payload)).toEqual(success)
+        server.use(mock.post(url, successfulWhen(hasPayload(payload))))
+        return expect(await post(url, payload)).toStrictEqual(success)
     })
 
     test(`DELETEs from a url`, async () => { 
         server.use(mock.delete(url, successfulWhen(() => true)))
-        return expect(await del(url)).toEqual(success)
+        return expect(await del(url)).toStrictEqual(success)
     })
+    
+    test(`EMPTY Bodies discuss with chris`, async () => {})
 })
 
 describe(`Headers`, () => {        
@@ -56,10 +58,10 @@ describe(`Headers`, () => {
             mock.delete(url, successfulWhen(isJson(`Accept`)))
         )
 
-        expect(await get(url)).toEqual(success)
-        expect(await put(url, {})).toEqual(success)
-        expect(await post(url, {})).toEqual(success)
-        return expect(await del(url)).toEqual(success)
+        expect(await get(url)).toStrictEqual(success)
+        expect(await put(url, {})).toStrictEqual(success)
+        expect(await post(url, {})).toStrictEqual(success)
+        return expect(await del(url)).toStrictEqual(success)
     })
 
     test(`PUT & POST add content-type header for application/json`, async () => { 
@@ -68,9 +70,23 @@ describe(`Headers`, () => {
             mock.post(url, successfulWhen(isJson(`Content-Type`)))
         )
 
-        expect(await put(url, {})).toEqual(success)
-        return expect(await post(url, {})).toEqual(success)
+        expect(await put(url, {})).toStrictEqual(success)
+        return expect(await post(url, {})).toStrictEqual(success)
     })
 })
 
-describe(`Error Handling`, () => {})
+describe(`Error Handling`, () => {
+    test(`401s provide the requested url, 'Access Denied' and any problem returned in the http response`, async () => verifyResponse(401, `Access Denied`))
+    test(`403s provide the requested url, 'Access Denied' and any problem returned in the http response`, async () => verifyResponse(403, `Access Denied`) )
+
+    const problem = { title: `Things ain't so good`, errors:[`What hasn't gone wrong`, `Catastophic rip in the space tiem continuum`]  }
+    function verifyResponse (status : number, message : string) {
+        server.use(mock.get(url, (req, res, ctx) => res(ctx.status(401), ctx.json(problem))))
+        get(url).catch((response : any) => {
+            expect(response.status).toBe(status)
+            expect(response.message).toBe(message)
+            expect(response.url).toBe(url)
+            return expect(response.problem).toStrictEqual(problem)
+        })
+    }
+})
