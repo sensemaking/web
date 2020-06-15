@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll, afterEach, beforeEach } from '@jest/globals'
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest as mock, response } from 'msw'
+import { rest as mock, response, MockedRequest } from 'msw'
 import { get, put, post, del, ApiError } from './api'
 import { HttpMethod, HttpStatusCode } from './http'
 
@@ -16,14 +16,15 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
+interface Payload { wibble: string }
+
 const url = `http://myapi.com/`
+const payload = { wibble: `wobble` }
 const success = { success: true }
 const failure = { success: false }
 
-interface Payload { wibble: string }
-
 const successfulWhen = (predicate: Function) => (req: any, res: any, ctx: any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
-const hasPayload = (payload: Payload) => (req: any) => req.body.wibble === payload.wibble
+const hasPayload = (payload: Payload) => (req: MockedRequest) => (req.body as Payload).wibble === payload.wibble
 const isJson = (header: string) => (req: any) => req.headers.get(header) === `application/json`
 
 describe(`Methods`, () => {
@@ -33,13 +34,11 @@ describe(`Methods`, () => {
     })
 
     test(`PUTs a body to a url`, async () => {
-        const payload = { wibble: `wobble` }
         server.use(mock.put(url, successfulWhen(hasPayload(payload))))
         return expect(await put(url, payload)).toStrictEqual(success)
     })
 
     test(`POSTs a body to a url`, async () => {
-        const payload = { wibble: `wobble` }
         server.use(mock.post(url, successfulWhen(hasPayload(payload))))
         return expect(await post(url, payload)).toStrictEqual(success)
     })
@@ -82,7 +81,6 @@ describe(`Headers`, () => {
 })
 
 describe(`Error Handling`, () => {
-    const payload = { wibble: `wobble` }
     const status = HttpStatusCode.Forbidden
     const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space time continuum`] }
 
