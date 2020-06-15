@@ -14,16 +14,11 @@ function api(method : Method, url : string, payload? : object) {
     }).then(jsonOrApiError)
 }
 
-function jsonOrApiError(response : Response) {
-    return new Promise((resolve, reject) => {
-        if (response.ok)
-            response.text().then(text => resolve(text !== "" ? JSON.parse(text) : null))
-                        //    response.json().then(payload => resolve(payload)).catch(_ => resolve(null));
-        else if([401, 403].includes(response.status))
-            reject({ status: response.status, message: `Access Denied`, url: response.url });
-        else
-            response.json()
-                .then(payload => { reject({ status: response.status, message: `Received API Problem`, problem: payload, url: response.url })})
-                .catch(_ => reject({ status: response.status, message: `Unable to deserialise response body`, url: response.url }));                     
-    })
-}    
+async function jsonOrApiError(response : Response) {    
+    const json = response.json().then(json => json).catch(_ => null)
+    
+    if(response.ok)
+        return json
+    else      
+        throw new Error(JSON.stringify({ status: response.status, message: [401, 403].includes(response.status) ? `Access Denied` : `Received API Problem`, problem: json }))    
+}
