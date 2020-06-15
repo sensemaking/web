@@ -13,14 +13,18 @@ function api(method : Method, url : string, payload? : object) {
         method: method,
         headers:  payload ? { 'Content-Type': mediaType, 'Accept': mediaType } : { 'Accept': mediaType },
         body: (payload ? JSON.stringify(payload) : null)
-    }).then(jsonOrApiError)
+    }).then(response => jsonOrApiError(url, response))
 }
 
-async function jsonOrApiError(response : Response) {    
+async function jsonOrApiError(url : string, response : Response) {    
     const json = response.json().then(json => json).catch(_ => null)
     
     if(response.ok)
         return json
     else      
-        throw new Error(JSON.stringify({ status: response.status, message: [HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden].includes(response.status) ? `Access Denied` : `Received API Problem`, problem: json }))    
+        throw new Error(JSON.stringify({ 
+            status: response.status, 
+            statusText: response.statusText, 
+            message: [HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden].includes(response.status) ? `Access Denied` : `Received API Problem`, 
+            problem: json }))    
 }
