@@ -16,27 +16,26 @@ afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 const url = `http://myapi.com/`
+const success = { success: true }
+const failure = { success: false }
 
-    const success = { success: true }
-    const failure = { success: false }
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {        
-        const result = { wibble: `wobble` }
-        server.use(mock.get(url, async (req, res, ctx) => res(ctx.status(200), ctx.json(result))))
+        server.use(mock.get(url, async (req, res, ctx) => res(ctx.status(200), ctx.json(success))))
 
-        return expect(await get(url)).toEqual(result)
+        return expect(await get(url)).toEqual(success)
     })
 
     test(`PUTs a body to a url`, async () => { 
         const body = { wibble: `wobble` }
-        server.use(mock.put(url, async (req, res, ctx) => { return res((req.body as any).wibble === body.wibble ? ctx.status(200) : ctx.status(500))}))
+        server.use(mock.put(url, async (req, res, ctx) => { return res(ctx.status(200), (req.body as any).wibble === body.wibble ? ctx.json(success) : ctx.json(failure))}))
 
         await put(url, body)
     })
 
     test(`POSTs a body to a url`, async () => { 
         const body = { wibble: `wobble` }
-        server.use(mock.post(url, async (req, res, ctx) => { return res((req.body as any).wibble === body.wibble ? ctx.status(200) : ctx.status(500))}))
+        server.use(mock.post(url, async (req, res, ctx) => { return res(ctx.status(200), (req.body as any).wibble === body.wibble ? ctx.json(success) : ctx.json(failure))}))
 
         await post(url, body)
     })
