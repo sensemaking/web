@@ -26,5 +26,6 @@ async function jsonOrApiError(url : string, response : Response) {
             status: response.status, 
             statusText: response.statusText, 
             message: [HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden].includes(response.status) ? `Access Denied` : `Received API Problem`, 
+            url,
             problem: json }))    
 }

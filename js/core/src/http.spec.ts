@@ -91,8 +91,8 @@ describe(`Error Handling`, () => {
         return get(url).catch((response: Error) => {
             expect(JSON.parse(response.message).status).toBe(status)
             expect(JSON.parse(response.message).statusText).toBe(HttpStatusCode[status])
-            return expect(JSON.parse(response.message).message).toBe(message)
-            //return expect(JSON.parse(response.message).url).toBe(url)
+            expect(JSON.parse(response.message).message).toBe(message)
+            return expect(JSON.parse(response.message).url).toBe(url)
             //return expect(JSON.parse(response.message).problem).toStrictEqual(problem)
         })
     }
