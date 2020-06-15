@@ -22,11 +22,5 @@ async function jsonOrApiError(url : string, response : Response) {
     if(response.ok)
         return json
     else      
-        console.log(json)
-        throw new Error(JSON.stringify({ 
-            status: response.status, 
-            statusText: response.statusText, 
-            message: [HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden].includes(response.status) ? `Access Denied` : `Received API Problem`, 
-            url,
-            problem: json }))    
+        throw new Error(JSON.stringify({ status: response.status, statusText: response.statusText, url, problem: json }))    
 }
