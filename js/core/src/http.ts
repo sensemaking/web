@@ -17,7 +17,7 @@ function api(method : Method, url : string, payload? : object) {
 }
 
 async function jsonOrApiError(response : Response) {    
-    const json = response.json().then(json => json).catch(_ => null)
+    const json = response.json().then(json => json).catch(() => null)
     
     if(response.ok)
         return json
