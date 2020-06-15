@@ -82,18 +82,19 @@ describe(`Headers`, () => {
 })
 
 describe(`Error Handling`, () => {
+    const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space time continuum`] }
+    
     test(`401s provide the status, requested url, 'Access Denied' and any problem returned in the http response`, async () => verifyResponse(HttpStatusCode.Unauthorized, `Access Denied`))
     test(`403s provide the status, requested url, 'Access Denied' and any problem returned in the http response`, async () => verifyResponse(HttpStatusCode.Forbidden, `Access Denied`))
 
-    const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space tiem continuum`] }
     async function verifyResponse (status : HttpStatusCode, message: string) {
         server.use(mock.get(url, (req, res, ctx) => res(ctx.status(status), ctx.json(problem))))
         return get(url).catch((response: Error) => {
             expect(JSON.parse(response.message).status).toBe(status)
             expect(JSON.parse(response.message).statusText).toBe(HttpStatusCode[status])
             expect(JSON.parse(response.message).message).toBe(message)
-            return expect(JSON.parse(response.message).url).toBe(url)
-            //return expect(JSON.parse(response.message).problem).toStrictEqual(problem)
+            expect(JSON.parse(response.message).url).toBe(url)
+            return expect(JSON.parse(response.message).problem).toStrictEqual(problem)
         })
     }
 })

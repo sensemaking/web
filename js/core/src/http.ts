@@ -17,11 +17,12 @@ function api(method : Method, url : string, payload? : object) {
 }
 
 async function jsonOrApiError(url : string, response : Response) {    
-    const json = response.json().then(json => json).catch(_ => null)
+    const json = await response.json().then(json => json).catch(_ => null)
     
     if(response.ok)
         return json
     else      
+        console.log(json)
         throw new Error(JSON.stringify({ 
             status: response.status, 
             statusText: response.statusText, 
