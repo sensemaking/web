@@ -19,7 +19,9 @@ const url = `http://myapi.com/`
 const success = { success: true }
 const failure = { success: false }
 
-const successful = (predicate : Function) => (req : any, res : any, ctx : any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
+const successfulWhen = (predicate : Function) => (req : any, res : any, ctx : any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
+const hasBody = (payload : any) => (req : any) => req.body.wibble === payload.wibble
+const isJsonHeader = (header : string) => (req : any) => req.headers.get(header) === `application/json` 
 
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {        
@@ -29,17 +31,17 @@ describe(`Methods`, () => {
     })
 
     test(`PUTs a body to a url`, async () => { 
-        const body = { wibble: `wobble` }
-        server.use(mock.put(url, successful((req : any) => req.body.wibble === body.wibble)))
+        const payload = { wibble: `wobble` }
+        server.use(mock.put(url, successfulWhen(hasBody(payload))))
 
-        return expect(await put(url, body)).toEqual(success)
+        return expect(await put(url, payload)).toEqual(success)
     })
 
     test(`POSTs a body to a url`, async () => { 
-        const body = { wibble: `wobble` }
-        server.use(mock.post(url, async (req, res, ctx) => { return res(ctx.status(200), (req.body as any).wibble === body.wibble ? ctx.json(success) : ctx.json(failure))}))
+        const payload = { wibble: `wobble` }
+        server.use(mock.post(url, successfulWhen(hasBody(payload))))
 
-        return expect(await post(url, body)).toEqual(success)
+        return expect(await post(url, payload)).toEqual(success)
     })
 
     test(`DELETEs from a url`, async () => { 
@@ -49,7 +51,7 @@ describe(`Methods`, () => {
 })
 
 describe(`Headers`, () => {        
-    const checkForJson = (header : string) => (req : any, res : any, ctx : any) => res(ctx.status(200), req.headers.get(header) === `application/json` ? ctx.json(success) : ctx.json(failure))
+    const checkForJson = (header : string) => successfulWhen(isJsonHeader(header))
 
     test(`All http requests add accept header for application/json`, async () => {        
         server.use(mock.get(url, checkForJson(`Accept`)), mock.put(url, checkForJson(`Accept`)), mock.post(url, checkForJson(`Accept`)), mock.delete(url, checkForJson(`Accept`)))
