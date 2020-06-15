@@ -25,27 +25,24 @@ const isJson = (header : string) => (req : any) => req.headers.get(header) === `
 
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {        
-        server.use(mock.get(url, async (req, res, ctx) => res(ctx.status(200), ctx.json(success))))
-
+        server.use(mock.get(url, successfulWhen(() => true)))
         return expect(await get(url)).toEqual(success)
     })
 
     test(`PUTs a body to a url`, async () => { 
         const payload = { wibble: `wobble` }
         server.use(mock.put(url, successfulWhen(hasBody(payload))))
-
         return expect(await put(url, payload)).toEqual(success)
     })
 
     test(`POSTs a body to a url`, async () => { 
         const payload = { wibble: `wobble` }
         server.use(mock.post(url, successfulWhen(hasBody(payload))))
-
         return expect(await post(url, payload)).toEqual(success)
     })
 
     test(`DELETEs from a url`, async () => { 
-        server.use(mock.delete(url, async (req, res, ctx) => res(ctx.status(200), ctx.json(success))))        
+        server.use(mock.delete(url, successfulWhen(() => true)))
         return expect(await del(url)).toEqual(success)
     })
 })
