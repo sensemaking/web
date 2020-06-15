@@ -3,7 +3,7 @@ import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
 import { rest as mock, response } from 'msw'
 import { get, put, post, del } from './api'
-import HttpStatusCode from './http-status-codes'
+import { HttpMethod, HttpStatusCode } from './http'
 
 const noHandler = async (req: any, res: any, ctx: any) => {
     console.log(`No mocked handler setup for ${req.method} at ${req.url}`)
@@ -91,6 +91,7 @@ describe(`Error Handling`, () => {
 
         return put(url, payload).catch((apiError: any) => {
             expect(apiError.request.url).toBe(url)
+            expect(apiError.request.method).toBe(HttpMethod.Put)
             expect(apiError.status.code).toBe(status)
             expect(apiError.status.text).toBe(HttpStatusCode[status])
             return expect(apiError.problem).toStrictEqual(problem)

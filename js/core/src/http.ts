@@ -1,4 +1,6 @@
-enum HttpStatusCode {
+export enum HttpMethod { Get = `GET`, Post = `POST`, Put = `PUT`, Delete = `DELETE` }
+
+export enum HttpStatusCode {
     Continue = 100,
     SwitchingProtocols = 101,
     Processing = 102,
@@ -61,5 +63,3 @@ enum HttpStatusCode {
     NotExtended = 510,
     NetworkAuthenticationRequired = 511
 }
-
-export default HttpStatusCode;

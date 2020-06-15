@@ -1,14 +1,13 @@
-import HttpStatusCode from './http-status-codes'
+import { HttpMethod } from './http'
 
-export const get : any = (url: string) => call(Method.Get, url)
-export const post : any = (url: string, payload : object) => call(Method.Post, url, payload)
-export const put : any = (url: string, payload : object) => call(Method.Put, url, payload)
-export const del : any = (url: string) => call(Method.Delete, url)
+export const get : any = (url: string) => call(HttpMethod.Get, url)
+export const post : any = (url: string, payload : object) => call(HttpMethod.Post, url, payload)
+export const put : any = (url: string, payload : object) => call(HttpMethod.Put, url, payload)
+export const del : any = (url: string) => call(HttpMethod.Delete, url)
 
-enum Method { Get = `GET`, Post = `POST`, Put = `PUT`, Delete = `DELETE` }
 const mediaType = `application/json`
 
-async function call(method: Method, url: string, payload?: object) {
+async function call(method: HttpMethod, url: string, payload?: object) {
     const request: RequestInit = {
         method: method,
         headers:  payload ? { 'Content-Type': mediaType, 'Accept': mediaType } : { 'Accept': mediaType },
@@ -24,5 +23,5 @@ async function jsonOrError(url : string, request : RequestInit, response : Respo
     if(response.ok)
         return json
     else      
-        throw { request: { url, method: request.method, body: request.body }, status: { code: response.status, text: response.statusText }, problem: json }
+        throw { request: { url, method: request.method, payload: request.body }, status: { code: response.status, text: response.statusText }, problem: json }
 }
