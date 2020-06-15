@@ -50,7 +50,7 @@ describe(`Methods`, () => {
     })
 
     test(`Returns null when response has no content`, async () => {
-        server.use(mock.get(url, (req, res, ctx) => res(ctx.status(200))))
+        server.use(mock.get(url, (_, res, ctx) => res(ctx.status(200))))
         return expect(await get(url)).toBeNull()
     })
 })
@@ -86,7 +86,7 @@ describe(`Error Handling`, () => {
         const status = HttpStatusCode.Forbidden
         const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space time continuum`] }
     
-        server.use(mock.get(url, (req, res, ctx) => res(ctx.status(status), ctx.json(problem))))
+        server.use(mock.get(url, (_, res, ctx) => res(ctx.status(status), ctx.json(problem))))
 
         return get(url).catch((response: Error) => {
             expect(JSON.parse(response.message).status).toBe(status)
