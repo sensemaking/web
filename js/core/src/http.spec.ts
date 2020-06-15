@@ -82,17 +82,18 @@ describe(`Headers`, () => {
 })
 
 describe(`Error Handling`, () => {
-    test(`Errors provide the http status code and its text, the requested url and any problems detailed in the http response`, async () => {
+    test(`Errors provide the http status code and its text, the requested url and its body, and any problems detailed in the http response`, async () => {
+        const payload = { wibble: `wobble` }
         const status = HttpStatusCode.Forbidden
         const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space time continuum`] }
     
-        server.use(mock.get(url, (_, res, ctx) => res(ctx.status(status), ctx.json(problem))))
+        server.use(mock.put(url, (_, res, ctx) => res(ctx.status(status), ctx.json(problem))))
 
-        return get(url).catch((response: Error) => {
-            expect(JSON.parse(response.message).status).toBe(status)
-            expect(JSON.parse(response.message).statusText).toBe(HttpStatusCode[status])
-            expect(JSON.parse(response.message).url).toBe(url)
-            return expect(JSON.parse(response.message).problem).toStrictEqual(problem)
+        return put(url, payload).catch((response: {status: number, statusText: string, url: string, problem: object}) => {
+            expect(response.status).toBe(status)
+            expect(response.statusText).toBe(HttpStatusCode[status])
+            expect(response.url).toBe(url)
+            return expect(response.problem).toStrictEqual(problem)
         })
     })
 })
