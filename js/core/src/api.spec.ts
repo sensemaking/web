@@ -1,8 +1,8 @@
-import { describe, test, expect, beforeAll, afterAll, afterEach } from '@jest/globals'
+import { describe, test, expect, beforeAll, afterAll, afterEach, beforeEach } from '@jest/globals'
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
 import { rest as mock, response } from 'msw'
-import { get, put, post, del } from './api'
+import { get, put, post, del, ApiError } from './api'
 import { HttpMethod, HttpStatusCode } from './http'
 
 const noHandler = async (req: any, res: any, ctx: any) => {
@@ -82,20 +82,28 @@ describe(`Headers`, () => {
 })
 
 describe(`Error Handling`, () => {
-    test(`Errors provide the requested url, method and payload, the http status code and its text, and any problems detailed in the http response`, async () => {
-        const payload = { wibble: `wobble` }
-        const status = HttpStatusCode.Forbidden
-        const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space time continuum`] }
+    const payload = { wibble: `wobble` }
+    const status = HttpStatusCode.Forbidden
+    const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space time continuum`] }
 
-        server.use(mock.put(url, (_, res, ctx) => res(ctx.status(status), ctx.json(problem))))
+    beforeEach(() => server.use(mock.put(url, (_, res, ctx) => res(ctx.status(status), ctx.json(problem)))))
 
-        return put(url, payload).catch((apiError: any) => {
+    test(`Errors provide the request url, method and payload`, async () => {
+        return put(url, payload).catch((apiError: ApiError) => {
             expect(apiError.request.url).toBe(url)
             expect(apiError.request.method).toBe(HttpMethod.Put)
-            expect(apiError.request.payload).toBe(payload)
-            expect(apiError.status.code).toBe(status)
-            expect(apiError.status.text).toBe(HttpStatusCode[status])
-            return expect(apiError.problem).toStrictEqual(problem)
+            return expect(apiError.request.payload).toBe(payload)
         })
     })
+
+    test(`Errors provide the http status code and its text`, async () => {
+        return put(url, payload).catch((apiError: ApiError) => {
+            expect(apiError.status.code).toBe(status)
+            return expect(apiError.status.text).toBe(HttpStatusCode[status])
+        })
+    })
+
+    test(`Errors provide any problems detailed in the http response`, async () =>
+        put(url, payload).catch((apiError: ApiError) => expect(apiError.problem).toStrictEqual(problem))
+    )
 })
