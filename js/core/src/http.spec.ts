@@ -1,7 +1,7 @@
 import { describe, test, expect, afterAll, afterEach, beforeAll } from '@jest/globals'
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest as mock } from 'msw'
+import { rest as mock, response } from 'msw'
 import { get, put, post, del } from './http'
 
 const noHandler = async (req : any, res : any, ctx : any) => { 
@@ -19,6 +19,8 @@ const url = `http://myapi.com/`
 const success = { success: true }
 const failure = { success: false }
 
+const successful = (predicate : Function) => (req : any, res : any, ctx : any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
+
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {        
         server.use(mock.get(url, async (req, res, ctx) => res(ctx.status(200), ctx.json(success))))
@@ -28,7 +30,7 @@ describe(`Methods`, () => {
 
     test(`PUTs a body to a url`, async () => { 
         const body = { wibble: `wobble` }
-        server.use(mock.put(url, async (req, res, ctx) => { return res(ctx.status(200), (req.body as any).wibble === body.wibble ? ctx.json(success) : ctx.json(failure))}))
+        server.use(mock.put(url, successful((req : any) => req.body.wibble === body.wibble)))
 
         return expect(await put(url, body)).toEqual(success)
     })
