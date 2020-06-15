@@ -21,7 +21,7 @@ const failure = { success: false }
 
 const successfulWhen = (predicate : Function) => (req : any, res : any, ctx : any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
 const hasBody = (payload : any) => (req : any) => req.body.wibble === payload.wibble
-const isJsonHeader = (header : string) => (req : any) => req.headers.get(header) === `application/json` 
+const isJson = (header : string) => (req : any) => req.headers.get(header) === `application/json` 
 
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {        
@@ -51,10 +51,13 @@ describe(`Methods`, () => {
 })
 
 describe(`Headers`, () => {        
-    const checkForJson = (header : string) => successfulWhen(isJsonHeader(header))
-
     test(`All http requests add accept header for application/json`, async () => {        
-        server.use(mock.get(url, checkForJson(`Accept`)), mock.put(url, checkForJson(`Accept`)), mock.post(url, checkForJson(`Accept`)), mock.delete(url, checkForJson(`Accept`)))
+        server.use(
+            mock.get(url, successfulWhen(isJson(`Accept`))), 
+            mock.put(url, successfulWhen(isJson(`Accept`))), 
+            mock.post(url, successfulWhen(isJson(`Accept`))), 
+            mock.delete(url, successfulWhen(isJson(`Accept`)))
+        )
 
         expect(await get(url)).toEqual(success)
         expect(await put(url, {})).toEqual(success)
@@ -63,7 +66,10 @@ describe(`Headers`, () => {
     })
 
     test(`PUT & POST add content-type header for application/json`, async () => { 
-        server.use(mock.put(url, checkForJson(`Content-Type`)), mock.post(url, checkForJson(`Content-Type`)))
+        server.use(
+            mock.put(url, successfulWhen(isJson(`Content-Type`))), 
+            mock.post(url, successfulWhen(isJson(`Content-Type`)))
+        )
 
         expect(await put(url, {})).toEqual(success)
         return expect(await post(url, {})).toEqual(success)
