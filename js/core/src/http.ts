@@ -1,3 +1,5 @@
+import HttpStatusCode from './http-status-codes'
+
 export const get : any = (url : string) => api(Method.Get, url)
 export const post : any = (url : string, payload : object) => api(Method.Post, url, payload)
 export const put : any = (url : string, payload : object) => api(Method.Put, url, payload)
@@ -20,5 +22,5 @@ async function jsonOrApiError(response : Response) {
     if(response.ok)
         return json
     else      
-        throw new Error(JSON.stringify({ status: response.status, message: [401, 403].includes(response.status) ? `Access Denied` : `Received API Problem`, problem: json }))    
+        throw new Error(JSON.stringify({ status: response.status, message: [HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden].includes(response.status) ? `Access Denied` : `Received API Problem`, problem: json }))    
 }
