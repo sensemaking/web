@@ -17,7 +17,6 @@ async function call<T>(method: HttpMethod, url: string, payload?: object) : Prom
 
 async function jsonOrError(response: Response, url: string, method: HttpMethod, payload?: object) {
     const json = await response.json().then(json => json).catch(_ => null)
-
     if (response.ok)
         return json
     else
