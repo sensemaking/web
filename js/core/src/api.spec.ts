@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll, afterEach, beforeEach } from '@jest/globals'
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest as mock, response, MockedRequest, MockedResponse } from 'msw'
+import { rest as mock, MockedRequest } from 'msw'
 import { get, put, post, del, ApiError } from './api'
 import { HttpMethod, HttpStatusCode } from './http'
 
@@ -81,7 +81,7 @@ describe(`Headers`, () => {
 })
 
 describe(`Error Handling`, () => {
-    const status = HttpStatusCode.Forbidden
+    const status = HttpStatusCode.InternalServerError
     const problem = { title: `Things ain't so good`, errors: [`What hasn't gone wrong`, `Catastophic rip in the space time continuum`] }
 
     beforeEach(() => server.use(mock.put(url, (_, res, ctx) => res(ctx.status(status), ctx.json(problem)))))

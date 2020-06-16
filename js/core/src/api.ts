@@ -1,4 +1,4 @@
-import { HttpMethod } from './http'
+import { HttpMethod, HttpStatusCode, HttpStatus } from './http'
 
 export const get: any = (url: string) => call(HttpMethod.Get, url)
 export const post: any = (url: string, payload: object) => call(HttpMethod.Post, url, payload)
@@ -21,11 +21,13 @@ async function jsonOrError(response: Response, url: string, method: HttpMethod, 
     if (response.ok)
         return json
     else
-        throw new ApiError({ url, method, payload }, { code: response.status, text: response.statusText }, json);
+        throw new ApiError({ url, method, payload }, new HttpStatus(response.status), json);
 }
 
+interface ErroredRequest { url: string, method: string, payload?: object }
+
 export class ApiError extends Error {
-    constructor(request: { url: string, method: string, payload?: object }, status: { code: number, text: string }, problem: object | null, message? : string) {
+    constructor(request: ErroredRequest, status: HttpStatus, problem: object | null, message? : string) {
         super(message)
         Object.setPrototypeOf(this, new.target.prototype);
 
@@ -34,7 +36,7 @@ export class ApiError extends Error {
         this.problem = problem
     }
     
-    readonly request: { url: string, method: string, payload?: object }
-    readonly status: { code: number, text: string }
+    readonly request: ErroredRequest
+    readonly status: HttpStatus
     readonly problem: object | null
 }
