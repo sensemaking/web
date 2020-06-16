@@ -1,11 +1,11 @@
 import { HttpMethod, HttpStatus, createHttpStatus } from './http'
 
-export async function get<T>(url: string) { return call<T>(HttpMethod.Get, url) }
+export async function get<T>(url: string) : Promise<T> { return call(HttpMethod.Get, url) }
 export async function post(url: string, payload: object) { return call(HttpMethod.Post, url, payload) }
 export async function put(url: string, payload: object) { return call(HttpMethod.Put, url, payload) }
 export async function del(url: string) { return call(HttpMethod.Delete, url) }
 
-async function call<T>(method: HttpMethod, url: string, payload?: object) : Promise<T> {
+async function call(method: HttpMethod, url: string, payload?: object) {
     const mediaType = `application/json`
     const response = await fetch(url, {
         method: method,

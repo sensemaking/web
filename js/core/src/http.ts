@@ -1,7 +1,7 @@
 export enum HttpMethod { Get = `GET`, Post = `POST`, Put = `PUT`, Delete = `DELETE` }
 
 export type HttpStatus = { readonly code: HttpStatusCode, readonly text: string }
-export function createHttpStatus(status: HttpStatusCode) : HttpStatus { return { code: status, text: HttpStatusCode[status] } }
+export function createHttpStatus(status: HttpStatusCode) { return { code: status, text: HttpStatusCode[status] } }
 
 export enum HttpStatusCode {
     Continue = 100,
