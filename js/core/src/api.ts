@@ -1,11 +1,11 @@
-import { HttpMethod, HttpStatusCode, HttpStatus } from './http'
+import { HttpMethod, HttpStatus, createHttpStatus } from './http'
 
-export const get: any = (url: string) => call(HttpMethod.Get, url)
-export const post: any = (url: string, payload: object) => call(HttpMethod.Post, url, payload)
-export const put: any = (url: string, payload: object) => call(HttpMethod.Put, url, payload)
-export const del: any = (url: string) => call(HttpMethod.Delete, url)
+export async function get<T>(url: string) { return call<T>(HttpMethod.Get, url) }
+export async function post(url: string, payload: object) { return call(HttpMethod.Post, url, payload) }
+export async function put(url: string, payload: object) { return call(HttpMethod.Put, url, payload) }
+export async function del(url: string) { return call(HttpMethod.Delete, url) }
 
-async function call(method: HttpMethod, url: string, payload?: object) {
+async function call<T>(method: HttpMethod, url: string, payload?: object) : Promise<T> {
     const mediaType = `application/json`
     const response = await fetch(url, {
         method: method,
@@ -21,16 +21,15 @@ async function jsonOrError(response: Response, url: string, method: HttpMethod, 
     if (response.ok)
         return json
     else
-        throw new ApiError({ url, method, payload }, new HttpStatus(response.status), json);
+        throw new ApiError({ url, method, payload }, createHttpStatus(response.status), json);
 }
 
-interface ErroredRequest { url: string, method: string, payload?: object }
+type ErroredRequest = { url: string, method: string, payload?: object }
 
 export class ApiError extends Error {
     constructor(request: ErroredRequest, status: HttpStatus, problem: object | null, message? : string) {
         super(message)
         Object.setPrototypeOf(this, new.target.prototype);
-
         this.request = request
         this.status = status
         this.problem = problem

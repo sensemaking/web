@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll, afterEach, beforeEach } from '@jest/globals'
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest as mock, MockedRequest } from 'msw'
+import { rest as mock, MockedRequest, MockedResponse } from 'msw'
 import { get, put, post, del, ApiError } from './api'
 import { HttpMethod, HttpStatusCode } from './http'
 
@@ -16,14 +16,16 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-interface Payload { wibble: string }
+type Payload = { wibble: string }
 
 const url = `http://myapi.com/`
 const payload = { wibble: `wobble` }
 const success = { success: true }
 const failure = { success: false }
 
-const successfulWhen = (predicate: Function) => (req: MockedRequest, res: any, ctx: any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
+type Predicate = (req: MockedRequest) => boolean
+
+const successfulWhen = (predicate: Predicate)  => (req: any, res: any, ctx: any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
 const hasPayload = (payload: Payload) => (req: MockedRequest) => (req.body as Payload).wibble === payload.wibble
 const isJson = (header: string) => (req: MockedRequest) => req.headers.get(header) === `application/json`
 
@@ -62,7 +64,7 @@ describe(`Headers`, () => {
             mock.post(url, successfulWhen(isJson(`Accept`))),
             mock.delete(url, successfulWhen(isJson(`Accept`)))
         )
-
+        
         expect(await get(url)).toStrictEqual(success)
         expect(await put(url, {})).toStrictEqual(success)
         expect(await post(url, {})).toStrictEqual(success)

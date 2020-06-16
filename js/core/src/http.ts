@@ -1,9 +1,7 @@
 export enum HttpMethod { Get = `GET`, Post = `POST`, Put = `PUT`, Delete = `DELETE` }
-export class HttpStatus {
-    constructor(status: HttpStatusCode){
-        this.code = status;
-        this.text = HttpStatusCode[status]
-    }
+
+export function createHttpStatus(status: HttpStatusCode) { return { code: status, text: HttpStatusCode[status] } }
+export type HttpStatus = {
     readonly code: HttpStatusCode
     readonly text: string
 }
