@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll, afterEach, beforeEach } from '@jest/globals'
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest as mock, response, MockedRequest } from 'msw'
+import { rest as mock, response, MockedRequest, MockedResponse } from 'msw'
 import { get, put, post, del, ApiError } from './api'
 import { HttpMethod, HttpStatusCode } from './http'
 
@@ -23,7 +23,7 @@ const payload = { wibble: `wobble` }
 const success = { success: true }
 const failure = { success: false }
 
-const successfulWhen = (predicate: Function) => (req: any, res: any, ctx: any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
+const successfulWhen = (predicate: Function) => (req: MockedRequest, res: any, ctx: any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
 const hasPayload = (payload: Payload) => (req: MockedRequest) => (req.body as Payload).wibble === payload.wibble
 const isJson = (header: string) => (req: MockedRequest) => req.headers.get(header) === `application/json`
 

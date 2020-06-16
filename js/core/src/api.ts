@@ -21,11 +21,20 @@ async function jsonOrError(response: Response, url: string, method: HttpMethod, 
     if (response.ok)
         return json
     else
-        throw { request: { url, method, payload }, status: { code: response.status, text: response.statusText }, problem: json }
+        throw new ApiError({ url, method, payload }, { code: response.status, text: response.statusText }, json);
 }
 
-export interface ApiError {
-    request: { url: string, method: string, payload?: object }
-    status: { code: number, text: string }
-    problem: object
+export class ApiError extends Error {
+    constructor(request: { url: string, method: string, payload?: object }, status: { code: number, text: string }, problem: object, message? : string) {
+        super(message)
+        Object.setPrototypeOf(this, new.target.prototype);
+
+        this.request = request
+        this.status = status
+        this.problem = problem
+    }
+    
+    readonly request: { url: string, method: string, payload?: object }
+    readonly status: { code: number, text: string }
+    readonly problem: object
 }
