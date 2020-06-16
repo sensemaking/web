@@ -25,7 +25,7 @@ async function jsonOrError(response: Response, url: string, method: HttpMethod, 
 }
 
 export class ApiError extends Error {
-    constructor(request: { url: string, method: string, payload?: object }, status: { code: number, text: string }, problem: object, message? : string) {
+    constructor(request: { url: string, method: string, payload?: object }, status: { code: number, text: string }, problem: object | null, message? : string) {
         super(message)
         Object.setPrototypeOf(this, new.target.prototype);
 
@@ -36,5 +36,5 @@ export class ApiError extends Error {
     
     readonly request: { url: string, method: string, payload?: object }
     readonly status: { code: number, text: string }
-    readonly problem: object
+    readonly problem: object | null
 }
