@@ -18,66 +18,74 @@ afterAll(() => server.close())
 
 const url = `http://myapi.com/`
 const payload = { wibble: `wobble` }
-const success = { success: true }
-const failure = { success: false }
 
-type Predicate = (req: MockedRequest) => boolean
+type CallDetail = { shouldSucceed: (req: MockedRequest) => boolean, wasCalled: boolean }
 type Payload = { wibble: string }
 
-const successfulWhen = (predicate: Predicate)  => (req: any, res: any, ctx: any) => res(ctx.status(200), ctx.json(predicate(req) ? success : failure))
+const successfulWhen = (call: CallDetail)  => { call.wasCalled = false; return (req: any, res: any, ctx: any) => { 
+    call.wasCalled = call.shouldSucceed(req)
+    return res(ctx.status(200)) 
+}}
+
 const hasPayload = (payload: Payload) => (req: MockedRequest) => (req.body as Payload).wibble === payload.wibble
 const isJson = (header: string) => (req: MockedRequest) => req.headers.get(header) === `application/json`
 
 describe(`Methods`, () => {
     test(`GETs from a url`, async () => {
-        server.use(mock.get(url, successfulWhen(() => true)))
-        return expect(await get(url)).toStrictEqual(success)
+        const callDetail = { shouldSucceed: () => true, wasCalled: false }
+        server.use(mock.get(url, successfulWhen(callDetail)))
+        await get(url); return expect(callDetail.wasCalled).toBeTruthy()
+    })
+
+    test(`GET returns null when response has no content`, async () => {
+        server.use(mock.get(url, (_, res, ctx) => res(ctx.status(200))))
+        return expect(await get(url)).toBeNull()
     })
 
     test(`PUTs a body to a url`, async () => {
-        server.use(mock.put(url, successfulWhen(hasPayload(payload))))
-        return expect(await put(url, payload)).toStrictEqual(success)
+        const callDetail = { shouldSucceed: hasPayload(payload), wasCalled: false }
+        server.use(mock.put(url, successfulWhen(callDetail)))
+        await put(url, payload); return expect(callDetail.wasCalled).toBeTruthy()
     })
 
     test(`POSTs a body to a url`, async () => {
-        server.use(mock.post(url, successfulWhen(hasPayload(payload))))
-        return expect(await post(url, payload)).toStrictEqual(success)
+        const callDetail = { shouldSucceed: hasPayload(payload), wasCalled: false }
+        server.use(mock.post(url, successfulWhen(callDetail)))
+        await post(url, payload); return expect(callDetail.wasCalled).toBeTruthy()
     })
 
     test(`DELETEs from a url`, async () => {
-        server.use(mock.delete(url, successfulWhen(() => true)))
-        return expect(await del(url)).toStrictEqual(success)
-    })
-
-    test(`Returns null when response has no content`, async () => {
-        server.use(mock.get(url, (_, res, ctx) => res(ctx.status(200))))
-        return expect(await get(url)).toBeNull()
+        const callDetail = { shouldSucceed: () => true, wasCalled: false }
+        server.use(mock.delete(url, successfulWhen(callDetail)))
+        await del(url); return expect(callDetail.wasCalled).toBeTruthy()
     })
 })
 
 describe(`Headers`, () => {
     test(`All http requests add accept header for application/json`, async () => {
+        const callDetail = { shouldSucceed: isJson(`Accept`), wasCalled: false }
         server.use(
-            mock.get(url, successfulWhen(isJson(`Accept`))),
-            mock.put(url, successfulWhen(isJson(`Accept`))),
-            mock.post(url, successfulWhen(isJson(`Accept`))),
-            mock.delete(url, successfulWhen(isJson(`Accept`)))
+            mock.get(url, successfulWhen(callDetail)),
+            mock.put(url, successfulWhen(callDetail)),
+            mock.post(url, successfulWhen(callDetail)),
+            mock.delete(url, successfulWhen(callDetail))
         )
         
-        expect(await get(url)).toStrictEqual(success)
-        expect(await put(url, {})).toStrictEqual(success)
-        expect(await post(url, {})).toStrictEqual(success)
-        return expect(await del(url)).toStrictEqual(success)
+        await get(url); expect(callDetail.wasCalled).toBeTruthy()
+        await put(url, {}); expect(callDetail.wasCalled).toBeTruthy()
+        await post(url, {}); expect(callDetail.wasCalled).toBeTruthy()
+        await del(url); return expect(callDetail.wasCalled).toBeTruthy()
     })
 
     test(`PUT & POST add content-type header for application/json`, async () => {
+        const callDetail = { shouldSucceed: isJson(`Content-Type`), wasCalled: false }
         server.use(
-            mock.put(url, successfulWhen(isJson(`Content-Type`))),
-            mock.post(url, successfulWhen(isJson(`Content-Type`)))
+            mock.put(url, successfulWhen(callDetail)),
+            mock.post(url, successfulWhen(callDetail))
         )
 
-        expect(await put(url, {})).toStrictEqual(success)
-        return expect(await post(url, {})).toStrictEqual(success)
+        await put(url, {}); expect(callDetail.wasCalled).toBeTruthy()
+        await post(url, {}); return expect(callDetail.wasCalled).toBeTruthy()
     })
 })
 
