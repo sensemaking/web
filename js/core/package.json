@@ -6,7 +6,10 @@
   "author": "sense|making",
   "devDependencies": {
     "@jest/globals": "^26.0.1",
+    "@typescript-eslint/eslint-plugin": "^3.3.0",
+    "@typescript-eslint/parser": "^3.3.0",
     "del-cli": "^3.0.1",
+    "eslint": "^7.2.0",
     "jest": "^26.0.1",
     "msw": "^0.19.3",
     "typescript": "^3.9.5",
@@ -16,7 +19,8 @@
     "prebuild": "yarn && del-cli \"./build\" -f",
     "build": "tsc",
     "pretest": "yarn build",
-    "test": "jest ./build"
+    "test": "jest ./build",
+    "lint": "eslint src/**/*.{ts,tsx} --quiet --fix"
   },
   "dependencies": {}
 }

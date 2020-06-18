@@ -22,7 +22,7 @@ const payload = { wibble: `wobble` }
 type CallDetail = { shouldSucceed: (req: MockedRequest) => boolean, wasCalled: boolean }
 type Payload = { wibble: string }
 
-const successfulWhen = (call: CallDetail)  => { call.wasCalled = false; return (req: any, res: any, ctx: any) => { 
+const successfulWhen = (call: CallDetail)  => { call.wasCalled = false; return (req: MockedRequest, res: any, ctx: any) => { 
     call.wasCalled = call.shouldSucceed(req)
     return res(ctx.status(200)) 
 }}
