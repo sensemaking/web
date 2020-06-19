@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll, afterEach, beforeEach } from '@jest/globals'
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest as mock, MockedRequest, MockedResponse } from 'msw'
+import { rest as mock, MockedRequest  } from 'msw'
 import { get, put, post, del, ApiError } from './jsonApi'
 import { HttpMethod, HttpStatusCode } from './http'
 

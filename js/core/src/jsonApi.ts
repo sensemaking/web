@@ -27,7 +27,7 @@ async function jsonOrError(response: Response, url: string, method: HttpMethod, 
     if (response.ok)
         return json
     else
-        throw new ApiError({ url, method, payload }, createHttpStatus(response.status), json);
+        throw new ApiError({ url, method, payload }, createHttpStatus(response.status), json)
 }
 
 type ErroredRequest = { url: string, method: string, payload?: unknown }
