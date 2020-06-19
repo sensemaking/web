@@ -1,9 +1,16 @@
 import { HttpMethod, HttpStatus, createHttpStatus } from './http'
 
+type JsonPayload = string|number|boolean|Date|JsonObject|JsonPayload[]
+type JsonObject = { [key: string]: string|number|boolean|Date|JsonObject|JsonPayload[] }
+
 export async function get<T>(url: string) : Promise<T> { return call(HttpMethod.Get, url) }
-export async function post(url: string, payload: unknown) { call(HttpMethod.Post, url, payload) }
-export async function put(url: string, payload: object) { call(HttpMethod.Put, url, payload) }
+export async function post(url: string, payload: JsonPayload) { call(HttpMethod.Post, url, payload) }
+export async function put(url: string, payload: JsonPayload) { call(HttpMethod.Put, url, payload) }
 export async function del(url: string) { call(HttpMethod.Delete, url) }
+
+function voids() : never {
+    throw { error: `Wibble` }
+}
 
 async function call(method: HttpMethod, url: string, payload?: unknown) {
     const mediaType = `application/json`
@@ -26,7 +33,7 @@ async function jsonOrError(response: Response, url: string, method: HttpMethod, 
 type ErroredRequest = { url: string, method: string, payload?: unknown }
 
 export class ApiError extends Error {
-    constructor(request: ErroredRequest, status: HttpStatus, problem: object | null, message? : string) {
+    constructor(request: ErroredRequest, status: HttpStatus, problem: unknown | null, message? : string) {
         super(message)
         Object.setPrototypeOf(this, new.target.prototype);
         this.request = request
@@ -36,5 +43,5 @@ export class ApiError extends Error {
     
     readonly request: ErroredRequest
     readonly status: HttpStatus
-    readonly problem: object | null
+    readonly problem: unknown | null
 }

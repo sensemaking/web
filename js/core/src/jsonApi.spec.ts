@@ -22,7 +22,7 @@ const payload = { wibble: `wobble` }
 type CallDetail = { shouldSucceed: (req: MockedRequest) => boolean, wasCalled: boolean }
 type Payload = { wibble: string }
 
-const successfulWhen = (call: CallDetail)  => { call.wasCalled = false; return (req: MockedRequest, res: any, ctx: any) => { 
+const successfulWhen = (call: CallDetail)  => { call.wasCalled = false; return (req: any, res: any, ctx: any) => { 
     call.wasCalled = call.shouldSucceed(req)
     return res(ctx.status(200)) 
 }}
@@ -35,6 +35,10 @@ describe(`Methods`, () => {
         const callDetail = { shouldSucceed: () => true, wasCalled: false }
         server.use(mock.get(url, successfulWhen(callDetail)))
         await get(url); return expect(callDetail.wasCalled).toBeTruthy()
+    })
+
+    test(`fun and games`, () => {
+
     })
 
     test(`GET returns null when response has no content`, async () => {
