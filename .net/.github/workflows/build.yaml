@@ -1,0 +1,21 @@
+name: Build
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pull
+      uses: actions/checkout@v2
+    - name: Install .Net Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+        source-url: https://nuget.pkg.github.com/sensemaking/index.json
+      env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    - name: Build and Test
+      run: dotnet test --configuration Release
+    - name: Package
+      run: dotnet pack -o packages --no-restore
+    - name: Publish Packages 
+      run: dotnet nuget push '${{ github.workspace }}/packages/*.nupkg' 
