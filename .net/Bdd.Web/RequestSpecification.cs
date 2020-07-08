@@ -23,12 +23,12 @@ namespace Sensemaking.Bdd.Web
 
         protected async Task get<U>(string url, params (string Name, string Value)[] headers)
         {
-            the_response = await client.BaseAddress.WithPath(url).GetAsync<T>(headers);
+            the_response = await client.BaseAddress.WithPath(url).GetAsync<U>(headers);
         }
 
         protected async Task delete(string url, params (string Name, string Value)[] headers)
         {
-            the_response = await client.BaseAddress.WithPath(url).GetAsync<T>(headers);
+            the_response = await client.BaseAddress.WithPath(url).DeleteAsync(headers);
         }
 
         protected async Task put(string url, object payload, params (string Name, string Value)[] headers)
@@ -85,12 +85,12 @@ namespace Sensemaking.Bdd.Web
 
         public void it_is_service_unavailable(string message)
         {
-            the_response.should_be_service_unavailable(message);
+            the_response.should_be_service_unavailable();
         }
 
         public void it_is_an_internal_error(string message)
         {
-            the_response.should_be_internal_error(message);
+            the_response.should_be_internal_error();
         }
 
         public void it_is_a_conflict(string message)
