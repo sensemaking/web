@@ -6,8 +6,14 @@ namespace Api
 {
     public class Program
     {
-        public static void Main(string[] args) => CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>())
-            .Build().Run();
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>());
+        }
+
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
     }
 }

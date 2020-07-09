@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
+using Flurl.Http;
+using Flurl.Http.Configuration;
 using Sensemaking.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -10,10 +12,29 @@ namespace Sensemaking.Bdd.Web
 {
     public abstract class RequestSpecification<T> : Specification where T : class
     {
-        private static readonly HttpClient client;
+        private class WebApplicationClientFactory : DefaultHttpClientFactory
+        {
+            private readonly HttpClient client;
+
+            public WebApplicationClientFactory(HttpClient client)
+            {
+                this.client = client;
+            }
+
+            public override HttpClient CreateHttpClient(HttpMessageHandler handler)
+            {
+                return client;
+            }
+        }
+
+        protected static readonly HttpClient client;
         protected JsonResponse the_response;
 
-        static RequestSpecification() => client = new WebApplicationFactory<T>().CreateClient();
+        static RequestSpecification()
+        {
+            client = new WebApplicationFactory<T>().CreateClient();
+            FlurlHttp.Configure(settings => settings.HttpClientFactory = new WebApplicationClientFactory(client));
+        }
 
         protected override void before_each()
         {
@@ -111,4 +132,6 @@ namespace Sensemaking.Bdd.Web
             headers.Add("Authorization", $"Bearer {token}");
         }
     }
+
+
 }

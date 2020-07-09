@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +12,9 @@ namespace Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHttpsRedirection();
             app.UseRouting();
-
-            app.UseEndpoints(endpoints => endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello Bozo!"); }));
+            app.UseEndpoints(endpoints => endpoints.MapDelete("/", context => Task.CompletedTask ));
         }
     }
 }
