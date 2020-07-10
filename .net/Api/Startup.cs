@@ -21,6 +21,7 @@ namespace Api
 
         private void RemoveSupportForTls11AndLower()
         {
+            #pragma warning disable CS0618
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
             ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Ssl3;
             ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls;
