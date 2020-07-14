@@ -1,12 +1,10 @@
 ﻿using NUnit.Framework;
 using Sensemaking.Bdd.Web;
-using System;
-using Sensemaking.Web.Host;
 
-namespace Sensemaking.Web.Specs
+namespace Sensemaking.Host.Web.Specs
 {
     [TestFixture]
-    public partial class StartupSpecs : RequestSpecification<Startup>
+    public partial class StartupSpecs : Specification<Startup>
     {
         [Test]
         public void refuses_pre_tls12_protocols()
@@ -15,17 +13,15 @@ namespace Sensemaking.Web.Specs
         }
 
         [Test]
-        public void uses_an_api_service_monitor()
+        public void monitors_service_dependencies_every_20_seconds()
         {
-            Then(service_monitor_is_used);
+            Given(service_dependencies);
+            Then(it_monitors_them);
+            Then(every_20_seconds);
         }
-        //
-        // [Test]
-        // public void uses_bootsrapper_monitor_to_initiate_service_status_notification()
-        // {
-        //     Given(api_is_bootstrapped);
-        //     Then(a_service_status_notifer_is_started);
-        // }
+        
+        //warn if no monitoring wired up
+        //Logging
         //
         // [Test]
         // public void accepts_valid_tokens()

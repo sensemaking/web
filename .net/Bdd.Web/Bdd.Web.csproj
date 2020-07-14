@@ -18,9 +18,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.5" />
-    <PackageReference Include="Sensemaking.Bdd" Version="1.0.55" />
-    <PackageReference Include="Sensemaking.Http" Version="1.0.55" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.6" />
+    <PackageReference Include="Sensemaking.Bdd" Version="1.0.61" />
+    <PackageReference Include="Sensemaking.Http" Version="1.0.61" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Host\Host.csproj" />
   </ItemGroup>
 
 </Project>

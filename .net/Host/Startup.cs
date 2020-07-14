@@ -3,14 +3,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
+using Sensemaking.Host.Monitoring;
 
-namespace Sensemaking.Web.Host
+namespace Sensemaking.Host.Web
 {
     public class Startup
     {
-        public void ConfigureServices(IServiceCollection services) { }
+        public virtual void ConfigureServices(IServiceCollection services)
+        {
+        }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseHttpsRedirection();
             app.RemoveSupportForTls11AndLower();

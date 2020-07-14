@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Sensemaking.Web.Host;
 using static Microsoft.Extensions.Hosting.Host;
 
-namespace Web.Host
+namespace Sensemaking.Host.Web
 {
     public class Program
     {

@@ -1,40 +1,29 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
-using Flurl.Http.Configuration;
+using Microsoft.AspNetCore.TestHost;
+using Sensemaking.Host.Web;
 using Sensemaking.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Sensemaking.Bdd.Web
 {
-    public abstract class RequestSpecification<T> : Specification where T : class
+    public abstract partial class Specification<T> : Specification where T : Startup, new()
     {
-        protected static readonly string root_url;
+        private static readonly string root_url;
+
+        protected static readonly T startup = new T();
+        protected static readonly IServiceProvider services;
         protected JsonResponse the_response;
 
-        static RequestSpecification()
+        static Specification()
         {
-            var client = new WebApplicationFactory<T>().CreateClient();
+            var factory = new WebApplicationFactory().WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot(".\\Host"));
+            services = factory.Services;
+            var client = factory.CreateClient();
             root_url = client.BaseAddress.AbsoluteUri;
-            FlurlHttp.Configure(settings => settings.HttpClientFactory = new WebApplicationClientFactory(client));
-        }
-
-        private class WebApplicationClientFactory : DefaultHttpClientFactory
-        {
-            private readonly HttpClient client;
-
-            public WebApplicationClientFactory(HttpClient client)
-            {
-                this.client = client;
-            }
-
-            public override HttpClient CreateHttpClient(HttpMessageHandler handler)
-            {
-                return client;
-            }
+            FlurlHttp.Configure(settings => settings.HttpClientFactory = new HttpClientFactory(client));
         }
 
         protected override void before_each()
@@ -45,24 +34,24 @@ namespace Sensemaking.Bdd.Web
 
         protected async Task get<U>(string url, params (string Name, string Value)[] headers)
         {
-            the_response = await root_url.WithPath(url).GetAsync<U>(headers);
+            the_response = await root_url.WithSegment(url).GetAsync<U>(headers);
         }
 
         protected async Task delete(string url, params (string Name, string Value)[] headers)
         {
-            the_response = await root_url.WithPath(url).DeleteAsync(headers);
+            the_response = await root_url.WithSegment(url).DeleteAsync(headers);
         }
 
         protected async Task put(string url, object payload, params (string Name, string Value)[] headers)
         {
 
-            the_response = await root_url.WithPath(url).PutAsync(payload, headers);
+            the_response = await root_url.WithSegment(url).PutAsync(payload, headers);
         }
 
         protected async Task post(string url, object payload, params (string Name, string Value)[] headers)
         {
 
-            the_response = await root_url.WithPath(url).PostAsync(payload, headers);
+            the_response = await root_url.WithSegment(url).PostAsync(payload, headers);
         }
 
         public void it_is_ok()
@@ -120,19 +109,12 @@ namespace Sensemaking.Bdd.Web
             the_response.should_be_conflict(message);
         }
     }
-
+    
     public static class Extensions
     {
-        public static string WithPath(this string root, string path)
+        public static string WithSegment(this string root, string path)
         {
             return root.AppendPathSegment(path);
         }
-
-        public static void AuthenticateUsing(this IDictionary<string, string> headers, string token)
-        {
-            headers.Add("Authorization", $"Bearer {token}");
-        }
     }
-
-
 }

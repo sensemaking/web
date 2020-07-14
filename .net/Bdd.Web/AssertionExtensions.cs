@@ -1,9 +1,8 @@
-using System.Linq;
+using System;
 using System.Net;
-using Sensemaking.Bdd;
 using Sensemaking.Http;
 
-namespace System
+namespace Sensemaking.Bdd.Web
 {
     public static class AssertionExtensions
     {
