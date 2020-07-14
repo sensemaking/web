@@ -4,7 +4,7 @@ using Sensemaking.Bdd.Web;
 namespace Sensemaking.Host.Web.Specs
 {
     [TestFixture]
-    public partial class StartupSpecs : Specification<Startup>
+    public partial class StartupSpecs : Specification<FakeStartup>
     {
         [Test]
         public void refuses_pre_tls12_protocols()
@@ -17,7 +17,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             Given(service_dependencies);
             Then(it_monitors_them);
-            Then(every_20_seconds);
+            And(every_20_seconds);
         }
 
         //Logging

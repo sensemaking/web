@@ -12,6 +12,7 @@ namespace Sensemaking.Bdd.Web
     {
         private static readonly string root_url;
 
+        protected static readonly T startup = new T();
         protected static readonly IServiceProvider services;
         protected JsonResponse the_response;
 
@@ -30,9 +31,9 @@ namespace Sensemaking.Bdd.Web
             the_response = null;
         }
 
-        protected async Task get<U>(string url, params (string Name, string Value)[] headers)
+        protected void get<U>(string url, params (string Name, string Value)[] headers)
         {
-            the_response = await root_url.WithSegment(url).GetAsync<U>(headers);
+            the_response = root_url.WithSegment(url).GetAsync<U>(headers).Result;
         }
 
         protected async Task delete(string url, params (string Name, string Value)[] headers)
@@ -48,7 +49,6 @@ namespace Sensemaking.Bdd.Web
 
         protected async Task post(string url, object payload, params (string Name, string Value)[] headers)
         {
-
             the_response = await root_url.WithSegment(url).PostAsync(payload, headers);
         }
 
