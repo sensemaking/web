@@ -12,6 +12,16 @@ namespace Sensemaking.Bdd.Web
 {
     public abstract class RequestSpecification<T> : Specification where T : class
     {
+        protected static readonly string root_url;
+        protected JsonResponse the_response;
+
+        static RequestSpecification()
+        {
+            var client = new WebApplicationFactory<T>().CreateClient();
+            root_url = client.BaseAddress.AbsoluteUri;
+            FlurlHttp.Configure(settings => settings.HttpClientFactory = new WebApplicationClientFactory(client));
+        }
+
         private class WebApplicationClientFactory : DefaultHttpClientFactory
         {
             private readonly HttpClient client;
@@ -27,15 +37,6 @@ namespace Sensemaking.Bdd.Web
             }
         }
 
-        protected static readonly HttpClient client;
-        protected JsonResponse the_response;
-
-        static RequestSpecification()
-        {
-            client = new WebApplicationFactory<T>().CreateClient();
-            FlurlHttp.Configure(settings => settings.HttpClientFactory = new WebApplicationClientFactory(client));
-        }
-
         protected override void before_each()
         {
             base.before_each();
@@ -44,24 +45,24 @@ namespace Sensemaking.Bdd.Web
 
         protected async Task get<U>(string url, params (string Name, string Value)[] headers)
         {
-            the_response = await client.BaseAddress.WithPath(url).GetAsync<U>(headers);
+            the_response = await root_url.WithPath(url).GetAsync<U>(headers);
         }
 
         protected async Task delete(string url, params (string Name, string Value)[] headers)
         {
-            the_response = await client.BaseAddress.WithPath(url).DeleteAsync(headers);
+            the_response = await root_url.WithPath(url).DeleteAsync(headers);
         }
 
         protected async Task put(string url, object payload, params (string Name, string Value)[] headers)
         {
 
-            the_response = await client.BaseAddress.WithPath(url).PutAsync(payload, headers);
+            the_response = await root_url.WithPath(url).PutAsync(payload, headers);
         }
 
         protected async Task post(string url, object payload, params (string Name, string Value)[] headers)
         {
 
-            the_response = await client.BaseAddress.WithPath(url).PostAsync(payload, headers);
+            the_response = await root_url.WithPath(url).PostAsync(payload, headers);
         }
 
         public void it_is_ok()
@@ -122,9 +123,9 @@ namespace Sensemaking.Bdd.Web
 
     public static class Extensions
     {
-        public static string WithPath(this Uri root, string path)
+        public static string WithPath(this string root, string path)
         {
-            return root.AbsoluteUri.AppendPathSegment(path);
+            return root.AppendPathSegment(path);
         }
 
         public static void AuthenticateUsing(this IDictionary<string, string> headers, string token)

@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Sensemaking.Web.Host</AssemblyName>
+    <RootNamespace>Sensemaking.Web.Host</RootNamespace>
   </PropertyGroup>
 
 </Project>

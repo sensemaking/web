@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Api\Api.csproj" />
     <ProjectReference Include="..\..\Bdd.Web\Bdd.Web.csproj" />
+    <ProjectReference Include="..\..\Host\Host.csproj" />
   </ItemGroup>
 
 </Project>

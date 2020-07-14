@@ -2,10 +2,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Api
+namespace Sensemaking.Web.Host
 {
     public class Startup
     {
@@ -13,19 +12,20 @@ namespace Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            RemoveSupportForTls11AndLower();
             app.UseHttpsRedirection();
+            app.RemoveSupportForTls11AndLower();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapDelete("/", context => Task.CompletedTask ));
         }
+    }
 
-        private void RemoveSupportForTls11AndLower()
+    internal static class ApplicationBuilderExtensions
+    {
+        internal static void RemoveSupportForTls11AndLower(this IApplicationBuilder app)
         {
-            #pragma warning disable CS0618
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Ssl3;
-            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls;
             ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls11;
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls;
         }
     }
 }
