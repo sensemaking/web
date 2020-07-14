@@ -5,7 +5,7 @@ namespace Sensemaking.Host.Web
 {
     public static class Web
     {
-        internal static ServiceStatusNotifier StatusNotifier { get; set; }
+        internal static ServiceStatusNotifier? StatusNotifier { get; private set; }
 
         public static void Configure(params ServiceDependency[] dependencies)
         {

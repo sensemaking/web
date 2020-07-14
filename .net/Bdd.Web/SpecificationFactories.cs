@@ -16,11 +16,11 @@ namespace Sensemaking.Bdd.Web
             }
         }
 
-        private class HttpClientFactory : DefaultHttpClientFactory
+        private class UseThisClientFactory : DefaultHttpClientFactory
         {
             private readonly HttpClient client;
 
-            public HttpClientFactory(HttpClient client)
+            public UseThisClientFactory(HttpClient client)
             {
                 this.client = client;
             }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
@@ -13,7 +12,6 @@ namespace Sensemaking.Bdd.Web
     {
         private static readonly string root_url;
 
-        protected static readonly T startup = new T();
         protected static readonly IServiceProvider services;
         protected JsonResponse the_response;
 
@@ -23,7 +21,7 @@ namespace Sensemaking.Bdd.Web
             services = factory.Services;
             var client = factory.CreateClient();
             root_url = client.BaseAddress.AbsoluteUri;
-            FlurlHttp.Configure(settings => settings.HttpClientFactory = new HttpClientFactory(client));
+            FlurlHttp.Configure(settings => settings.HttpClientFactory = new UseThisClientFactory(client));
         }
 
         protected override void before_each()

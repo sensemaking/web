@@ -19,8 +19,7 @@ namespace Sensemaking.Host.Web.Specs
             Then(it_monitors_them);
             Then(every_20_seconds);
         }
-        
-        //warn if no monitoring wired up
+
         //Logging
         //
         // [Test]
