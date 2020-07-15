@@ -21,6 +21,8 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         //Logging
+        //POST DELETE PUT
+        //put problems on all exceptions
         //
         // [Test]
         // public void accepts_valid_tokens()

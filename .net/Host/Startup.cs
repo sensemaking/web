@@ -3,12 +3,14 @@ using System.Net;
 using System.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
+using Sensemaking.Host.Web.Errors;
+using Sensemaking.Monitoring;
 
 namespace Sensemaking.Host.Web
 {
@@ -25,27 +27,39 @@ namespace Sensemaking.Host.Web
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseHttpsRedirection();
-            app.RemoveSupportForTls11AndLower();
-            app.UseRouting();
+            app.UseHttpsRedirection()
+                .UseTls2AndHigherOnly()
+                .UseProblemHandling()
+                .UseRouting();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/is-alive", context =>
+                endpoints.MapGet("/is-alive", async context =>
                 {
-                    context.Response.Headers.Add("Content-Type", "application/json");
-                    return context.Response.WriteAsync(new { status = "Service is up!" }.Serialize());
+                    var monitor = app.ApplicationServices.GetRequiredService<IMonitorServices>();
+                    if(!monitor.Availability())
+                        throw new ServiceAvailabilityException();
+
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync(new { status = "Service is up!" }.Serialize());
                 });
             });
         }
     }
 
+    internal static class ServiceStatus
+    {
+        internal static ServiceStatusNotifier? Notifier { get; set; }
+    }
+
     internal static class ApplicationBuilderExtensions
     {
-        internal static void RemoveSupportForTls11AndLower(this IApplicationBuilder app)
+        internal static IApplicationBuilder UseTls2AndHigherOnly(this IApplicationBuilder app)
         {
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
             ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls11;
             ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls;
+            return app;
         }
     }
 }

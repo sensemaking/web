@@ -11,4 +11,8 @@
     <PackageReference Include="Sensemaking.Host" Version="1.0.63" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middleware\" />
+  </ItemGroup>
+
 </Project>

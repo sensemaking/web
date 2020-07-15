@@ -42,7 +42,6 @@ namespace Sensemaking.Host.Web.Specs
         {
             return (protocol & included) == included;
         }
-
     }
 
     public class FakeStartup : Startup
