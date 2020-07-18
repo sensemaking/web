@@ -24,11 +24,21 @@ namespace Sensemaking.Host.Web
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>())
+            .Request()
                 .UseHttpsRedirection()
                 .UseTls2AndHigher()
+            .Response() 
                 .UseProblemHandling()
-                .UseRouting()
+            .Routing()
                 .AddIsAlive();
         }
+    }
+
+    internal static class Extensions
+    {
+        internal static IApplicationBuilder Request(this IApplicationBuilder app) { return app; }
+        internal static IApplicationBuilder Response(this IApplicationBuilder app) { return app; }
+        internal static IApplicationBuilder Routing(this IApplicationBuilder app) { return app.UseRouting(); }
+
     }
 }
