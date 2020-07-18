@@ -8,11 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sensemaking.Host" Version="1.0.71" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Middleware\" />
+    <PackageReference Include="Sensemaking.Host" Version="1.0.75" />
+    <PackageReference Include="Sensemaking.Http" Version="1.0.75" />
   </ItemGroup>
 
 </Project>

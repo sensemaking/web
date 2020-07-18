@@ -44,7 +44,7 @@ namespace Sensemaking.Host.Web.Specs
         }
     }
 
-    public class FakeStartup : Startup
+    public class FakeStartup : JsonApiStartup
     {
         internal static readonly ServiceDependency Dependency = new ServiceDependency(new FakeMonitor());
 

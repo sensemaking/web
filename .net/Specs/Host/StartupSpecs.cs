@@ -20,9 +20,7 @@ namespace Sensemaking.Host.Web.Specs
             And(every_20_seconds);
         }
 
-        //Logging
         //POST DELETE PUT
-        //put problems on all exceptions
         //
         // [Test]
         // public void accepts_valid_tokens()

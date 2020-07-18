@@ -47,7 +47,7 @@ namespace Sensemaking.Host.Web.Specs
         public string Status { get; private set; }
     }
 
-    public class IsAliveStartup : Startup
+    public class IsAliveStartup : JsonApiStartup
     {
         internal static readonly IMonitorServices Monitor = Substitute.For<IMonitorServices>();
 

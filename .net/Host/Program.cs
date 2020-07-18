@@ -13,7 +13,7 @@ namespace Sensemaking.Host.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>());
+            return CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder => builder.UseStartup<JsonApiStartup>());
         }
     }
 }

@@ -9,7 +9,7 @@ using Sensemaking.Http.Json.Client;
 
 namespace Sensemaking.Bdd.Web
 {
-    public abstract partial class Specification<T> : Specification where T : Startup, new()
+    public abstract partial class Specification<T> : Specification where T : JsonApiStartup, new()
     {
         private static readonly string root_url;
 
@@ -109,9 +109,9 @@ namespace Sensemaking.Bdd.Web
             the_exception.should_be_internal_error();
         }
 
-        public void it_is_a_bad_request(params string[] messages)
+        public void it_is_a_bad_request(params string[] erros)
         {
-            the_exception.should_be_bad_request(messages);
+            the_exception.should_be_bad_request(erros);
         }
 
         public void it_is_a_conflict(params string[] messages)

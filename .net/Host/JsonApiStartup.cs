@@ -7,7 +7,7 @@ using Sensemaking.Host.Monitoring;
 
 namespace Sensemaking.Host.Web
 {
-    public class Startup
+    public class JsonApiStartup
     {
         protected virtual ServiceDependency[] Dependencies => Array.Empty<ServiceDependency>();
 
@@ -22,9 +22,9 @@ namespace Sensemaking.Host.Web
             app.UseStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>())
             .Request()
                 .UseHttpsRedirection()
-                .UseTls2AndHigher()
+                .RejectNonTls2OrHigher()
             .Response() 
-                .UseProblemHandling()
+                .MapExceptionsToProblems()
             .Routing()
                 .AddIsAlive();
         }

@@ -9,19 +9,19 @@ namespace Sensemaking.Bdd.Web
     {
         public static void should_be_ok(this JsonResponse response)
         {
-            response.Status.Code.should_be(HttpStatusCode.OK);
+            response.Status.should_be(HttpStatusCode.OK);
             response.should_have_content_type();
         }
 
         public static void should_be_no_content(this JsonResponse response)
         {
-            response.Status.Code.should_be(HttpStatusCode.NoContent);
+            response.Status.should_be(HttpStatusCode.NoContent);
             response.should_have_no_content_type();
         }
 
         public static void should_be_accepted(this JsonResponse response)
         {
-            response.Status.Code.should_be(HttpStatusCode.Accepted);
+            response.Status.should_be(HttpStatusCode.Accepted);
             response.should_have_no_content_type();
         }
 
@@ -55,36 +55,39 @@ namespace Sensemaking.Bdd.Web
             problem.should_have_problem(HttpStatusCode.InternalServerError);
         }
 
-        public static void should_be_bad_request(this ProblemException problem, params string[] messages)
+        public static void should_be_bad_request(this ProblemException problem, params string[] errors)
         {
-            problem.should_have_problem(HttpStatusCode.BadRequest, messages);
+            problem.should_have_problem(HttpStatusCode.BadRequest, "The request could not be correctly validated.", errors);
         }
 
-        public static void should_be_conflict(this ProblemException problem, params string[] messages)
+        public static void should_be_conflict(this ProblemException problem, params string[] errors)
         {
-            problem.should_have_problem(HttpStatusCode.Conflict, messages);
+            problem.should_have_problem(HttpStatusCode.Conflict, "Fulfilling the request would cause a conflict.", errors);
         }
 
         private static void should_have_content_type(this JsonResponse response)
         {
-            response["Content-Type"].should_not_be_empty();
+            response.Headers.ValueFor("Content-Type").should_not_be_empty();
         }
 
         private static void should_have_no_content_type(this JsonResponse response)
         {
-            response["Content-Type"].should_be_empty();
+            response.Headers.ValueFor("Content-Type").should_be_empty();
         }
 
-        public static void should_have_problem(this ProblemException problem, HttpStatusCode code, params string[] messages)
+        public static void should_have_problem(this ProblemException problem, HttpStatusCode code, string problemTitle = "", params string[] errors)
         {
             if (problem == null)
                 "it".should_fail("Problem exception was not provided.");
 
-            problem.Status.Code.should_be(code);
-            if(messages.None())
-                problem.Problem.should_be(Problem.Empty);
+            problem.Status.should_be(code);
+            if (errors.None())
+                problem.HasProblem().should_be_false();
             else
-                problem.Problem.Errors.should_be(messages);
+            {
+                problem.Problem.Title.should_be(problemTitle);
+                problem.Problem.Errors.should_be(errors);
+            }
         }
     }
 }
