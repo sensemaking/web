@@ -13,8 +13,9 @@ namespace Sensemaking.Bdd.Web
     {
         private static readonly string root_url;
 
-        protected static readonly T startup = new T();
         protected static readonly IServiceProvider services;
+
+        protected T startup = new T();
         protected JsonResponse the_response;
         protected ProblemException the_exception;
 
@@ -30,6 +31,7 @@ namespace Sensemaking.Bdd.Web
         protected override void before_each()
         {
             base.before_each();
+            startup = new T();
             the_response = null;
             the_exception = null;
         }

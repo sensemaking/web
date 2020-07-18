@@ -1,13 +1,9 @@
 using System;
-using System.Net;
-using System.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
-using Sensemaking.Monitoring;
 
 namespace Sensemaking.Host.Web
 {
@@ -39,6 +35,5 @@ namespace Sensemaking.Host.Web
         internal static IApplicationBuilder Request(this IApplicationBuilder app) { return app; }
         internal static IApplicationBuilder Response(this IApplicationBuilder app) { return app; }
         internal static IApplicationBuilder Routing(this IApplicationBuilder app) { return app.UseRouting(); }
-
     }
 }
