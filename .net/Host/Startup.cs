@@ -29,8 +29,8 @@ namespace Sensemaking.Host.Web
         {
             app.UseHttpsRedirection()
                 .UseTls2AndHigherOnly()
-                .UseProblemHandling()
-                .UseRouting();
+                .UseRouting()
+                .UseProblemHandling();
 
             app.UseEndpoints(endpoints =>
             {

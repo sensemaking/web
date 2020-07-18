@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using Sensemaking.Http;
+using Sensemaking.Http.Json.Client;
 
 namespace Sensemaking.Bdd.Web
 {
@@ -24,51 +25,44 @@ namespace Sensemaking.Bdd.Web
             response.should_have_no_content_type();
         }
 
-        public static void should_be_not_found(this JsonResponse response)
+        public static void should_be_not_found(this ProblemException problem)
         {
-            response.Status.Code.should_be(HttpStatusCode.NotFound);
-            response.should_have_no_content_type();
+            problem.should_have_problem(HttpStatusCode.NotFound);
         }
 
-        public static void should_be_forbidden(this JsonResponse response)
+        public static void should_be_forbidden(this ProblemException problem)
         {
-            response.Status.Code.should_be(HttpStatusCode.Forbidden);
-            response.should_have_no_content_type();
+            problem.should_have_problem(HttpStatusCode.Forbidden);
         }
 
-        public static void should_be_unauthorised(this JsonResponse response)
+        public static void should_be_unauthorised(this ProblemException problem)
         {
-            response.Status.Code.should_be(HttpStatusCode.Unauthorized);
-            response.should_have_no_content_type();
+            problem.should_have_problem(HttpStatusCode.Unauthorized);
         }
 
-        public static void should_be_not_acceptable(this JsonResponse response)
+        public static void should_be_not_acceptable(this ProblemException problem)
         {
-            response.Status.Code.should_be(HttpStatusCode.NotAcceptable);
+            problem.should_have_problem(HttpStatusCode.NotAcceptable);
         }
 
-        public static void should_be_service_unavailable(this JsonResponse response)
+        public static void should_be_service_unavailable(this ProblemException problem)
         {
-            response.Status.Code.should_be(HttpStatusCode.ServiceUnavailable);
-            response.should_have_no_content_type();
+            problem.should_have_problem(HttpStatusCode.ServiceUnavailable);
         }
 
-        public static void should_be_internal_error(this JsonResponse response)
+        public static void should_be_internal_error(this ProblemException problem)
         {
-            response.Status.Code.should_be(HttpStatusCode.InternalServerError);
-            response.should_have_no_content_type();
+            problem.should_have_problem(HttpStatusCode.InternalServerError);
         }
 
-        public static void should_be_bad_request(this JsonResponse response, params string[] messages)
+        public static void should_be_bad_request(this ProblemException problem, params string[] messages)
         {
-            response.Status.Code.should_be(HttpStatusCode.BadRequest);
-            response.should_include_problem(messages);
+            problem.should_have_problem(HttpStatusCode.BadRequest, messages);
         }
 
-        public static void should_be_conflict(this JsonResponse response, params string[] messages)
+        public static void should_be_conflict(this ProblemException problem, params string[] messages)
         {
-            response.Status.Code.should_be(HttpStatusCode.Conflict);
-            response.should_include_problem(messages);
+            problem.should_have_problem(HttpStatusCode.Conflict, messages);
         }
 
         private static void should_have_content_type(this JsonResponse response)
@@ -81,13 +75,16 @@ namespace Sensemaking.Bdd.Web
             response["Content-Type"].should_be_empty();
         }
 
-        private static void should_include_problem(this JsonResponse response, params string[] messages)
+        public static void should_have_problem(this ProblemException problem, HttpStatusCode code, params string[] messages)
         {
-            response["Content-Type"].should_be($"{MediaType.JsonProblem}; charset=utf-8");
-            // var body = response.Body.DeserializeJson<Problem>();
-            // body.Title.should_be(response.ToString());
-            // messages.ForEach(message => body.Errors.should_contain(message));
-            throw new NotImplementedException();
+            if (problem == null)
+                "it".should_fail("Problem exception was not provided.");
+
+            problem.Status.Code.should_be(code);
+            if(messages.None())
+                problem.Problem.should_be(Problem.Empty);
+            else
+                problem.Problem.Errors.should_be(messages);
         }
     }
 }

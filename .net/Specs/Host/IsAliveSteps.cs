@@ -6,6 +6,7 @@ using NSubstitute.ClearExtensions;
 using Sensemaking.Bdd;
 using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
+using Sensemaking.Http.Json.Client;
 using Sensemaking.Monitoring;
 
 namespace Sensemaking.Host.Web.Specs

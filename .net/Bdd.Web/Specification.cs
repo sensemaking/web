@@ -5,6 +5,7 @@ using Flurl.Http;
 using Microsoft.AspNetCore.TestHost;
 using Sensemaking.Host.Web;
 using Sensemaking.Http;
+using Sensemaking.Http.Json.Client;
 
 namespace Sensemaking.Bdd.Web
 {
@@ -15,6 +16,7 @@ namespace Sensemaking.Bdd.Web
         protected static readonly T startup = new T();
         protected static readonly IServiceProvider services;
         protected JsonResponse the_response;
+        protected ProblemException the_exception;
 
         static Specification()
         {
@@ -29,11 +31,19 @@ namespace Sensemaking.Bdd.Web
         {
             base.before_each();
             the_response = null;
+            the_exception = null;
         }
 
         protected void get<U>(string url, params (string Name, string Value)[] headers)
         {
-            the_response = root_url.WithSegment(url).GetAsync<U>(headers).Result;
+            try
+            {
+                the_response = root_url.WithSegment(url).GetAsync<U>(headers).Result;
+            }
+            catch (AggregateException ex)
+            {
+                the_exception = ex.InnerException as ProblemException;
+            }
         }
 
         protected async Task delete(string url, params (string Name, string Value)[] headers)
@@ -69,42 +79,42 @@ namespace Sensemaking.Bdd.Web
 
         public void it_is_forbidden()
         {
-            the_response.should_be_forbidden();
+            the_exception.should_be_forbidden();
         }
 
         public void it_is_unauthorised()
         {
-            the_response.should_be_unauthorised();
+            the_exception.should_be_unauthorised();
         }
 
         public void it_is_not_acceptable()
         {
-            the_response.should_be_not_acceptable();
-        }
-
-        public void it_is_a_bad_request(params string[] messages)
-        {
-            the_response.should_be_bad_request(messages);
+            the_exception.should_be_not_acceptable();
         }
 
         public void it_is_not_found()
         {
-            the_response.should_be_not_found();
+            the_exception.should_be_not_found();
         }
 
-        public void it_is_service_unavailable(string message)
+        public void it_is_service_unavailable()
         {
-            the_response.should_be_service_unavailable();
+            the_exception.should_be_service_unavailable();
         }
 
-        public void it_is_an_internal_error(string message)
+        public void it_is_an_internal_error()
         {
-            the_response.should_be_internal_error();
+            the_exception.should_be_internal_error();
         }
 
-        public void it_is_a_conflict(string message)
+        public void it_is_a_bad_request(params string[] messages)
         {
-            the_response.should_be_conflict(message);
+            the_exception.should_be_bad_request(messages);
+        }
+
+        public void it_is_a_conflict(params string[] messages)
+        {
+            the_exception.should_be_conflict(messages);
         }
     }
     

@@ -28,7 +28,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             Given(monitor_has_no_service);
             When(checking_service_availability);
-            Then(() => it_is_service_unavailable("Service is currently unavailable."));
+            Then(it_is_service_unavailable);
         }
     }
 }
