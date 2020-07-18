@@ -26,13 +26,13 @@ namespace Sensemaking.Host.Web.Specs
 
         private void it_monitors_them()
         {
-            ServiceStatus.Notifier.Monitor.Dependencies.Single().should_be(FakeStartup.Dependency);
-            services.GetRequiredService<IMonitorServices>().should_be(ServiceStatus.Notifier.Monitor);
+            ServiceNotification.Notifier.Monitor.Dependencies.Single().should_be(FakeStartup.Dependency);
+            services.GetRequiredService<IMonitorServices>().should_be(ServiceNotification.Notifier.Monitor);
         }
 
         private void every_20_seconds()
         {
-            ServiceStatus.Notifier.Monitor.Heartbeat.Seconds.should_be(20);
+            ServiceNotification.Notifier.Monitor.Heartbeat.Seconds.should_be(20);
         }
     }
 

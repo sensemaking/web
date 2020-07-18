@@ -12,6 +12,6 @@ namespace Sensemaking.Host.Web
             return app;
         }
 
-        internal static ServiceStatusNotifier? Notifier { get; set; }
+        internal static ServiceStatusNotifier Notifier { get; set; }
     } 
 }

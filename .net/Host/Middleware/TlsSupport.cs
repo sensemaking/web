@@ -5,7 +5,7 @@ namespace Sensemaking.Host.Web
 {
     internal static class TlsSupport
     {
-        internal static IApplicationBuilder UseTls12AndHigher(this IApplicationBuilder app)
+        internal static IApplicationBuilder UseTls2AndHigher(this IApplicationBuilder app)
         {
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
             ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls11;

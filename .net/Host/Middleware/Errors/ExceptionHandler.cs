@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Builder;
 
-namespace Sensemaking.Host.Web.Errors
+namespace Sensemaking.Host.Web
 {
     internal static class ExceptionHandler
     {

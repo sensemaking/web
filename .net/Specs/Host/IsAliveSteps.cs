@@ -60,11 +60,13 @@ namespace Sensemaking.Host.Web.Specs
         {
             base.ConfigureServices(services);
             services.AddSingleton(Monitor);
+            SetMonitorAvailability(Availability.Up());
         }
 
         public void SetMonitorAvailability(Availability availability)
         {
             Monitor.ClearSubstitute();
+            Monitor.Heartbeat.Returns(Period.FromMinutes(1));
             Monitor.Availability().Returns(availability);
         }
     }
