@@ -26,21 +26,9 @@ namespace Sensemaking.Host.Web
             app.UseStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>())
                 .UseHttpsRedirection()
                 .UseTls2AndHigher()
+                .UseProblemHandling()
                 .UseRouting()
-                .UseProblemHandling();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/is-alive", async context =>
-                {
-                    var monitor = app.ApplicationServices.GetRequiredService<IMonitorServices>();
-                    if(!monitor.Availability())
-                        throw new ServiceAvailabilityException();
-
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync(new { status = "Service is up!" }.Serialize());
-                });
-            });
+                .AddIsAlive();
         }
     }
 }
