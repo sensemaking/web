@@ -1,12 +1,13 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using Sensemaking.Bdd.Web;
+using Sensemaking.Host.Monitoring;
+using Sensemaking.Monitoring;
 
 namespace Sensemaking.Host.Web.Specs
 {
     public partial class ExceptionHandlingSpecs : Specification<ExceptionStartup>
     {
-        //Logging
-        //problem content type
         //newtonsoft for deserialisation
         [Test]
         public void not_allowed_exception_causes_forbidden_error_problem()
@@ -38,6 +39,7 @@ namespace Sensemaking.Host.Web.Specs
             Given(() => an_(unexpected_exception));
             When(handling_a_request);
             Then(it_is_an_internal_error);
+            And(() => it_logs(AlertFactory.UnknownErrorOccured(services.GetRequiredService<IMonitorServices>().Info, unexpected_exception)));
         }
 
         [Test]

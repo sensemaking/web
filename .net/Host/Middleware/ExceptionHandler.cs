@@ -4,8 +4,11 @@ using System.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
 using Sensemaking.Monitoring;
+using Serilog;
 
 namespace Sensemaking.Host.Web
 {
@@ -26,6 +29,9 @@ namespace Sensemaking.Host.Web
                     _ => (HttpStatusCode.InternalServerError, Problem.Empty)
                 };
                 context.Response.StatusCode = (int)statusCode;
+
+                if(statusCode == HttpStatusCode.InternalServerError)
+                    Log.Logger.Error(AlertFactory.UnknownErrorOccured(app.ApplicationServices.GetRequiredService<IMonitorServices>().Info, feature.Error).Serialize());
 
                 if (problem == Problem.Empty)
                     return context.Response.CompleteAsync();

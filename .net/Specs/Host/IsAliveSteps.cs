@@ -49,9 +49,9 @@ namespace Sensemaking.Host.Web.Specs
 
     public class IsAliveStartup : JsonApiStartup
     {
-        internal static readonly IMonitorServices Monitor = Substitute.For<IMonitorServices>();
+        internal readonly IMonitorServices Monitor = Substitute.For<IMonitorServices>();
 
-        static IsAliveStartup()
+        public IsAliveStartup()
         {
             Monitor.Availability().Returns(Availability.Up());
         }

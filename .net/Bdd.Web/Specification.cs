@@ -13,18 +13,17 @@ namespace Sensemaking.Bdd.Web
 {
     public abstract partial class Specification<T> : Specification where T : JsonApiStartup, new()
     {
-        private static readonly string root_url;
-
+        protected static readonly T startup;
         protected static readonly IServiceProvider services;
         private static FlurlClient client;
 
-        protected T startup = new T();
         protected JsonResponse the_response;
         protected ProblemException the_exception;
 
         static Specification()
         {
-            var factory = new WebApplicationFactory().WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot(".\\Host"));
+            startup = new T();
+            var factory = new WebApplicationFactory(startup).WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot(".\\Host"));
             client = new FlurlClient(factory.CreateClient());
             services = factory.Services;
         }
@@ -32,7 +31,6 @@ namespace Sensemaking.Bdd.Web
         protected override void before_each()
         {
             base.before_each();
-            startup = new T();
             the_response = null;
             the_exception = null;
         }

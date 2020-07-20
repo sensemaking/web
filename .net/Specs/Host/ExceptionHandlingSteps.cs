@@ -1,10 +1,13 @@
 using System;
+using System.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using NSubstitute;
 using Sensemaking.Bdd;
 using Sensemaking.Http;
 using Sensemaking.Http.Json.Client;
 using Sensemaking.Monitoring;
+using Serilog;
 
 namespace Sensemaking.Host.Web.Specs
 {
@@ -16,7 +19,26 @@ namespace Sensemaking.Host.Web.Specs
         private static readonly Exception unexpected_exception = new Exception();
         private static readonly ValidationException validation_exception = new ValidationException("That ain't so good.", "And neither is this.", "Nor this.");
         private static readonly ConflictException conflict_exception = new ConflictException("Thingy caused a conflict.");
+        private string logged_alert;
 
+        protected override void before_all()
+        {
+            base.before_all();
+            Log.Logger = Substitute.For<ILogger>();
+            Log.Logger.When(l => l.Error(Arg.Any<string>())).Do(c => logged_alert = c.Arg<string>());
+        }
+
+        protected override void before_each()
+        {
+            base.before_each();
+            logged_alert = null;
+        }
+
+        protected override void after_all()
+        {
+            Log.Logger = null;
+            base.after_all();
+        }
 
         private void a_(Exception exception)
         {
@@ -41,6 +63,11 @@ namespace Sensemaking.Host.Web.Specs
         public void it_has_problem_content_type()
         {
             the_exception.Headers.ValueFor("Content-Type").should_be(MediaType.JsonProblem);
+        }
+
+        private void it_logs(Alert alert)
+        {
+            logged_alert.should_be(alert.Serialize());
         }
     }
 

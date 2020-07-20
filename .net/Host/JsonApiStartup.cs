@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using System.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,11 +11,17 @@ namespace Sensemaking.Host.Web
 {
     public class JsonApiStartup
     {
+        protected virtual string ServiceName => Assembly.GetExecutingAssembly().GetName().Name!;
         protected virtual ServiceDependency[] Dependencies => Array.Empty<ServiceDependency>();
+
+        public JsonApiStartup()
+        {
+            Serialization.Configure();
+        }
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var monitor = new ServiceMonitor(Period.FromSeconds(20), Dependencies);
+            var monitor = new ServiceMonitor(ServiceName, Period.FromSeconds(20), Dependencies);
             services.AddSingleton<IMonitorServices>(monitor);
         }
 
@@ -23,6 +31,7 @@ namespace Sensemaking.Host.Web
             .Request()
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
+                .OnlyAcceptJson()
             .Response() 
                 .MapExceptionsToProblems()
             .Routing()

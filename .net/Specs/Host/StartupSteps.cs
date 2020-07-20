@@ -26,6 +26,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void it_monitors_them()
         {
+            services.GetRequiredService<IMonitorServices>().Info.Name.should_be(FakeStartup.Name);
             ServiceNotification.Notifier.Monitor.Dependencies.Single().should_be(FakeStartup.Dependency);
             services.GetRequiredService<IMonitorServices>().should_be(ServiceNotification.Notifier.Monitor);
         }
@@ -46,8 +47,10 @@ namespace Sensemaking.Host.Web.Specs
 
     public class FakeStartup : JsonApiStartup
     {
+        internal const string Name = "Json Web Api";
         internal static readonly ServiceDependency Dependency = new ServiceDependency(new FakeMonitor());
 
+        protected override string ServiceName => Name;
         protected override ServiceDependency[] Dependencies => new[] { Dependency };
 
         private class FakeMonitor : IMonitor

@@ -10,9 +10,18 @@ namespace Sensemaking.Bdd.Web
     {
         private class WebApplicationFactory : WebApplicationFactory<T>
         {
+            private T startup;
+
+            public WebApplicationFactory(T startup)
+            {
+                this.startup = startup;
+            }
+
             protected override IWebHostBuilder CreateWebHostBuilder()
             {
-                return WebHost.CreateDefaultBuilder().UseStartup<T>();
+                return WebHost.CreateDefaultBuilder()
+                    .ConfigureServices(Specification<T>.startup.ConfigureServices)
+                    .Configure((context, app) => Specification<T>.startup.Configure(app, context.HostingEnvironment));
             }
         }
 
