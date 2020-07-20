@@ -1,7 +1,9 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Sensemaking.Host.Web;
 using Sensemaking.Http;
@@ -14,6 +16,7 @@ namespace Sensemaking.Bdd.Web
         private static readonly string root_url;
 
         protected static readonly IServiceProvider services;
+        private static FlurlClient client;
 
         protected T startup = new T();
         protected JsonResponse the_response;
@@ -22,10 +25,8 @@ namespace Sensemaking.Bdd.Web
         static Specification()
         {
             var factory = new WebApplicationFactory().WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot(".\\Host"));
+            client = new FlurlClient(factory.CreateClient());
             services = factory.Services;
-            var client = factory.CreateClient();
-            root_url = client.BaseAddress.AbsoluteUri;
-            FlurlHttp.Configure(settings => settings.HttpClientFactory = new UseThisClientFactory(client));
         }
 
         protected override void before_each()
@@ -40,7 +41,7 @@ namespace Sensemaking.Bdd.Web
         {
             try
             {
-                the_response = root_url.WithSegment(url).GetAsync<U>(headers).Result;
+                the_response = client.GetAsync<U>(url, headers).Result;
             }
             catch (AggregateException ex)
             {
@@ -48,20 +49,19 @@ namespace Sensemaking.Bdd.Web
             }
         }
 
-        protected async Task delete(string url, params (string Name, string Value)[] headers)
-        {
-            the_response = await root_url.WithSegment(url).DeleteAsync(headers);
-        }
-
         protected async Task put(string url, object payload, params (string Name, string Value)[] headers)
         {
+            the_response = await client.PutAsync(url, payload, headers);
+        }
 
-            the_response = await root_url.WithSegment(url).PutAsync(payload, headers);
+        protected async Task delete(string url, params (string Name, string Value)[] headers)
+        {
+            the_response = await client.DeleteAsync(url, headers);
         }
 
         protected async Task post(string url, object payload, params (string Name, string Value)[] headers)
         {
-            the_response = await root_url.WithSegment(url).PostAsync(payload, headers);
+            the_response = await client.PostAsync(url, payload, headers);
         }
 
         public void it_is_ok()
@@ -119,7 +119,7 @@ namespace Sensemaking.Bdd.Web
             the_exception.should_be_conflict(messages);
         }
     }
-    
+
     public static class Extensions
     {
         public static string WithSegment(this string root, string path)
