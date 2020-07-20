@@ -36,7 +36,7 @@ namespace Sensemaking.Host.Web.Specs
 
         protected override void after_all()
         {
-            Log.Logger = null;
+            Log.Logger = new LoggerConfiguration().CreateLogger();
             base.after_all();
         }
 
