@@ -20,6 +20,13 @@ namespace Sensemaking.Host.Web.Specs
             And(every_20_seconds);
         }
 
+        [Test]
+        public void accepts_requests_that_accept_json_sub_types()
+        {
+            When(requesting_a_json_subtype);
+            Then(it_is_ok);
+        }
+
         //POST DELETE PUT
         //
         // [Test]

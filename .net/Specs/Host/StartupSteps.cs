@@ -11,6 +11,11 @@ namespace Sensemaking.Host.Web.Specs
 {
     public partial class StartupSpecs
     {
+        private void requesting_a_json_subtype()
+        {
+            get<object>("is-alive", ("Accept", MediaType.Siren));
+        }
+
         private void pre_tls12_protocols_are_refused()
         {
 #pragma warning disable CS0618

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Host.Monitoring;
+using Sensemaking.Http;
 using Sensemaking.Monitoring;
 
 namespace Sensemaking.Host.Web
@@ -19,7 +20,7 @@ namespace Sensemaking.Host.Web
                     if (!monitor.Availability())
                         throw new ServiceAvailabilityException();
 
-                    context.Response.ContentType = "application/json";
+                    context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
                     await context.Response.WriteAsync(new { status = "Service is up!" }.Serialize());
                 });
             });

@@ -67,7 +67,7 @@ namespace Sensemaking.Bdd.Web
 
         private static void should_have_content_type(this JsonResponse response)
         {
-            response.Headers.ValueFor("Content-Type").should_not_be_empty();
+            response.Headers.ValueFor("Content-Type").should_be($"{MediaType.Json}; charset=utf-8");
         }
 
         private static void should_have_no_content_type(this JsonResponse response)
