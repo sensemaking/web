@@ -8,7 +8,6 @@ namespace Sensemaking.Host.Web.Specs
 {
     public partial class ExceptionHandlingSpecs : Specification<ExceptionStartup>
     {
-        //newtonsoft for deserialisation
         [Test]
         public void not_allowed_exception_causes_forbidden_error_problem()
         {
