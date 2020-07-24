@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Serialization;
+using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.Core;
@@ -11,10 +13,7 @@ namespace Sensemaking.Host.Web.Specs
 {
     public partial class JsonApiStartupSpecs
     {
-        protected override void before_each()
-        {
-            base.before_each();
-        }
+        private const int wait_for_notifier = 500;
 
         private void service_has_started() { }
 
