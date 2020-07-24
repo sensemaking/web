@@ -37,7 +37,6 @@ namespace Sensemaking.Host.Web
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
                 .RequireJsonAcceptance()
-            .Response() 
             .Routing()
                 .AddIsAlive();
         }
@@ -46,7 +45,6 @@ namespace Sensemaking.Host.Web
     internal static class Extensions
     {
         internal static IApplicationBuilder Request(this IApplicationBuilder app) { return app; }
-        internal static IApplicationBuilder Response(this IApplicationBuilder app) { return app; }
         internal static IApplicationBuilder Routing(this IApplicationBuilder app) { return app.UseRouting(); }
     }
 }
