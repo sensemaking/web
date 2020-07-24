@@ -23,7 +23,7 @@ namespace Sensemaking.Host.Web
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var monitor = new ServiceMonitor(ServiceName, Period.FromSeconds(20), Dependencies);
+            var monitor = new ServiceMonitor(ServiceName, Dependencies);
             services.AddSingleton<IMonitorServices>(monitor);
             services.AddSingleton<ILogger>(Logger);
         }

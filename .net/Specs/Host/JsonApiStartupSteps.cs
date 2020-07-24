@@ -3,7 +3,6 @@ using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
 using Sensemaking.Host.Monitoring;
-using Sensemaking.Http;
 using Serilog;
 
 namespace Sensemaking.Host.Web.Specs
@@ -42,7 +41,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void every_20_seconds()
         {
-            ServiceNotification.Notifier.Monitor.Heartbeat.Seconds.should_be(20);
+            ServiceNotification.Notifier.Heartbeat.Seconds.should_be(20);
         }
     }
 

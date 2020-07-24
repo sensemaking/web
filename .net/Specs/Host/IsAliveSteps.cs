@@ -67,7 +67,6 @@ namespace Sensemaking.Host.Web.Specs
         public void SetMonitorAvailability(Availability availability)
         {
             Monitor.ClearSubstitute();
-            Monitor.Heartbeat.Returns(Period.FromMinutes(1));
             Monitor.Availability().Returns(availability);
         }
     }

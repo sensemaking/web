@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sensemaking.Host" Version="1.0.91" />
-    <PackageReference Include="Sensemaking.Http" Version="1.0.91" />
+    <PackageReference Include="Sensemaking.Host" Version="1.0.93" />
+    <PackageReference Include="Sensemaking.Http" Version="1.0.93" />
   </ItemGroup>
 
 </Project>

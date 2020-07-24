@@ -8,7 +8,7 @@ namespace Sensemaking.Host.Web
     {
         internal static IApplicationBuilder UseStatusNotification(this IApplicationBuilder app, IMonitorServices monitor)
         {
-            Notifier = new ServiceStatusNotifier(monitor);
+            Notifier = new ServiceStatusNotifier(monitor, Period.FromSeconds(20));
             return app;
         }
 
