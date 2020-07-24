@@ -4,12 +4,20 @@ using Sensemaking.Bdd.Web;
 namespace Sensemaking.Host.Web.Specs
 {
     [TestFixture]
-    public partial class StartupSpecs : Specification<FakeStartup>
+    public partial class JsonApiStartupSpecs : Specification<SpecificationStartup>
     {
         [Test]
         public void refuses_pre_tls12_protocols()
         {
+            Given(service_has_started);
             Then(pre_tls12_protocols_are_refused);
+        }
+
+        [Test]
+        public void makes_logger_available_as_a_service()
+        {
+            Given(service_has_started);
+            Then(logger_is_available);
         }
 
         [Test]
@@ -21,6 +29,15 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         [Test]
+        [Ignore("")]
+        public void accepts_requests_that_accept_json()
+        {
+            When(requesting_json);
+            Then(it_is_ok);
+        }
+
+        [Test]
+        [Ignore("")]
         public void accepts_requests_that_accept_json_sub_types()
         {
             When(requesting_a_json_subtype);

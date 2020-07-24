@@ -6,15 +6,17 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
+using Serilog;
 
 namespace Sensemaking.Host.Web
 {
-    public class JsonApiStartup
+    public abstract class JsonApiStartup
     {
         protected virtual string ServiceName => Assembly.GetExecutingAssembly().GetName().Name!;
         protected virtual ServiceDependency[] Dependencies => Array.Empty<ServiceDependency>();
+        protected abstract ILogger Logger { get; }
 
-        public JsonApiStartup()
+        protected JsonApiStartup()
         {
             Serialization.Configure();
         }
@@ -23,11 +25,14 @@ namespace Sensemaking.Host.Web
         {
             var monitor = new ServiceMonitor(ServiceName, Period.FromSeconds(20), Dependencies);
             services.AddSingleton<IMonitorServices>(monitor);
+            services.AddSingleton<ILogger>(Logger);
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>())
+            app
+                .UseStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>())
+                .UseLogger(Logger)
             .Request()
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()

@@ -4,6 +4,7 @@ using NodaTime;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using Sensemaking.Bdd;
+using Sensemaking.Bdd.Web;
 using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
 using Sensemaking.Http.Json.Client;
@@ -47,7 +48,7 @@ namespace Sensemaking.Host.Web.Specs
         public string Status { get; private set; }
     }
 
-    public class IsAliveStartup : JsonApiStartup
+    public class IsAliveStartup : FakeStartup
     {
         internal readonly IMonitorServices Monitor = Substitute.For<IMonitorServices>();
 

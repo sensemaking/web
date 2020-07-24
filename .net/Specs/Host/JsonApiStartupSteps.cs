@@ -2,17 +2,27 @@
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
-using Sensemaking.Bdd.Web;
 using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
-using Sensemaking.Monitoring;
+using Serilog;
 
 namespace Sensemaking.Host.Web.Specs
 {
-    public partial class StartupSpecs
+    public partial class JsonApiStartupSpecs
     {
+        private void service_has_started() { }
+
+        private void service_dependencies() { }
+
+        private void requesting_json()
+        {
+            get<object>("is-alive");
+            "1".should_fail();
+        }
+
         private void requesting_a_json_subtype()
         {
+            "1".should_fail();
             get<object>("is-alive", ("Accept", MediaType.Siren));
         }
 
@@ -25,14 +35,15 @@ namespace Sensemaking.Host.Web.Specs
             ServicePointManager.SecurityProtocol.supports(SecurityProtocolType.Ssl3).should_be_false();
         }
 
-        private void service_dependencies()
+        private void logger_is_available()
         {
+            services.GetRequiredService<ILogger>().should_be(startup.SubstituteLogger);
         }
 
         private void it_monitors_them()
         {
-            services.GetRequiredService<IMonitorServices>().Info.Name.should_be(FakeStartup.Name);
-            ServiceNotification.Notifier.Monitor.Dependencies.Single().should_be(FakeStartup.Dependency);
+            services.GetRequiredService<IMonitorServices>().Info.Name.should_be(startup.Name);
+            ServiceNotification.Notifier.Monitor.Dependencies.Single().should_be(startup.Dependency);
             services.GetRequiredService<IMonitorServices>().should_be(ServiceNotification.Notifier.Monitor);
         }
 
@@ -47,25 +58,6 @@ namespace Sensemaking.Host.Web.Specs
         internal static bool supports(this SecurityProtocolType protocol, SecurityProtocolType included)
         {
             return (protocol & included) == included;
-        }
-    }
-
-    public class FakeStartup : JsonApiStartup
-    {
-        internal const string Name = "Json Web Api";
-        internal static readonly ServiceDependency Dependency = new ServiceDependency(new FakeMonitor());
-
-        protected override string ServiceName => Name;
-        protected override ServiceDependency[] Dependencies => new[] { Dependency };
-
-        private class FakeMonitor : IMonitor
-        {
-            public Availability Availability()
-            {
-                return Sensemaking.Monitoring.Availability.Up();
-            }
-
-            public MonitorInfo Info => new MonitorInfo("Awesome Monitor", "Bob the monitor");
         }
     }
 }

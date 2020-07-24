@@ -3,7 +3,9 @@ using System.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using NSubstitute;
+using NSubstitute.ClearExtensions;
 using Sensemaking.Bdd;
+using Sensemaking.Bdd.Web;
 using Sensemaking.Http;
 using Sensemaking.Http.Json.Client;
 using Sensemaking.Monitoring;
@@ -24,8 +26,7 @@ namespace Sensemaking.Host.Web.Specs
         protected override void before_all()
         {
             base.before_all();
-            Log.Logger = Substitute.For<ILogger>();
-            Log.Logger.When(l => l.Error(Arg.Any<string>())).Do(c => logged_alert = c.Arg<string>());
+            startup.SubstituteLogger.When(l => l.Error(Arg.Any<string>())).Do(c => logged_alert = c.Arg<string>());
         }
 
         protected override void before_each()
@@ -36,7 +37,7 @@ namespace Sensemaking.Host.Web.Specs
 
         protected override void after_all()
         {
-            Log.Logger = new LoggerConfiguration().CreateLogger();
+            startup.SubstituteLogger.ClearSubstitute();
             base.after_all();
         }
 
@@ -71,7 +72,7 @@ namespace Sensemaking.Host.Web.Specs
         }
     }
 
-    public class ExceptionStartup : JsonApiStartup
+    public class ExceptionStartup : FakeStartup
     {
         public const string exception_throwing_url = "/throw";
         private static Exception exception;

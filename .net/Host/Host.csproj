@@ -7,9 +7,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Sensemaking.Host" Version="1.0.80" />
-    <PackageReference Include="Sensemaking.Http" Version="1.0.80" />
+    <PackageReference Include="Sensemaking.Host" Version="1.0.89" />
+    <PackageReference Include="Sensemaking.Http" Version="1.0.89" />
   </ItemGroup>
 
 </Project>
