@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
+using NSubstitute.Core;
 using Sensemaking.Bdd;
 using Sensemaking.Host.Monitoring;
 using Serilog;
@@ -9,6 +11,11 @@ namespace Sensemaking.Host.Web.Specs
 {
     public partial class JsonApiStartupSpecs
     {
+        protected override void before_each()
+        {
+            base.before_each();
+        }
+
         private void service_has_started() { }
 
         private void it_has_dependencies() { }
@@ -39,7 +46,7 @@ namespace Sensemaking.Host.Web.Specs
             services.GetRequiredService<IMonitorServices>().should_be(ServiceNotification.Notifier.Monitor);
         }
 
-        private void every_20_seconds()
+        private void it_notifies_every_20_seconds()
         {
             ServiceNotification.Notifier.Heartbeat.Seconds.should_be(20);
         }

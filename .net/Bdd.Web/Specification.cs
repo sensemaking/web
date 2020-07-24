@@ -1,17 +1,14 @@
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Sensemaking.Host.Web;
-using Sensemaking.Http;
+using NSubstitute.ClearExtensions;
 using Sensemaking.Http.Json.Client;
 
 namespace Sensemaking.Bdd.Web
 {
-    public abstract partial class Specification<T> : Specification where T : JsonApiStartup, new()
+    public abstract partial class Specification<T> : Specification where T : FakeStartup, new()
     {
         protected static readonly T startup;
         protected static readonly IServiceProvider services;
@@ -33,6 +30,12 @@ namespace Sensemaking.Bdd.Web
             base.before_each();
             the_response = null;
             the_exception = null;
+        }
+
+        protected override void after_each()
+        {
+            startup.SubstituteLogger.ClearSubstitute();
+            base.after_all();
         }
 
         protected void get<U>(string url, params (string Name, string Value)[] headers)

@@ -23,22 +23,11 @@ namespace Sensemaking.Host.Web.Specs
         private static readonly ConflictException conflict_exception = new ConflictException("Thingy caused a conflict.");
         private string logged_alert;
 
-        protected override void before_all()
-        {
-            base.before_all();
-            startup.SubstituteLogger.When(l => l.Error(Arg.Any<string>())).Do(c => logged_alert = c.Arg<string>());
-        }
-
         protected override void before_each()
         {
             base.before_each();
             logged_alert = null;
-        }
-
-        protected override void after_all()
-        {
-            startup.SubstituteLogger.ClearSubstitute();
-            base.after_all();
+            startup.SubstituteLogger.When(l => l.Error(Arg.Any<string>())).Do(c => logged_alert = c.Arg<string>());
         }
 
         private void a_(Exception exception)
