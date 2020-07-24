@@ -36,7 +36,7 @@ namespace Sensemaking.Host.Web
             .Request()
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
-                .OnlyAcceptJson()
+                .RequireJsonAcceptance()
             .Response() 
                 .MapExceptionsToProblems()
             .Routing()

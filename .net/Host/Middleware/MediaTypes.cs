@@ -10,11 +10,11 @@ using Sensemaking.Http;
 
 namespace Sensemaking.Host.Web
 {
-    internal static class OnlySupportJson
+    internal static class MediaTypes
     {
         private const string JsonMatchPattern = @"application\/([\S]+\+)*json";
 
-        internal static IApplicationBuilder OnlyAcceptJson(this IApplicationBuilder app)
+        internal static IApplicationBuilder RequireJsonAcceptance(this IApplicationBuilder app)
         {
             app.Use((context, next) =>
             {
