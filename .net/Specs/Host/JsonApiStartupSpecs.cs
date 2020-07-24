@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Sensemaking.Bdd.Web;
+using Sensemaking.Http;
 
 namespace Sensemaking.Host.Web.Specs
 {
@@ -14,7 +15,7 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         [Test]
-        public void makes_logger_available_as_a_service()
+        public void makes_logger_available()
         {
             Given(service_has_started);
             Then(logger_is_available);
@@ -23,25 +24,50 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void monitors_service_dependencies_every_20_seconds()
         {
-            Given(service_dependencies);
+            Given(service_has_started);
+            And(it_has_dependencies);
             Then(it_monitors_them);
             And(every_20_seconds);
         }
 
         [Test]
-        [Ignore("")]
-        public void accepts_requests_that_accept_json()
+        public void accepts_requests_that_accept_anything()
         {
-            When(requesting_json);
+            Given(service_has_started);
+            When(() => requesting("*/*"));
             Then(it_is_ok);
         }
 
         [Test]
-        [Ignore("")]
+        public void accepts_requests_that_do_not_specify_what_they_accept()
+        {
+            Given(service_has_started);
+            When(() => requesting(""));
+            Then(it_is_ok);
+        }
+
+        [Test]
+        public void accepts_requests_that_accept_json()
+        {
+            Given(service_has_started);
+            When(() => requesting(MediaType.Json));
+            Then(it_is_ok);
+        }
+
+        [Test]
         public void accepts_requests_that_accept_json_sub_types()
         {
-            When(requesting_a_json_subtype);
+            Given(service_has_started);
+            When(() => requesting(MediaType.Siren));
             Then(it_is_ok);
+        }
+
+        [Test]
+        public void refuses_requests_that_are_neither_json_nor_html()
+        {
+            Given(service_has_started);
+            When(() => requesting("application/xml"));
+            Then(it_is_not_acceptable);
         }
 
         //POST DELETE PUT

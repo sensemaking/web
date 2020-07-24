@@ -12,18 +12,11 @@ namespace Sensemaking.Host.Web.Specs
     {
         private void service_has_started() { }
 
-        private void service_dependencies() { }
+        private void it_has_dependencies() { }
 
-        private void requesting_json()
+        private void requesting(string accepts)
         {
-            get<object>("is-alive");
-            "1".should_fail();
-        }
-
-        private void requesting_a_json_subtype()
-        {
-            "1".should_fail();
-            get<object>("is-alive", ("Accept", MediaType.Siren));
+            get<object>("is-alive", ("Accept", accepts));
         }
 
         private void pre_tls12_protocols_are_refused()
