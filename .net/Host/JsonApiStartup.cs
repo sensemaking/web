@@ -31,14 +31,14 @@ namespace Sensemaking.Host.Web
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app
-                .UseStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>())
                 .UseLogger(Logger)
+                .MapExceptionsToProblems()
+                .UseStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>())
             .Request()
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
                 .RequireJsonAcceptance()
             .Response() 
-                .MapExceptionsToProblems()
             .Routing()
                 .AddIsAlive();
         }
