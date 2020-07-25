@@ -14,8 +14,8 @@ jobs:
       env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: Build and Test
-      run: dotnet test .\.net --configuration Release
+      run: dotnet test .\.net\ --configuration Release
     - name: Package
-      run: dotnet pack .\.net -o .\.net\packages --no-restore
+      run: dotnet pack .\.net\ -o .\.net\packages --no-restore
     - name: Publish Packages 
       run: dotnet nuget push '${{ github.workspace }}/.net/packages/*.nupkg' 
