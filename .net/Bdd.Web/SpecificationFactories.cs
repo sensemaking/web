@@ -3,6 +3,7 @@ using Flurl.Http.Configuration;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Logging;
 
 namespace Sensemaking.Bdd.Web
 {
@@ -20,8 +21,9 @@ namespace Sensemaking.Bdd.Web
             protected override IWebHostBuilder CreateWebHostBuilder()
             {
                 return WebHost.CreateDefaultBuilder()
-                    .ConfigureServices(Specification<T>.startup.ConfigureServices)
-                    .Configure((context, app) => Specification<T>.startup.Configure(app, context.HostingEnvironment));
+                    .ConfigureLogging(logging => logging.ClearProviders())
+                    .ConfigureServices(startup.ConfigureServices)
+                    .Configure((context, app) => startup.Configure(app, context.HostingEnvironment));
             }
         }
 
