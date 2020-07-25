@@ -20,7 +20,7 @@ namespace Sensemaking.Bdd.Web
         static Specification()
         {
             startup = new T();
-            var factory = new WebApplicationFactory(startup).WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot(".\\Host"));
+            var factory = new WebApplicationFactory(startup).WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot("./Host"));
             client = new FlurlClient(factory.CreateClient());
             services = factory.Services;
         }
