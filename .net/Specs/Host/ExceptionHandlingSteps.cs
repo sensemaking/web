@@ -42,17 +42,17 @@ namespace Sensemaking.Host.Web.Specs
 
         private void handling_a_request()
         {
-            get<object>(ExceptionStartup.exception_throwing_url);
+           trying(() => get<object>(ExceptionStartup.exception_throwing_url));
         }
 
         public void it_has_no_content_type()
         {
-            the_exception.Headers.ValueFor("Content-Type").should_be_empty();
+            the_problem_exception.Headers.ValueFor("Content-Type").should_be_empty();
         }
 
         public void it_has_problem_content_type()
         {
-            the_exception.Headers.ValueFor("Content-Type").should_be(MediaType.JsonProblem);
+            the_problem_exception.Headers.ValueFor("Content-Type").should_be(MediaType.JsonProblem);
         }
 
         private void it_logs(Alert alert)

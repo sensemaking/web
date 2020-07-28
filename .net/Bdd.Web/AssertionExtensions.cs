@@ -10,19 +10,16 @@ namespace Sensemaking.Bdd.Web
         public static void should_be_ok(this JsonResponse response)
         {
             response.Status.should_be(HttpStatusCode.OK);
-            response.should_have_content_type();
         }
 
         public static void should_be_no_content(this JsonResponse response)
         {
             response.Status.should_be(HttpStatusCode.NoContent);
-            response.should_have_no_content_type();
         }
 
         public static void should_be_accepted(this JsonResponse response)
         {
             response.Status.should_be(HttpStatusCode.Accepted);
-            response.should_have_no_content_type();
         }
 
         public static void should_be_not_found(this ProblemException problem)
@@ -63,16 +60,6 @@ namespace Sensemaking.Bdd.Web
         public static void should_be_conflict(this ProblemException problem, params string[] errors)
         {
             problem.should_have_problem(HttpStatusCode.Conflict, "Fulfilling the request would cause a conflict.", errors);
-        }
-
-        private static void should_have_content_type(this JsonResponse response)
-        {
-            response.Headers.ValueFor("Content-Type").should_be($"{MediaType.Json}; charset=utf-8");
-        }
-
-        private static void should_have_no_content_type(this JsonResponse response)
-        {
-            response.Headers.ValueFor("Content-Type").should_be_empty();
         }
 
         public static void should_have_problem(this ProblemException problem, HttpStatusCode code, string problemTitle = "", params string[] errors)

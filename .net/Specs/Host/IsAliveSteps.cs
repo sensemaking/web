@@ -31,7 +31,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void checking_service_availability()
         {
-            get<IsAliveResponse>("is-alive");
+            trying(() => get<IsAliveResponse>("is-alive"));
         }
 
         private void status_is_up()

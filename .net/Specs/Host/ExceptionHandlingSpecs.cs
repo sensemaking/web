@@ -64,13 +64,5 @@ namespace Sensemaking.Host.Web.Specs
             When(handling_a_request);
             Then(it_has_no_content_type);
         }
-
-        [Test]
-        public void problems_with_details_have_problem_content_type()
-        {
-            Given(() => an_(conflict_exception));
-            When(handling_a_request);
-            Then(it_has_problem_content_type);
-        }
     }
 }

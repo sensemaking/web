@@ -21,7 +21,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void requesting(string accepts)
         {
-            get<object>("is-alive", ("Accept", accepts));
+            trying(() => get<object>("is-alive", ("Accept", accepts)));
         }
 
         private void pre_tls12_protocols_are_refused()
