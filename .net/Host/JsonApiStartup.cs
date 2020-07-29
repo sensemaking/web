@@ -1,16 +1,11 @@
 using System;
-using System.Net.Http;
 using System.Reflection;
 using System.Serialization;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
-using Sensemaking.Http;
-using Sensemaking.Web.Api;
 using Serilog;
 
 namespace Sensemaking.Web.Host
