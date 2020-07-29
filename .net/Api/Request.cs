@@ -10,13 +10,13 @@ namespace Sensemaking.Web.Api
         Task<object> Handle();
     }
 
-    public interface IHandleCommands
+    public interface IHandleCommandRequests
     {
         string Route { get; }
-        HttpStatusCode Handle();
+        Task<HttpStatusCode> Handle();
     }
 
-    public interface IHandlePutRequests : IHandleCommands {}
-    public interface IHandlePostRequests : IHandleCommands {}
-    public interface IHandleDeleteRequests : IHandleCommands {}
+    public interface IHandlePutRequests : IHandleCommandRequests {}
+    public interface IHandlePostRequests : IHandleCommandRequests {}
+    public interface IHandleDeleteRequests : IHandleCommandRequests {}
 }

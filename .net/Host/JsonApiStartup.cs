@@ -47,10 +47,8 @@ namespace Sensemaking.Web.Host
 
             app.UseEndpoints(endpoints =>
             {
-                app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler =>
-                {
-                    endpoints.MapGet(handler.Route, ctx => Get(ctx, handler));
-                });
+                app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, ctx => Get(ctx, handler)));
+                app.ApplicationServices.GetServices<IHandlePutRequests>().ForEach(handler => endpoints.MapPut(handler.Route, ctx => Execute(ctx, handler)));
             });
         }
 
@@ -59,6 +57,12 @@ namespace Sensemaking.Web.Host
             var results = await handler.Handle();
             context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
             await context.Response.WriteAsync(results.Serialize());
+        }
+
+        private static async Task Execute(HttpContext context, IHandleCommandRequests handler)
+        {
+            context.Response.StatusCode = (int) await handler.Handle();
+            await context.Response.CompleteAsync();
         }
     }
 

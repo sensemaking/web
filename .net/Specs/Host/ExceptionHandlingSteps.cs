@@ -51,11 +51,6 @@ namespace Sensemaking.Host.Web.Specs
             the_problem_exception.Headers.ValueFor("Content-Type").should_be_empty();
         }
 
-        public void it_has_problem_content_type()
-        {
-            the_problem_exception.Headers.ValueFor("Content-Type").should_be(MediaType.JsonProblem);
-        }
-
         private void it_logs(Alert alert)
         {
             logged_alert.should_be(alert.Serialize());

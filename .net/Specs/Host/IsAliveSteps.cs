@@ -36,7 +36,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void status_is_up()
         {
-            (the_response as JsonResponse<IsAliveResponse>).Body.Status.should_be("Service is up!");
+            the_response_body<IsAliveResponse>().Status.should_be("Service is up!");
         }
     }
 

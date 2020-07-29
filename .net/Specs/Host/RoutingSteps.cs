@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
@@ -19,9 +20,22 @@ namespace Sensemaking.Host.Web.Specs
             get<GetHandler.Response>(GetHandler.Url);
         }
 
-        private void the_handler_processes_the_request()
+        private void the_get_handler_processes_the_request()
         {
-            (the_response as JsonResponse<GetHandler.Response>).Body.should_be(GetHandler.TheResponse);
+            the_response.Status.should_be(HttpStatusCode.OK);
+            the_response_body<GetHandler.Response>().should_be(GetHandler.TheResponse);
+        }
+
+        private void a_put_handler_for_the_url() { }
+
+        private void putting()
+        {
+            put(PutHandler.Url, null);
+        }
+
+        private void the_put_handler_processes_the_request()
+        {
+            the_response.Status.should_be(PutHandler.ResponseStatusCode);
         }
     }
 
@@ -31,6 +45,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             base.ConfigureServices(services);
             services.AddSingleton<IHandleGetRequests, GetHandler>();
+            services.AddSingleton<IHandlePutRequests, PutHandler>();
         }
     }
 
@@ -46,15 +61,27 @@ namespace Sensemaking.Host.Web.Specs
             public string Content { get; }
         }
 
-        public static readonly string Url = "/get_from_here";
+        public static readonly string Url = "/get";
         public static Response TheResponse = new Response("anything will do");
 
-        public HttpMethod Method => HttpMethod.Get;
         public string Route => Url;
 
         public async Task<object> Handle()
         {
             return await Task.FromResult(TheResponse);
+        }
+    }
+
+    public class PutHandler : IHandlePutRequests
+    {
+        public static readonly string Url = "/put";
+        public static readonly HttpStatusCode ResponseStatusCode = HttpStatusCode.Accepted;
+
+        public string Route => Url;
+
+        public async Task<HttpStatusCode> Handle()
+        {
+            return await Task.FromResult(ResponseStatusCode);
         }
     }
 }

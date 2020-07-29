@@ -15,6 +15,8 @@ namespace Sensemaking.Bdd.Web
         protected static FlurlClient client;
 
         protected JsonResponse the_response;
+        protected U the_response_body<U>() => (the_response as JsonResponse<U>).Body;
+
         protected ProblemException the_problem_exception;
 
         static Specification()
