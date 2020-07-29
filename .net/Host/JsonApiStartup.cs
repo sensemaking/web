@@ -42,7 +42,7 @@ namespace Sensemaking.Web.Host
             .Request()
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
-                .RequireJson()
+                .RequireJsonAcceptance()
             .Routing()
                 .WireUpHandlers()
                 .AddIsAlive();
