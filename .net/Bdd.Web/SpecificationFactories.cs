@@ -21,8 +21,8 @@ namespace Sensemaking.Bdd.Web
             protected override IWebHostBuilder CreateWebHostBuilder()
             {
                 return WebHost.CreateDefaultBuilder()
-                    .UseWebRoot("../Specs/Host/wwwroot")
                     .ConfigureLogging(logging => logging.ClearProviders())
+                    .UseWebRoot("../Specs/Host/wwwroot")
                     .ConfigureServices(startup.ConfigureServices)
                     .Configure((context, app) => startup.Configure(app, context.HostingEnvironment));
             }
