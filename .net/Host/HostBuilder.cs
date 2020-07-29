@@ -7,11 +7,11 @@ namespace Sensemaking.Host.Web
 {
     public static class HostBuilder
     {
-        public static IHostBuilder Create(string[] args)
+        public static IHostBuilder Create<T>(string[] args) where T : JsonApiStartup
         {
             return CreateDefaultBuilder(args)
                 .ConfigureLogging(logging => logging.ClearProviders())
-                .ConfigureWebHostDefaults(builder => builder.UseStartup<JsonApiStartup>())
+                .ConfigureWebHostDefaults(builder => builder.UseStartup<T>())
                 .ConfigureWebHost(b => b.UseWebRoot("public"));
         }
     }

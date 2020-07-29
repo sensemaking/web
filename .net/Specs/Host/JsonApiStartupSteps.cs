@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
+using Sensemaking.Bdd.Web;
 using Sensemaking.Host.Monitoring;
 using Serilog;
 
