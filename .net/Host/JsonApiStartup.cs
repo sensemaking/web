@@ -44,8 +44,8 @@ namespace Sensemaking.Web.Host
                 .RejectNonTls2OrHigher()
                 .RequireJson()
             .Routing()
-                .AddIsAlive()
-                .WireUpHandlers();
+                .WireUpHandlers()
+                .AddIsAlive();
         }
     }
 
