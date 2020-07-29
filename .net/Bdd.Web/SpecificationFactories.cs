@@ -22,7 +22,7 @@ namespace Sensemaking.Bdd.Web
             {
                 return WebHost.CreateDefaultBuilder()
                     .ConfigureLogging(logging => logging.ClearProviders())
-                    .UseWebRoot("../Specs/Host/wwwroot")
+                    .UseWebRoot("../Specs/Host/public")
                     .ConfigureServices(startup.ConfigureServices)
                     .Configure((context, app) => startup.Configure(app, context.HostingEnvironment));
             }

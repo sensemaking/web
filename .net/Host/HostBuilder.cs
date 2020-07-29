@@ -11,7 +11,8 @@ namespace Sensemaking.Host.Web
         {
             return CreateDefaultBuilder(args)
                 .ConfigureLogging(logging => logging.ClearProviders())
-                .ConfigureWebHostDefaults(builder => builder.UseStartup<JsonApiStartup>());
+                .ConfigureWebHostDefaults(builder => builder.UseStartup<JsonApiStartup>())
+                .ConfigureWebHost(b => b.UseWebRoot("public"));
         }
     }
 }
