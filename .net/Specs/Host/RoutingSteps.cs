@@ -54,7 +54,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public async Task<object> Handle()
         {
-            return TheResponse;
+            return await Task.FromResult(TheResponse);
         }
     }
 }
