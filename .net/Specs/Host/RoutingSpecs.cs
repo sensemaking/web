@@ -22,5 +22,14 @@ namespace Sensemaking.Host.Web.Specs
             When(putting);
             Then(the_put_handler_processes_the_request);
         }
+
+        [Test]
+        public void post_requests_are_handled()
+        {
+            Given(a_url);
+            And(a_post_handler_for_the_url);
+            When(posting);
+            Then(the_post_handler_processes_the_request);
+        }
     }
 }

@@ -15,9 +15,23 @@ namespace Sensemaking.Host.Web.Specs
 
         private void a_get_handler_for_the_url() {}
 
+        private void a_put_handler_for_the_url() { }
+
+        private void a_post_handler_for_the_url() { }
+
         private void getting()
         {
             get<GetHandler.Response>(GetHandler.Url);
+        }
+
+        private void putting()
+        {
+            put(PutHandler.Url, null);
+        }
+
+        private void posting()
+        {
+            post(PostHandler.Url, null);
         }
 
         private void the_get_handler_processes_the_request()
@@ -26,16 +40,14 @@ namespace Sensemaking.Host.Web.Specs
             the_response_body<GetHandler.Response>().should_be(GetHandler.TheResponse);
         }
 
-        private void a_put_handler_for_the_url() { }
-
-        private void putting()
-        {
-            put(PutHandler.Url, null);
-        }
-
         private void the_put_handler_processes_the_request()
         {
             the_response.Status.should_be(PutHandler.ResponseStatusCode);
+        }
+
+        private void the_post_handler_processes_the_request()
+        {
+            the_response.Status.should_be(PostHandler.ResponseStatusCode);
         }
     }
 
@@ -46,6 +58,7 @@ namespace Sensemaking.Host.Web.Specs
             base.ConfigureServices(services);
             services.AddSingleton<IHandleGetRequests, GetHandler>();
             services.AddSingleton<IHandlePutRequests, PutHandler>();
+            services.AddSingleton<IHandlePostRequests, PostHandler>();
         }
     }
 
@@ -76,6 +89,19 @@ namespace Sensemaking.Host.Web.Specs
     {
         public static readonly string Url = "/put";
         public static readonly HttpStatusCode ResponseStatusCode = HttpStatusCode.Accepted;
+
+        public string Route => Url;
+
+        public async Task<HttpStatusCode> Handle()
+        {
+            return await Task.FromResult(ResponseStatusCode);
+        }
+    }
+
+    public class PostHandler : IHandlePostRequests
+    {
+        public static readonly string Url = "/post";
+        public static readonly HttpStatusCode ResponseStatusCode = HttpStatusCode.Created;
 
         public string Route => Url;
 
