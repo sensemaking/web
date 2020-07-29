@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
 using Sensemaking.Bdd.Web;
 using Sensemaking.Host.Monitoring;
+using Sensemaking.Web.Host;
 using Serilog;
 
 namespace Sensemaking.Host.Web.Specs

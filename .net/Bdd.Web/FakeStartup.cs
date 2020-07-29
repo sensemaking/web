@@ -1,7 +1,7 @@
 ﻿using NSubstitute;
 using Sensemaking.Host.Monitoring;
-using Sensemaking.Host.Web;
 using Sensemaking.Monitoring;
+using Sensemaking.Web.Host;
 using Serilog;
 
 namespace Sensemaking.Bdd.Web

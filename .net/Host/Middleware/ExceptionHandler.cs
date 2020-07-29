@@ -10,7 +10,7 @@ using Sensemaking.Http;
 using Sensemaking.Monitoring;
 using Serilog;
 
-namespace Sensemaking.Host.Web
+namespace Sensemaking.Web.Host
 {
     internal static class ExceptionHandler
     {

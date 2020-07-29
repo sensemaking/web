@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Builder;
 
-namespace Sensemaking.Host.Web
+namespace Sensemaking.Web.Host
 {
     internal static class TlsSupport
     {

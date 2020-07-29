@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using static Microsoft.Extensions.Hosting.Host;
 
-namespace Sensemaking.Host.Web
+namespace Sensemaking.Web.Host
 {
     public static class HostBuilder
     {

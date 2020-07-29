@@ -1,14 +1,18 @@
 using System;
+using System.Net.Http;
 using System.Reflection;
 using System.Serialization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sensemaking.Host.Monitoring;
+using Sensemaking.Http;
+using Sensemaking.Web.Api;
 using Serilog;
 
-namespace Sensemaking.Host.Web
+namespace Sensemaking.Web.Host
 {
     public abstract class JsonApiStartup
     {
@@ -25,7 +29,7 @@ namespace Sensemaking.Host.Web
         {
             var monitor = new ServiceMonitor(ServiceName, Dependencies);
             services.AddSingleton<IMonitorServices>(monitor);
-            services.AddSingleton<ILogger>(Logger);
+            services.AddSingleton(Logger);
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -40,6 +44,21 @@ namespace Sensemaking.Host.Web
                 .RequireJsonAcceptance()
             .Routing()
                 .AddIsAlive();
+
+            app.UseEndpoints(endpoints =>
+            {
+                app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler =>
+                {
+                    endpoints.MapGet(handler.Route, ctx => Get(ctx, handler));
+                });
+            });
+        }
+
+        private static async Task Get(HttpContext context, IHandleGetRequests handler)
+        {
+            var results = await handler.Handle();
+            context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
+            await context.Response.WriteAsync(results.Serialize());
         }
     }
 

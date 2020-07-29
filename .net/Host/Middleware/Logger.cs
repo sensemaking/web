@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Serilog;
 
-namespace Sensemaking.Host.Web
+namespace Sensemaking.Web.Host
 {
     internal static class Logger
     {

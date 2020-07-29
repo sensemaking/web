@@ -6,7 +6,7 @@ using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
 using Sensemaking.Monitoring;
 
-namespace Sensemaking.Host.Web
+namespace Sensemaking.Web.Host
 {
     internal static class IsAlive
     {

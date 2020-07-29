@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
-namespace Sensemaking.Host.Web
+namespace Sensemaking.Web.Host
 {
     internal static class Acceptability
     {

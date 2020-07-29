@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sensemaking.Host.Web
+namespace Sensemaking.Web.Host
 {
     public class NotAllowedException : Exception { } 
 }

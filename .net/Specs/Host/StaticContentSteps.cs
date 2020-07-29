@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Sensemaking.Bdd;
 using Sensemaking.Bdd.Web;
+using Sensemaking.Web.Host;
 
 namespace Sensemaking.Host.Web.Specs
 {

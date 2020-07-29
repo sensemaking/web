@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Sensemaking.Host.Web</AssemblyName>
-    <RootNamespace>Sensemaking.Host.Web</RootNamespace>
+    <AssemblyName>Sensemaking.Web.Host</AssemblyName>
+    <RootNamespace>Sensemaking.Web.Host</RootNamespace>
     <Nullable>enable</Nullable>
     <Description>Startup and Middleware for Json Api</Description>
     <RepositoryUrl>https://github.com/sensemaking/web.git</RepositoryUrl>
@@ -23,8 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sensemaking.Host" Version="1.0.115" />
-    <PackageReference Include="Sensemaking.Http" Version="1.0.115" />
+    <PackageReference Include="Sensemaking.Host" Version="1.0.119" />
+    <PackageReference Include="Sensemaking.Http" Version="1.0.119" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Api\Api.csproj" />
   </ItemGroup>
 
 </Project>

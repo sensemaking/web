@@ -9,6 +9,7 @@ using Sensemaking.Bdd.Web;
 using Sensemaking.Http;
 using Sensemaking.Http.Json.Client;
 using Sensemaking.Monitoring;
+using Sensemaking.Web.Host;
 using Serilog;
 
 namespace Sensemaking.Host.Web.Specs
