@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
 using Sensemaking.Web.Api;
@@ -37,34 +38,14 @@ namespace Sensemaking.Web.Host
             app
                 .UseLogger(Logger)
                 .MapExceptionsToProblems()
-                .UseStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>())
+                .ScheduleStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>(), Period.FromSeconds(20))
             .Request()
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
-                .RequireJsonAcceptance()
+                .RequireJson()
             .Routing()
-                .AddIsAlive();
-
-            app.UseEndpoints(endpoints =>
-            {
-                app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, ctx => Get(ctx, handler)));
-                app.ApplicationServices.GetServices<IHandlePutRequests>().ForEach(handler => endpoints.MapPut(handler.Route, ctx => Execute(ctx, handler)));
-                app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, ctx => Execute(ctx, handler)));
-                app.ApplicationServices.GetServices<IHandlePostRequests>().ForEach(handler => endpoints.MapPost(handler.Route, ctx => Execute(ctx, handler)));
-            });
-        }
-
-        private static async Task Get(HttpContext context, IHandleGetRequests handler)
-        {
-            var results = await handler.Handle();
-            context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
-            await context.Response.WriteAsync(results.Serialize());
-        }
-
-        private static async Task Execute(HttpContext context, IHandleCommandRequests handler)
-        {
-            context.Response.StatusCode = (int) await handler.Handle();
-            await context.Response.CompleteAsync();
+                .AddIsAlive()
+                .WireUpHandlers();
         }
     }
 

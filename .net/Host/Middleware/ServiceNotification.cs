@@ -6,9 +6,9 @@ namespace Sensemaking.Web.Host
 {
     internal static class ServiceNotification
     {
-        internal static IApplicationBuilder UseStatusNotification(this IApplicationBuilder app, IMonitorServices monitor)
+        internal static IApplicationBuilder ScheduleStatusNotification(this IApplicationBuilder app, IMonitorServices monitor, Period heartbeat)
         {
-            Notifier = new ServiceStatusNotifier(monitor, Period.FromSeconds(20));
+            Notifier = new ServiceStatusNotifier(monitor, heartbeat);
             return app;
         }
 

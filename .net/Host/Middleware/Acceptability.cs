@@ -12,7 +12,7 @@ namespace Sensemaking.Web.Host
     {
         private const string JsonMatchPattern = @"application\/([\S]+\+)*json";
 
-        internal static IApplicationBuilder RequireJsonAcceptance(this IApplicationBuilder app)
+        internal static IApplicationBuilder RequireJson(this IApplicationBuilder app)
         {
             app.Use((context, next) =>
             {
