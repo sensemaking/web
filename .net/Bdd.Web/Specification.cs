@@ -12,7 +12,7 @@ namespace Sensemaking.Bdd.Web
     {
         protected static readonly T startup;
         protected static readonly IServiceProvider services;
-        private static FlurlClient client;
+        protected static FlurlClient client;
 
         protected JsonResponse the_response;
         protected ProblemException the_problem_exception;
@@ -44,24 +44,24 @@ namespace Sensemaking.Bdd.Web
             the_problem_exception = the_exception as ProblemException;
         }
 
-        protected void get<U>(string url, params (string Name, string Value)[] headers)
+        protected virtual void get<U>(string url, params (string Name, string Value)[] headers)
         {
             the_response = client.GetAsync<U>(url, headers).Result;
         }
 
-        protected async Task put(string url, object payload, params (string Name, string Value)[] headers)
+        protected virtual void put(string url, object payload, params (string Name, string Value)[] headers)
         {
-            the_response = await client.PutAsync(url, payload, headers);
+            the_response = client.PutAsync(url, payload, headers).Result;
         }
 
-        protected async Task delete(string url, params (string Name, string Value)[] headers)
+        protected virtual void delete(string url, params (string Name, string Value)[] headers)
         {
-            the_response = await client.DeleteAsync(url, headers);
+            the_response = client.DeleteAsync(url, headers).Result;
         }
 
-        protected async Task post(string url, object payload, params (string Name, string Value)[] headers)
+        protected virtual void post(string url, object payload, params (string Name, string Value)[] headers)
         {
-            the_response = await client.PostAsync(url, payload, headers);
+            the_response = client.PostAsync(url, payload, headers).Result;
         }
 
         public void it_is_ok()

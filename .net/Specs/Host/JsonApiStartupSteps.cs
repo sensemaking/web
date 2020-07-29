@@ -1,10 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
-using System.Serialization;
-using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
-using NSubstitute.Core;
 using Sensemaking.Bdd;
 using Sensemaking.Host.Monitoring;
 using Serilog;
