@@ -5,11 +5,10 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Sensemaking.Http;
 
 namespace Sensemaking.Host.Web
 {
-    internal static class MediaTypes
+    internal static class Acceptability
     {
         private const string JsonMatchPattern = @"application\/([\S]+\+)*json";
 
@@ -22,18 +21,6 @@ namespace Sensemaking.Host.Web
 
                 context.Response.StatusCode = (int) HttpStatusCode.NotAcceptable;
                 return  context.Response.CompleteAsync();
-            });
-            return app;
-        }
-
-        internal static IApplicationBuilder ProvideJsonContent(this IApplicationBuilder app)
-        {
-            app.Use((context, next) =>
-            {
-                if(context.Response.Body.Length != 0)
-                    context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
-
-                return context.Response.CompleteAsync();
             });
             return app;
         }
