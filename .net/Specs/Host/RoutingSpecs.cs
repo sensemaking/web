@@ -24,6 +24,15 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         [Test]
+        public void delete_requests_are_handled()
+        {
+            Given(a_url);
+            And(a_delete_handler_for_the_url);
+            When(deleting);
+            Then(the_delete_handler_processes_the_request);
+        }
+
+        [Test]
         public void post_requests_are_handled()
         {
             Given(a_url);

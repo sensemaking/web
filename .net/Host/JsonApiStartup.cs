@@ -49,6 +49,7 @@ namespace Sensemaking.Web.Host
             {
                 app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, ctx => Get(ctx, handler)));
                 app.ApplicationServices.GetServices<IHandlePutRequests>().ForEach(handler => endpoints.MapPut(handler.Route, ctx => Execute(ctx, handler)));
+                app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, ctx => Execute(ctx, handler)));
                 app.ApplicationServices.GetServices<IHandlePostRequests>().ForEach(handler => endpoints.MapPost(handler.Route, ctx => Execute(ctx, handler)));
             });
         }
