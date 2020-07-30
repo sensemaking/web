@@ -24,13 +24,10 @@ namespace Sensemaking.Web.Host
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(Logger);
-            services.AddSingleton<IMonitorServices>(new ServiceMonitor(ServiceName, Dependencies));
-            services.Scan(scan => scan.FromApplicationDependencies()
-                .AddClasses(classes => classes.AssignableTo<IHandleGetRequests>()).As<IHandleGetRequests>()
-                .AddClasses(classes => classes.AssignableTo<IHandlePutRequests>()).As<IHandlePutRequests>()
-                .AddClasses(classes => classes.AssignableTo<IHandleDeleteRequests>()).As<IHandleDeleteRequests>()
-                .AddClasses(classes => classes.AssignableTo<IHandlePostRequests>()).As<IHandlePostRequests>());
+            services
+                .AddLogger(Logger)
+                .AddMonitor(ServiceName, Dependencies)
+                .AutoRegisterHandlers();
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -44,7 +41,7 @@ namespace Sensemaking.Web.Host
                 .RejectNonTls2OrHigher()
                 .RequireJsonAcceptance()
             .Routing()
-                .WireUpHandlers()
+                .MapHandlersToRoutes()
                 .AddIsAlive();
         }
     }

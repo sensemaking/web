@@ -11,7 +11,17 @@ namespace Sensemaking.Web.Host
 {
     internal static class Handlers
     {
-        internal static IApplicationBuilder WireUpHandlers(this IApplicationBuilder app)
+        internal static IServiceCollection AutoRegisterHandlers(this IServiceCollection services)
+        {
+            services.Scan(scan => scan.FromApplicationDependencies()
+                .AddClasses(classes => classes.AssignableTo<IHandleGetRequests>()).As<IHandleGetRequests>()
+                .AddClasses(classes => classes.AssignableTo<IHandlePutRequests>()).As<IHandlePutRequests>()
+                .AddClasses(classes => classes.AssignableTo<IHandleDeleteRequests>()).As<IHandleDeleteRequests>()
+                .AddClasses(classes => classes.AssignableTo<IHandlePostRequests>()).As<IHandlePostRequests>());
+            return services;
+        }
+
+        internal static IApplicationBuilder MapHandlersToRoutes(this IApplicationBuilder app)
         {
             app.UseEndpoints(endpoints =>
             {
