@@ -64,16 +64,4 @@ namespace Sensemaking.Host.Web.Specs
             the_response.Status.should_be(FakePoster.ResponseStatusCode);
         }
     }
-
-    public class RoutingStartup : FakeStartup
-    {
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            base.ConfigureServices(services);
-            services.AddSingleton<IHandleGetRequests, FakeGetter>();
-            services.AddSingleton<IHandlePutRequests, FakePutter>();
-            services.AddSingleton<IHandleDeleteRequests, FakeDeleter>();
-            services.AddSingleton<IHandlePostRequests, FakePoster>();
-        }
-    }
 }

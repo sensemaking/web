@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
+using Sensemaking.Web.Api;
 using Serilog;
 
 namespace Sensemaking.Web.Host
@@ -23,10 +24,13 @@ namespace Sensemaking.Web.Host
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var monitor = new ServiceMonitor(ServiceName, Dependencies);            
-
-            services.AddSingleton<IMonitorServices>(monitor);
-            services.AddSingleton(Logger);            
+            services.AddSingleton(Logger);
+            services.AddSingleton<IMonitorServices>(new ServiceMonitor(ServiceName, Dependencies));
+            services.Scan(scan => scan.FromApplicationDependencies()
+                .AddClasses(classes => classes.AssignableTo<IHandleGetRequests>()).As<IHandleGetRequests>()
+                .AddClasses(classes => classes.AssignableTo<IHandlePutRequests>()).As<IHandlePutRequests>()
+                .AddClasses(classes => classes.AssignableTo<IHandleDeleteRequests>()).As<IHandleDeleteRequests>()
+                .AddClasses(classes => classes.AssignableTo<IHandlePostRequests>()).As<IHandlePostRequests>());
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
