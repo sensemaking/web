@@ -23,9 +23,10 @@ namespace Sensemaking.Web.Host
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var monitor = new ServiceMonitor(ServiceName, Dependencies);
+            var monitor = new ServiceMonitor(ServiceName, Dependencies);            
+
             services.AddSingleton<IMonitorServices>(monitor);
-            services.AddSingleton(Logger);
+            services.AddSingleton(Logger);            
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)

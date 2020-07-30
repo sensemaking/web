@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Http;
 using Sensemaking.Web.Api;
-using Serilog;
 
 namespace Sensemaking.Web.Host
 {
