@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Serialization;
 using System.Threading.Tasks;
 
 namespace Sensemaking.Web.Api
@@ -10,13 +11,26 @@ namespace Sensemaking.Web.Api
         Task<object> Handle();
     }
 
-    public interface IHandleCommandRequests
+    public interface IRequestCommandHandler
     {
         string Route { get; }
-        Task<HttpStatusCode> Handle();
+        Task<HttpStatusCode> HandleJson(string json);
     }
 
-    public interface IHandlePutRequests : IHandleCommandRequests {}
-    public interface IHandlePostRequests : IHandleCommandRequests {}
-    public interface IHandleDeleteRequests : IHandleCommandRequests {}
+    public interface IRequestCommandHandler<in T> : IRequestCommandHandler
+    {
+        Task<HttpStatusCode> IRequestCommandHandler.HandleJson(string json)
+        {
+            return Handle(json.Deserialize<T>());
+        }
+
+        Task<HttpStatusCode> Handle(T request);
+    }
+
+    public interface IPutRequestHandler : IRequestCommandHandler {}
+    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> {}
+    public interface IRequestDeleteHandler : IRequestCommandHandler {}
+    public interface IHandleDeleteRequests<in T> : IRequestDeleteHandler, IRequestCommandHandler<T> {}
+    public interface IRequestPostHandler : IRequestCommandHandler {}
+    public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T> {}
 }

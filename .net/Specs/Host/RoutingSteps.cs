@@ -11,8 +11,11 @@ namespace Sensemaking.Host.Web.Specs
 {
     public partial class RoutingSpecs
     {
-        private void a_url()
+        private void a_url() { }
+
+        private void a_payload()
         {
+            throw new System.NotImplementedException();
         }
 
         private void a_get_handler_for_the_url() { }
