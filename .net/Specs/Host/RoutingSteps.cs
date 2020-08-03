@@ -11,11 +11,19 @@ namespace Sensemaking.Host.Web.Specs
 {
     public partial class RoutingSpecs
     {
+        private FakePayload the_payload;
+
+        protected override void before_each()
+        {
+            base.before_each();
+            the_payload = null;
+        }
+
         private void a_url() { }
 
         private void a_payload()
         {
-            throw new System.NotImplementedException();
+            the_payload = new FakePayload("The payload contents");
         }
 
         private void a_get_handler_for_the_url() { }
@@ -33,7 +41,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void putting()
         {
-            put(FakePutter.Url, null);
+            put(FakePutter.Url, the_payload);
         }
 
         private void deleting()
@@ -43,7 +51,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void posting()
         {
-            post(FakePoster.Url, null);
+            post(FakePoster.Url, the_payload);
         }
 
         private void the_get_handler_processes_the_request()

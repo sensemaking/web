@@ -18,6 +18,7 @@ namespace Sensemaking.Host.Web.Specs
         public void put_requests_are_handled()
         {
             Given(a_url);
+            And(a_payload);
             And(a_put_handler_for_the_url);
             When(putting);
             Then(the_put_handler_processes_the_request);
@@ -36,6 +37,7 @@ namespace Sensemaking.Host.Web.Specs
         public void post_requests_are_handled()
         {
             Given(a_url);
+            And(a_payload);
             And(a_post_handler_for_the_url);
             When(posting);
             Then(the_post_handler_processes_the_request);

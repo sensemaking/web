@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Serialization;
 using System.Threading.Tasks;
@@ -16,8 +17,8 @@ namespace Sensemaking.Web.Host
         {
             services.Scan(scan => scan.FromApplicationDependencies()
                 .AddClasses(classes => classes.AssignableTo<IHandleGetRequests>()).As<IHandleGetRequests>()
+                .AddClasses(classes => classes.AssignableTo<IHandleDeleteRequests>()).As<IHandleDeleteRequests>()
                 .AddClasses(classes => classes.AssignableTo(typeof(IHandlePutRequests<>))).AsImplementedInterfaces()
-                .AddClasses(classes => classes.AssignableTo(typeof(IHandleDeleteRequests<>))).AsImplementedInterfaces()
                 .AddClasses(classes => classes.AssignableTo(typeof(IHandlePostRequests<>))).AsImplementedInterfaces());
             return services;
         }
@@ -27,8 +28,8 @@ namespace Sensemaking.Web.Host
             app.UseEndpoints(endpoints =>
             {
                 app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, handler.Get));
+                app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, handler.Execute));
                 app.ApplicationServices.GetServices<IPutRequestHandler>().ForEach(handler => endpoints.MapPut(handler.Route, handler.Execute));
-                app.ApplicationServices.GetServices<IRequestDeleteHandler>().ForEach(handler => endpoints.MapDelete(handler.Route, handler.Execute));
                 app.ApplicationServices.GetServices<IRequestPostHandler>().ForEach(handler => endpoints.MapPost(handler.Route, handler.Execute));
             });
             return app;
@@ -41,9 +42,16 @@ namespace Sensemaking.Web.Host
             await context.Response.WriteAsync(results.Serialize());
         }
 
+        private static async Task Execute(this IHandleDeleteRequests handler, HttpContext context)
+        {
+            context.Response.StatusCode = (int) await handler.Handle();
+            await context.Response.CompleteAsync();
+        }
+
         private static async Task Execute(this IRequestCommandHandler handler, HttpContext context)
         {
-            context.Response.StatusCode = (int) await handler.HandleJson(string.Empty);
+            using (var reader = new StreamReader(context.Request.Body))
+                context.Response.StatusCode = (int) await handler.HandleJson(await reader.ReadToEndAsync());
 
             await context.Response.CompleteAsync();
         }

@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Sensemaking.Web.Api;
 
 namespace Sensemaking.Host.Web.Specs
@@ -34,20 +36,23 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => Url;
 
-        public async Task<HttpStatusCode> Handle(FakePayload request)
+        public async Task<HttpStatusCode> Handle(FakePayload payload)
         {
+            if(payload.Content.IsNullOrEmpty())
+                throw new Exception("Payload was not provided.");
+
             return await Task.FromResult(ResponseStatusCode);
         }
     }
 
-    public class FakeDeleter : IHandleDeleteRequests<FakePayload>
+    public class FakeDeleter : IHandleDeleteRequests
     {
         public static readonly string Url = "/delete";
         public static readonly HttpStatusCode ResponseStatusCode = HttpStatusCode.NoContent;
 
         public string Route => Url;
 
-        public async Task<HttpStatusCode> Handle(FakePayload request)
+        public async Task<HttpStatusCode> Handle()
         {
             return await Task.FromResult(ResponseStatusCode);
         }
@@ -60,14 +65,22 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => Url;
 
-        public async Task<HttpStatusCode> Handle(FakePayload request)
+        public async Task<HttpStatusCode> Handle(FakePayload payload)
         {
+            if(payload.Content.IsNullOrEmpty())
+                throw new Exception("Payload was not provided.");
+
             return await Task.FromResult(ResponseStatusCode);
         }
     }
 
     public class FakePayload
     {
+        public FakePayload(string content)
+        {
+            Content = content;
+        }
 
+        public string Content { get; private set; }
     }
 }

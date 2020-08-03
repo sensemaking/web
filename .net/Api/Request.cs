@@ -11,6 +11,12 @@ namespace Sensemaking.Web.Api
         Task<object> Handle();
     }
 
+    public interface IHandleDeleteRequests 
+    {
+        string Route { get; }  
+        Task<HttpStatusCode> Handle();
+    }
+
     public interface IRequestCommandHandler
     {
         string Route { get; }
@@ -24,13 +30,13 @@ namespace Sensemaking.Web.Api
             return Handle(json.Deserialize<T>());
         }
 
-        Task<HttpStatusCode> Handle(T request);
+        Task<HttpStatusCode> Handle(T payload);
     }
 
     public interface IPutRequestHandler : IRequestCommandHandler {}
-    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> {}
-    public interface IRequestDeleteHandler : IRequestCommandHandler {}
-    public interface IHandleDeleteRequests<in T> : IRequestDeleteHandler, IRequestCommandHandler<T> {}
     public interface IRequestPostHandler : IRequestCommandHandler {}
+
+    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> {}
     public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T> {}
 }
+
