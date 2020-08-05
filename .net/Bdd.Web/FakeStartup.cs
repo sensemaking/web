@@ -6,7 +6,7 @@ using Serilog;
 
 namespace Sensemaking.Bdd.Web
 {
-    public abstract class FakeStartup : JsonApiStartup
+    public abstract class FakeStartup : ApiStartup
     {
         protected FakeStartup()
         {

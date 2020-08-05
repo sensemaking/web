@@ -6,18 +6,17 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
-using Sensemaking.Web.Api;
 using Serilog;
 
 namespace Sensemaking.Web.Host
 {
-    public abstract class JsonApiStartup
+    public abstract class ApiStartup
     {
         protected virtual string ServiceName => Assembly.GetExecutingAssembly().GetName().Name!;
         protected virtual ServiceDependency[] Dependencies => Array.Empty<ServiceDependency>();
         protected abstract ILogger Logger { get; }
 
-        protected JsonApiStartup()
+        protected ApiStartup()
         {
             Serialization.Configure();
         }

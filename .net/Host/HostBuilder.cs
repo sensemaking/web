@@ -7,7 +7,7 @@ namespace Sensemaking.Web.Host
 {
     public static class HostBuilder
     {
-        public static IHostBuilder Create<T>(string[] args) where T : JsonApiStartup
+        public static IHostBuilder Create<T>(string[] args) where T : ApiStartup
         {
             return CreateDefaultBuilder(args)
                 .ConfigureLogging(logging => logging.ClearProviders())
