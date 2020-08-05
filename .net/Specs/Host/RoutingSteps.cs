@@ -11,6 +11,8 @@ namespace Sensemaking.Host.Web.Specs
 {
     public partial class RoutingSpecs
     {
+        private const string the_route_value = "route_value";
+        private const string the_query_value = "query_value";
         private FakePayload the_payload;
 
         protected override void before_each()
@@ -20,6 +22,10 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         private void a_url() { }
+
+        private void a_route_value() { }
+
+        private void a_query_value() { }
 
         private void a_payload()
         {
@@ -36,7 +42,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void getting()
         {
-            get<FakeGetter.Response>(FakeGetter.Url);
+            get<FakeGetter.Response>($"{FakeGetter.Url}/{the_route_value}?{FakeGetter.QueryKey}={the_query_value}");
         }
 
         private void putting()

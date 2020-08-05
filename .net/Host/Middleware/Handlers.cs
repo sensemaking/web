@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Serialization;
@@ -37,7 +38,8 @@ namespace Sensemaking.Web.Host
 
         private static async Task Get(this IHandleGetRequests handler, HttpContext context)
         {
-            var results = await handler.Handle();
+            var request = new RequestParameters(Append(context.Request.RouteValues, context.Request.Query));
+            var results = await handler.Handle(request);
             context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
             await context.Response.WriteAsync(results.Serialize());
         }
@@ -51,9 +53,15 @@ namespace Sensemaking.Web.Host
         private static async Task Execute(this IRequestCommandHandler handler, HttpContext context)
         {
             using (var reader = new StreamReader(context.Request.Body))
-                context.Response.StatusCode = (int) await handler.HandleJson(await reader.ReadToEndAsync());
+                context.Response.StatusCode = (int) await handler.HandleJson((await reader.ReadToEndAsync()));
 
             await context.Response.CompleteAsync();
         }
-    } 
+
+        private static IReadOnlyDictionary<string, object> Append(this IDictionary<string, object> routeValues, IQueryCollection queryValues)
+        {
+            var r = queryValues.ToDictionary(x => x.Key, x => x.Value.First() as object);
+            return routeValues.Concat(r).ToDictionary(x => x.Key, x => x.Value);
+        }
+    }
 }

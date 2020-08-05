@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
+using Microsoft.AspNetCore.Routing;
 using Sensemaking.Web.Api;
 
 namespace Sensemaking.Host.Web.Specs
@@ -18,13 +20,18 @@ namespace Sensemaking.Host.Web.Specs
             public string Content { get; }
         }
 
+        public static readonly string RouteKey = "routeKey";
+        public static readonly string QueryKey = "queryKey";
         public static readonly string Url = "/get";
-        public static Response TheResponse = new Response("anything will do");
+        public static Response TheResponse = new Response("Anything will do");
 
-        public string Route => Url;
+        public string Route => $"/get/{{{RouteKey}}}";
 
-        public async Task<object> Handle()
+        public async Task<object> Handle(RequestParameters parameters)
         {
+            if(parameters.Values[RouteKey] == null || parameters.Values[QueryKey] == null)
+                throw new Exception("Route values or query string were not provided.");
+
             return await Task.FromResult(TheResponse);
         }
     }

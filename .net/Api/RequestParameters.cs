@@ -1,14 +1,24 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Serialization;
 using System.Threading.Tasks;
 
 namespace Sensemaking.Web.Api
 {
+    public class RequestParameters
+    {
+        public IReadOnlyDictionary<string, object> Values { get; }
+
+        public RequestParameters(IReadOnlyDictionary<string, object> values)
+        {
+            Values = values;
+        }
+    }
+
     public interface IHandleGetRequests
     {
         string Route { get; }  
-        Task<object> Handle();
+        Task<object> Handle(RequestParameters parameters);
     }
 
     public interface IHandleDeleteRequests 

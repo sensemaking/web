@@ -9,6 +9,8 @@ namespace Sensemaking.Host.Web.Specs
         public void get_requests_are_handled()
         {
             Given(a_url);
+            And(a_route_value);
+            And(a_query_value);
             And(a_get_handler_for_the_url);
             When(getting);
             Then(the_get_handler_processes_the_request);
