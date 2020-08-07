@@ -10,7 +10,7 @@ using Serilog;
 
 namespace Sensemaking.Host.Web.Specs
 {
-    public partial class JsonApiStartupSpecs
+    public partial class ApiStartupSpecs
     {
         private const int wait_for_notifier = 500;
 

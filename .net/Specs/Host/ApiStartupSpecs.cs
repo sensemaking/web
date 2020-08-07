@@ -5,7 +5,7 @@ using Sensemaking.Http;
 namespace Sensemaking.Host.Web.Specs
 {
     [TestFixture]
-    public partial class JsonApiStartupSpecs : Specification<SpecificationStartup>
+    public partial class ApiStartupSpecs : Specification<SpecificationStartup>
     {
         [Test]
         public void refuses_pre_tls12_protocols()
@@ -33,9 +33,19 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void accepts_requests_that_accept_anything()
         {
-            Given(service_has_started);
-            When(() => requesting("*/*"));
-            Then(it_is_ok);
+            scenario(() =>
+            {
+                Given(service_has_started);
+                When(() => requesting("*/*"));
+                Then(it_is_ok);
+            });
+
+            scenario(() =>
+            {
+                Given(service_has_started);
+                When(() => requesting("text/html,application/xml;q=0.9,image/apng,*/*;"));
+                Then(it_is_ok);
+            });
         }
 
         [Test]

@@ -27,7 +27,7 @@ namespace Sensemaking.Web.Host
 
         private static bool AcceptsAnything(this HttpRequest request)
         {
-            return request.Headers.Accept().None() || request.Headers.Accept().Any(header => header == "*/*");
+            return request.Headers.Accept().None() || request.Headers.Accept().Any(header => header.Contains("*/*"));
         }
 
         internal static bool IsAcceptable(this HttpRequest request)
