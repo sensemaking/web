@@ -42,8 +42,8 @@ namespace Sensemaking.Host.Web.Specs
 
             scenario(() =>
             {
-                Given(service_has_started);
-                When(() => requesting("text/html,application/xml;q=0.9,image/apng,*/*;"));
+                Given(service_has_started);                
+                When(() => requesting("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"));
                 Then(it_is_ok);
             });
         }

@@ -46,7 +46,20 @@ namespace Sensemaking.Web.Api
     public interface IPutRequestHandler : IRequestCommandHandler {}
     public interface IRequestPostHandler : IRequestCommandHandler {}
 
-    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> {}
-    public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T> {}
+    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T>
+    {
+        Task<HttpStatusCode> IRequestCommandHandler.HandleJson(string json)
+        {
+            return Handle(json.Deserialize<T>());
+        }
+    }
+
+    public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T>
+    {
+        Task<HttpStatusCode> IRequestCommandHandler.HandleJson(string json)
+        {
+            return Handle(json.Deserialize<T>());
+        }
+    }
 }
 
