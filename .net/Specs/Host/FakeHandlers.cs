@@ -27,7 +27,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => $"/get/{{{RouteKey}}}";
 
-        public async Task<object> Handle(Requests parameters)
+        public async Task<object> Handle(RequestParameters parameters)
         {
             if(parameters.Values[RouteKey] == null || parameters.Values[QueryKey] == null)
                 throw new Exception("Route values or query string were not provided.");
