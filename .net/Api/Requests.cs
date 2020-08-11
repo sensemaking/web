@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Sensemaking.Web.Api
 {
-    public class RequestParameters
+    public class Requests
     {
         public IReadOnlyDictionary<string, object> Values { get; }
 
-        public RequestParameters(IReadOnlyDictionary<string, object> values)
+        public Requests(IReadOnlyDictionary<string, object> values)
         {
             Values = values;
         }
@@ -18,7 +18,7 @@ namespace Sensemaking.Web.Api
     public interface IHandleGetRequests
     {
         string Route { get; }  
-        Task<object> Handle(RequestParameters parameters);
+        Task<object> Handle(Requests parameters);
     }
 
     public interface IHandleDeleteRequests 

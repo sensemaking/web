@@ -38,7 +38,7 @@ namespace Sensemaking.Web.Host
 
         private static async Task Get(this IHandleGetRequests handler, HttpContext context)
         {
-            var request = new RequestParameters(Append(context.Request.RouteValues, context.Request.Query));
+            var request = new Requests(Append(context.Request.RouteValues, context.Request.Query));
             var results = await handler.Handle(request);
             context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
             await context.Response.WriteAsync(results.Serialize());
