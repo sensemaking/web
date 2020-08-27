@@ -27,7 +27,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => $"/get/{{{RouteKey}}}";
 
-        public async Task<object> Handle(RequestParameters parameters)
+        public async Task<object> Handle(Request parameters)
         {
             if(parameters.Values[RouteKey] == null || parameters.Values[QueryKey] == null)
                 throw new Exception("Route values or query string were not provided.");
@@ -43,7 +43,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => Url;
 
-        public async Task<HttpStatusCode> Handle(FakePayload payload)
+        public async Task<HttpStatusCode> Handle(Request request, FakePayload payload)
         {
             if(payload.Content.IsNullOrEmpty())
                 throw new Exception("Payload was not provided.");
@@ -72,7 +72,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => Url;
 
-        public async Task<HttpStatusCode> Handle(FakePayload payload)
+        public async Task<HttpStatusCode> Handle(Request request, FakePayload payload)
         {
             if(payload.Content.IsNullOrEmpty())
                 throw new Exception("Payload was not provided.");

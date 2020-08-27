@@ -18,8 +18,4 @@
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Sensemaking.Serialization" Version="1.0.119" />
-  </ItemGroup>
-
 </Project>
