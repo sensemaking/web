@@ -28,32 +28,33 @@ namespace Sensemaking.Web.Host
 
         internal static IApplicationBuilder MapHandlersToRoutes(this IApplicationBuilder app)
         {
+            var requestFactory = app.ApplicationServices.GetRequiredService<RequestFactory>();
             app.UseEndpoints(endpoints =>
             {
-                app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, handler.Get));
-                app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, handler.Delete));
-                app.ApplicationServices.GetServices<IPutRequestHandler>().ForEach(handler => endpoints.MapPut(handler.Route, handler.Execute));
-                app.ApplicationServices.GetServices<IRequestPostHandler>().ForEach(handler => endpoints.MapPost(handler.Route, handler.Execute));
+                app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, context => handler.Get(requestFactory, context)));
+                app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, context => handler.Delete(requestFactory, context)));
+                app.ApplicationServices.GetServices<IPutRequestHandler>().ForEach(handler => endpoints.MapPut(handler.Route, context => handler.Execute(requestFactory, context)));
+                app.ApplicationServices.GetServices<IRequestPostHandler>().ForEach(handler => endpoints.MapPost(handler.Route, context => handler.Execute(requestFactory, context)));
             });
             return app;
         }
 
-        private static async Task Get(this IHandleGetRequests handler, HttpContext context)
+        private static async Task Get(this IHandleGetRequests handler, RequestFactory requestFactory, HttpContext context)
         {
-            var results = await handler.Handle(new RequestFactory().Create(context));
+            var results = await handler.Handle(requestFactory.Create(context));
             context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
             await context.Response.WriteAsync(results.Serialize());
         }
 
-        private static async Task Delete(this IHandleDeleteRequests handler, HttpContext context)
+        private static async Task Delete(this IHandleDeleteRequests handler, RequestFactory requestFactory, HttpContext context)
         {
-            context.Response.StatusCode = (int) await handler.Handle();
+            context.Response.StatusCode = (int) await handler.Handle(requestFactory.Create(context));
             await context.Response.CompleteAsync();
         }
 
-        private static async Task Execute(this IRequestCommandHandler handler, HttpContext context)
+        private static async Task Execute(this IRequestCommandHandler handler, RequestFactory requestFactory, HttpContext context)
         {
-            context.Response.StatusCode = (int) await handler.Execute(new RequestFactory().Create(context), await context.PayloadFor(handler));
+            context.Response.StatusCode = (int) await handler.Execute(requestFactory.Create(context), await context.PayloadFor(handler));
             await context.Response.CompleteAsync();
         }
 

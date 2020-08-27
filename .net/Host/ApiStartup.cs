@@ -26,6 +26,7 @@ namespace Sensemaking.Web.Host
             services
                 .AddLogger(Logger)
                 .AddMonitor(ServiceName, Dependencies)
+                .AddRequestFactory(new RequestFactory())
                 .AutoRegisterHandlers();
         }
 

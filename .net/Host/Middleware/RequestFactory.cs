@@ -37,14 +37,6 @@ namespace Sensemaking.Web.Host
         }
     }
 
-    public class RequestFactory2 : RequestFactory
-    {
-        protected override IDictionary<string, object> GetAdditionalValuesFrom(IFeatureCollection features)
-        {
-            return new Dictionary<string, object>() { { "Wibble", "Wobble" } };
-        }
-    }
-
     internal static class RequestFactoryExtensions
     {
         internal static IServiceCollection AddRequestFactory(this IServiceCollection services, RequestFactory factory)
@@ -58,4 +50,4 @@ namespace Sensemaking.Web.Host
             return dictionaries.SelectMany(dict => dict).ToDictionary(e => e.Key, e => e.Value);
         }
     }
-    }
+}

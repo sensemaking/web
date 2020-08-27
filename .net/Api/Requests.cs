@@ -18,13 +18,13 @@ namespace Sensemaking.Web.Api
     public interface IHandleGetRequests
     {
         string Route { get; }  
-        Task<object> Handle(Request parameters);
+        Task<object> Handle(Request request);
     }
 
     public interface IHandleDeleteRequests 
     {
         string Route { get; }  
-        Task<HttpStatusCode> Handle();
+        Task<HttpStatusCode> Handle(Request request);
     }
 
     public interface IRequestCommandHandler
