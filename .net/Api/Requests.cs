@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -8,9 +9,9 @@ namespace Sensemaking.Web.Api
     {
         public IReadOnlyDictionary<string, object> Values { get; }
 
-        public Request(IReadOnlyDictionary<string, object> values)
+        public Request(IDictionary<string, object> values)
         {
-            Values = values;
+            Values = new ReadOnlyDictionary<string, object>(values);
         }
     }
 
