@@ -20,6 +20,9 @@ namespace Sensemaking.Host.Web.Specs
         public void put_requests_are_handled()
         {
             Given(a_url);
+            And(a_route_value);
+            And(a_query_value);
+            And(a_get_handler_for_the_url);
             And(a_payload);
             And(a_put_handler_for_the_url);
             When(putting);
@@ -30,6 +33,8 @@ namespace Sensemaking.Host.Web.Specs
         public void delete_requests_are_handled()
         {
             Given(a_url);
+            And(a_route_value);
+            And(a_query_value);
             And(a_delete_handler_for_the_url);
             When(deleting);
             Then(the_delete_handler_processes_the_request);
@@ -39,6 +44,8 @@ namespace Sensemaking.Host.Web.Specs
         public void post_requests_are_handled()
         {
             Given(a_url);
+            And(a_route_value);
+            And(a_query_value);
             And(a_payload);
             And(a_post_handler_for_the_url);
             When(posting);

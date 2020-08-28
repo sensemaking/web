@@ -42,22 +42,22 @@ namespace Sensemaking.Host.Web.Specs
 
         private void getting()
         {
-            get<FakeGetter.Response>($"{FakeGetter.Url}/{the_route_value}?{FakeGetter.QueryKey}={the_query_value}");
+            get<FakeGetter.Response>(GenerateUrl(FakeGetter.Url));
         }
 
         private void putting()
         {
-            put(FakePutter.Url, the_payload);
+            put(GenerateUrl(FakePutter.Url), the_payload);
         }
 
         private void deleting()
         {
-            delete(FakeDeleter.Url);
+            delete(GenerateUrl(FakeDeleter.Url));
         }
 
         private void posting()
         {
-            post(FakePoster.Url, the_payload);
+            post(GenerateUrl(FakePoster.Url), the_payload);
         }
 
         private void the_get_handler_processes_the_request()
@@ -79,6 +79,11 @@ namespace Sensemaking.Host.Web.Specs
         private void the_post_handler_processes_the_request()
         {
             the_response.Status.should_be(FakePoster.ResponseStatusCode);
+        }
+
+        private string GenerateUrl(string url)
+        {
+            return $"{url}/{the_route_value}?{FakeKeys.QueryKey}={the_query_value}";
         }
     }
 }

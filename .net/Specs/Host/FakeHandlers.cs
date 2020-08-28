@@ -8,6 +8,17 @@ using Sensemaking.Web.Api;
 
 namespace Sensemaking.Host.Web.Specs
 {
+    public static class FakeKeys
+    {
+        public static readonly string RouteKey = "routeKey";
+        public static readonly string QueryKey = "queryKey";
+
+        public static void Verify(Request request)
+        {
+            if(!request.Values.ContainsKey(RouteKey) || !request.Values.ContainsKey(QueryKey) == null)
+                throw new ValidationException("Route values or query string were not provided.");
+        }
+    }
     public class FakeGetter : IHandleGetRequests
     {
         public readonly struct Response
@@ -20,18 +31,14 @@ namespace Sensemaking.Host.Web.Specs
             public string Content { get; }
         }
 
-        public static readonly string RouteKey = "routeKey";
-        public static readonly string QueryKey = "queryKey";
         public static readonly string Url = "/get";
         public static Response TheResponse = new Response("Anything will do");
 
-        public string Route => $"/get/{{{RouteKey}}}";
+        public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
         public async Task<object> Handle(Request request)
         {
-            if(request.Values[RouteKey] == null || request.Values[QueryKey] == null)
-                throw new Exception("Route values or query string were not provided.");
-
+            FakeKeys.Verify(request);
             return await Task.FromResult(TheResponse);
         }
     }
@@ -41,10 +48,12 @@ namespace Sensemaking.Host.Web.Specs
         public static readonly string Url = "/put";
         public static readonly HttpStatusCode ResponseStatusCode = HttpStatusCode.Accepted;
 
-        public string Route => Url;
+        public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
         public async Task<HttpStatusCode> Handle(Request request, FakePayload payload)
         {
+            FakeKeys.Verify(request);
+
             if(payload.Content.IsNullOrEmpty())
                 throw new Exception("Payload was not provided.");
 
@@ -57,10 +66,12 @@ namespace Sensemaking.Host.Web.Specs
         public static readonly string Url = "/delete";
         public static readonly HttpStatusCode ResponseStatusCode = HttpStatusCode.NoContent;
 
-        public string Route => Url;
+        public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
         public async Task<HttpStatusCode> Handle(Request request)
         {
+            FakeKeys.Verify(request);
+
             return await Task.FromResult(ResponseStatusCode);
         }
     }
@@ -70,10 +81,12 @@ namespace Sensemaking.Host.Web.Specs
         public static readonly string Url = "/post";
         public static readonly HttpStatusCode ResponseStatusCode = HttpStatusCode.Created;
 
-        public string Route => Url;
+        public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
         public async Task<HttpStatusCode> Handle(Request request, FakePayload payload)
         {
+            FakeKeys.Verify(request);
+
             if(payload.Content.IsNullOrEmpty())
                 throw new Exception("Payload was not provided.");
 
