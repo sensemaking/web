@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
 
 namespace Sensemaking.Web.Host
 {
-    internal static class ServiceNotification
+    public static class ServiceNotification
     {
         public static IServiceCollection AddMonitor(this IServiceCollection services, string serviceName, params ServiceDependency[] dependencies)
         {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 
 namespace Sensemaking.Web.Host
 {
-    internal static class TlsSupport
+    public static class TlsSupport
     {
         public static IApplicationBuilder RejectNonTls2OrHigher(this IApplicationBuilder app)
         {

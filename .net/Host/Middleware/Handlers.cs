@@ -12,7 +12,7 @@ using Sensemaking.Web.Api;
 
 namespace Sensemaking.Web.Host
 {
-    internal static class Handlers
+    public static class Handlers
     {
         public static IServiceCollection AutoRegisterHandlers(this IServiceCollection services)
         {

@@ -4,7 +4,7 @@ using Serilog;
 
 namespace Sensemaking.Web.Host
 {
-    internal static class Logger
+    public static class Logger
     {
         public static IServiceCollection AddLogger(this IServiceCollection services, ILogger logger)
         {

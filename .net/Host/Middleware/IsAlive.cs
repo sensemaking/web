@@ -8,7 +8,7 @@ using Sensemaking.Monitoring;
 
 namespace Sensemaking.Web.Host
 {
-    internal static class IsAlive
+    public static class IsAlive
     {
         public static IApplicationBuilder AddIsAlive(this IApplicationBuilder app)
         {

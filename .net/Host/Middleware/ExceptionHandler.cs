@@ -12,7 +12,7 @@ using Serilog;
 
 namespace Sensemaking.Web.Host
 {
-    internal static class ExceptionHandler
+    public static class ExceptionHandler
     {
         public static IApplicationBuilder MapExceptionsToProblems(this IApplicationBuilder app)
         {

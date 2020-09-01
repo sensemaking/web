@@ -8,7 +8,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace Sensemaking.Web.Host
 {
-    internal static class Acceptability
+    public static class Acceptability
     {
         private const string JsonMatchPattern = @"application\/([\S]+\+)*json";
 

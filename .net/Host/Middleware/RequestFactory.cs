@@ -37,7 +37,7 @@ namespace Sensemaking.Web.Host
         }
     }
 
-    internal static class RequestFactoryExtensions
+    public static class RequestFactoryExtensions
     {
         public static IServiceCollection AddRequestFactory(this IServiceCollection services, RequestFactory factory)
         {
