@@ -17,7 +17,7 @@ namespace Sensemaking.Web.Host
                 GetRouteValuesFrom(context),
                 GetAdditionalValuesFrom(context.Features)
             };
-
+            
             return new Request(dictionaries.Merge());
         }
 
@@ -39,7 +39,7 @@ namespace Sensemaking.Web.Host
 
     internal static class RequestFactoryExtensions
     {
-        internal static IServiceCollection AddRequestFactory(this IServiceCollection services, RequestFactory factory)
+        public static IServiceCollection AddRequestFactory(this IServiceCollection services, RequestFactory factory)
         {
             services.AddSingleton(factory);
             return services;

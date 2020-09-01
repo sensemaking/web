@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
-using Microsoft.AspNetCore.Routing;
 using Sensemaking.Web.Api;
 
 namespace Sensemaking.Host.Web.Specs
@@ -15,7 +13,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public static void Verify(Request request)
         {
-            if(!request.Values.ContainsKey(RouteKey) || !request.Values.ContainsKey(QueryKey) == null)
+            if(!request.Values.ContainsKey(RouteKey) || !request.Values.ContainsKey(QueryKey))
                 throw new ValidationException("Route values or query string were not provided.");
         }
     }

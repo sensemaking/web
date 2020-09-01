@@ -14,7 +14,7 @@ namespace Sensemaking.Web.Host
 {
     internal static class ExceptionHandler
     {
-        internal static IApplicationBuilder MapExceptionsToProblems(this IApplicationBuilder app)
+        public static IApplicationBuilder MapExceptionsToProblems(this IApplicationBuilder app)
         {
             app.UseExceptionHandler(error => error.Run(context =>
             {

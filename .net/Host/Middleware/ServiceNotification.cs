@@ -8,13 +8,13 @@ namespace Sensemaking.Web.Host
 {
     internal static class ServiceNotification
     {
-        internal static IServiceCollection AddMonitor(this IServiceCollection services, string serviceName, params ServiceDependency[] dependencies)
+        public static IServiceCollection AddMonitor(this IServiceCollection services, string serviceName, params ServiceDependency[] dependencies)
         {
             services.AddSingleton<IMonitorServices>(new ServiceMonitor(serviceName, dependencies));
             return services;
         }
 
-        internal static IApplicationBuilder ScheduleStatusNotification(this IApplicationBuilder app, IMonitorServices monitor, Period heartbeat)
+        public static IApplicationBuilder ScheduleStatusNotification(this IApplicationBuilder app, IMonitorServices monitor, Period heartbeat)
         {
             Notifier = new ServiceStatusNotifier(monitor, heartbeat);
             return app;

@@ -46,9 +46,9 @@ namespace Sensemaking.Web.Host
         }
     }
 
-    internal static class Extensions
+    public static class Extensions
     {
-        internal static IApplicationBuilder Request(this IApplicationBuilder app) { return app; }
-        internal static IApplicationBuilder Routing(this IApplicationBuilder app) { return app.UseRouting(); }
+        public static IApplicationBuilder Request(this IApplicationBuilder app) { return app; }
+        public static IApplicationBuilder Routing(this IApplicationBuilder app) { return app.UseRouting(); }
     }
 }

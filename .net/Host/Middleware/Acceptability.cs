@@ -12,7 +12,7 @@ namespace Sensemaking.Web.Host
     {
         private const string JsonMatchPattern = @"application\/([\S]+\+)*json";
 
-        internal static IApplicationBuilder RequireJsonAcceptance(this IApplicationBuilder app)
+        public static IApplicationBuilder RequireJsonAcceptance(this IApplicationBuilder app)
         {
             app.Use((context, next) =>
             {
@@ -30,7 +30,7 @@ namespace Sensemaking.Web.Host
             return request.Headers.Accept().None() || request.Headers.Accept().Any(header => header.Contains("*/*"));
         }
 
-        internal static bool IsAcceptable(this HttpRequest request)
+        private static bool IsAcceptable(this HttpRequest request)
         {
             return request.Headers.Accept().Any(header => Regex.IsMatch(header, JsonMatchPattern));
         }
