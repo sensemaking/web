@@ -58,7 +58,7 @@ namespace Sensemaking.Web.Host
 
         public static async Task<HttpStatusCode> Execute(this IRequestCommandHandler handler, Request request, object payload)
         {
-            return await (handler.GetType().GetMethod("Handle")!.Invoke(handler, new[] { request, payload }) as Task<HttpStatusCode>)!;
+            return await (handler.GetType().GetMethod("Handle")!.Invoke(handler, System.Reflection.BindingFlags.DoNotWrapExceptions, null, new[] { request, payload }, null) as Task<HttpStatusCode>)!;
         }
 
         public static async Task<object> PayloadFor(this HttpContext context, IRequestCommandHandler handler)
