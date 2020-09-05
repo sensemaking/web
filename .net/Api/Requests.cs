@@ -7,12 +7,13 @@ namespace Sensemaking.Web.Api
 {
     public class Request
     {
-        public IReadOnlyDictionary<string, object> Values { get; }
-
         public Request(IDictionary<string, object> values)
         {
             Values = new ReadOnlyDictionary<string, object>(values);
         }
+
+        public object this[string key] => Values[key];
+        public IReadOnlyDictionary<string, object> Values { get; }
     }
 
     public interface IHandleGetRequests
