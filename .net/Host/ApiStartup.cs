@@ -12,8 +12,8 @@ namespace Sensemaking.Web.Host
 {
     public abstract class ApiStartup
     {
-        protected virtual string ServiceName => Assembly.GetExecutingAssembly().GetName().Name!;
-        protected virtual ServiceDependency[] Dependencies => Array.Empty<ServiceDependency>();
+        protected abstract string ServiceName { get; }
+        protected abstract ServiceDependency[] Dependencies { get; }
         protected abstract ILogger Logger { get; }
 
         protected ApiStartup()
