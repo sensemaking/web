@@ -23,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scrutor" Version="3.2.1" />
-    <PackageReference Include="Sensemaking.Host" Version="1.0.120" />
-    <PackageReference Include="Sensemaking.Http" Version="1.0.120" />
-    <PackageReference Include="Sensemaking.Serialization" Version="1.0.120" />
+    <PackageReference Include="Scrutor" Version="3.2.2" />
+    <PackageReference Include="Sensemaking.Host" Version="1.0.122" />
+    <PackageReference Include="Sensemaking.Http" Version="1.0.122" />
+    <PackageReference Include="Sensemaking.Serialization" Version="1.0.122" />
   </ItemGroup>
 
   <ItemGroup>
