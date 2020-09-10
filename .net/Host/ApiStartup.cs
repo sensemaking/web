@@ -12,8 +12,7 @@ namespace Sensemaking.Web.Host
 {
     public abstract class ApiStartup
     {
-        protected abstract string ServiceName { get; }
-        protected abstract ServiceDependency[] Dependencies { get; }
+        protected abstract IMonitorServices ServiceMonitor { get; }
         protected abstract ILogger Logger { get; }
 
         protected ApiStartup()
@@ -25,7 +24,7 @@ namespace Sensemaking.Web.Host
         {
             services
                 .AddLogger(Logger)
-                .AddMonitor(ServiceName, Dependencies)
+                .AddMonitor(ServiceMonitor)
                 .AddRequestFactory(new RequestFactory())
                 .AutoRegisterHandlers();
         }

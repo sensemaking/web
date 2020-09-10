@@ -8,14 +8,12 @@ namespace Sensemaking.Bdd.Web
 {
     public abstract class FakeStartup : ApiStartup
     {
-        protected FakeStartup()
-        {
-            Logger = Substitute.For<ILogger>();
-        }
+        public const string Name = "Json Web Api";
+        public static readonly ServiceDependency Dependency = new ServiceDependency(new FakeMonitor());
 
-        protected override string ServiceName => Name;
-        protected override ServiceDependency[] Dependencies => new[] { Dependency };
-        protected override ILogger Logger { get; }
+        protected override IMonitorServices ServiceMonitor { get; } = new ServiceMonitor(Name, Dependency);
+
+        protected override ILogger Logger { get; } = Substitute.For<ILogger>();
 
         private class FakeMonitor : IMonitor
         {
@@ -28,7 +26,5 @@ namespace Sensemaking.Bdd.Web
         }
 
         public ILogger SubstituteLogger => Logger;
-        public string Name = "Json Web Api";
-        public ServiceDependency Dependency = new ServiceDependency(new FakeMonitor());
     }
 }

@@ -7,9 +7,9 @@ namespace Sensemaking.Web.Host
 {
     public static class ServiceNotification
     {
-        public static IServiceCollection AddMonitor(this IServiceCollection services, string serviceName, params ServiceDependency[] dependencies)
+        public static IServiceCollection AddMonitor(this IServiceCollection services, IMonitorServices serviceMonitor)
         {
-            services.AddSingleton<IMonitorServices>(new ServiceMonitor(serviceName, dependencies));
+            services.AddSingleton(serviceMonitor);
             return services;
         }
 
