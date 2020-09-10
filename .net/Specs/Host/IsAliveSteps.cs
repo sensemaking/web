@@ -47,24 +47,19 @@ namespace Sensemaking.Host.Web.Specs
 
     public class IsAliveStartup : FakeStartup
     {
-        internal readonly IMonitorServices Monitor = Substitute.For<IMonitorServices>();
-
-        public IsAliveStartup()
-        {
-            Monitor.Availability().Returns(Availability.Up());
-        }
+        protected override IMonitorServices ServiceMonitor { get; } = Substitute.For<IMonitorServices>();
 
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
-            services.AddSingleton(Monitor);
+            services.AddSingleton(ServiceMonitor);
             SetMonitorAvailability(Availability.Up());
         }
 
         public void SetMonitorAvailability(Availability availability)
         {
-            Monitor.ClearSubstitute();
-            Monitor.Availability().Returns(availability);
+            ServiceMonitor.ClearSubstitute();
+            ServiceMonitor.Availability().Returns(availability);
         }
     }
 }
