@@ -34,7 +34,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
-        public async Task<object> Handle(Request request)
+        public async Task<object> HandleAsync(Request request)
         {
             FakeKeys.Verify(request);
             return await Task.FromResult(TheResponse);
@@ -48,7 +48,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
-        public async Task<HttpStatusCode> Handle(Request request, FakePayload payload)
+        public async Task<HttpStatusCode> HandleAsync(Request request, FakePayload payload)
         {
             FakeKeys.Verify(request);
 
@@ -66,7 +66,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
-        public async Task<HttpStatusCode> Handle(Request request)
+        public async Task<HttpStatusCode> HandleAsync(Request request)
         {
             FakeKeys.Verify(request);
 
@@ -81,7 +81,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
-        public async Task<HttpStatusCode> Handle(Request request, FakePayload payload)
+        public async Task<HttpStatusCode> HandleAsync(Request request, FakePayload payload)
         {
             FakeKeys.Verify(request);
 

@@ -39,14 +39,14 @@ namespace Sensemaking.Web.Host
 
         public static async Task Get(this IHandleGetRequests handler, RequestFactory requestFactory, HttpContext context)
         {
-            var results = await handler.Handle(requestFactory.Create(context));
+            var results = await handler.HandleAsync(requestFactory.Create(context));
             context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
             await context.Response.WriteAsync(results.Serialize());
         }
 
         public static async Task Delete(this IHandleDeleteRequests handler, RequestFactory requestFactory, HttpContext context)
         {
-            context.Response.StatusCode = (int) await handler.Handle(requestFactory.Create(context));
+            context.Response.StatusCode = (int) await handler.HandleAsync(requestFactory.Create(context));
             await context.Response.CompleteAsync();
         }
 
@@ -58,7 +58,7 @@ namespace Sensemaking.Web.Host
 
         public static async Task<HttpStatusCode> Execute(this IRequestCommandHandler handler, Request request, object payload)
         {
-            return await (handler.GetType().GetMethod("Handle")!.Invoke(handler, System.Reflection.BindingFlags.DoNotWrapExceptions, null, new[] { request, payload }, null) as Task<HttpStatusCode>)!;
+            return await (handler.GetType().GetMethod("HandleAsync")!.Invoke(handler, System.Reflection.BindingFlags.DoNotWrapExceptions, null, new[] { request, payload }, null) as Task<HttpStatusCode>)!;
         }
 
         public static async Task<object> PayloadFor(this HttpContext context, IRequestCommandHandler handler)

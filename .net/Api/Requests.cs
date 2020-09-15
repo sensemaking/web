@@ -19,13 +19,13 @@ namespace Sensemaking.Web.Api
     public interface IHandleGetRequests
     {
         string Route { get; }  
-        Task<object> Handle(Request request);
+        Task<object> HandleAsync(Request request);
     }
 
     public interface IHandleDeleteRequests 
     {
         string Route { get; }  
-        Task<HttpStatusCode> Handle(Request request);
+        Task<HttpStatusCode> HandleAsync(Request request);
     }
 
     public interface IRequestCommandHandler
@@ -35,7 +35,7 @@ namespace Sensemaking.Web.Api
 
     public interface IRequestCommandHandler<in T> : IRequestCommandHandler
     {
-        Task<HttpStatusCode> Handle(Request request, T payload);
+        Task<HttpStatusCode> HandleAsync(Request request, T payload);
     }
 
     public interface IPutRequestHandler : IRequestCommandHandler {}
