@@ -9,6 +9,14 @@ namespace Sensemaking.Host.Web.Specs
     public partial class ExceptionHandlingSpecs : Specification<ExceptionStartup>
     {
         [Test]
+        public void who_are_you_exception_causes_not_authorised_problem()
+        {
+            Given(() => a_(who_are_you_exception));
+            When(handling_a_request);
+            Then(it_is_unauthorised);
+        }
+
+        [Test]
         public void not_allowed_exception_causes_forbidden_error_problem()
         {
             Given(() => a_(not_allowed_exception));

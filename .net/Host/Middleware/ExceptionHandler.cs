@@ -21,6 +21,7 @@ namespace Sensemaking.Web.Host
                 var feature = context.Features.Get<IExceptionHandlerFeature>();
                 var (statusCode, problem) = feature.Error switch
                 {
+                    WhoAreYouException _ => (HttpStatusCode.Unauthorized, Problem.Empty),
                     NotAllowedException _ => (HttpStatusCode.Forbidden, Problem.Empty),
                     NotFoundException _ => (HttpStatusCode.NotFound, Problem.Empty),
                     ServiceAvailabilityException _ => (HttpStatusCode.ServiceUnavailable, Problem.Empty),
