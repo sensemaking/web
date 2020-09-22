@@ -22,7 +22,7 @@ namespace Sensemaking.Web.Host
                 var (statusCode, problem) = feature.Error switch
                 {
                     WhoAreYouException _ => (HttpStatusCode.Unauthorized, Problem.Empty),
-                    NotAllowedException _ => (HttpStatusCode.Forbidden, Problem.Empty),
+                    AccessException _ => (HttpStatusCode.Forbidden, Problem.Empty),
                     NotFoundException _ => (HttpStatusCode.NotFound, Problem.Empty),
                     ServiceAvailabilityException _ => (HttpStatusCode.ServiceUnavailable, Problem.Empty),
                     ValidationException ex => (HttpStatusCode.BadRequest, new Problem("The request could not be correctly validated.", ex.Errors)),

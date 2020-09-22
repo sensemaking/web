@@ -17,7 +17,7 @@ namespace Sensemaking.Host.Web.Specs
     public partial class ExceptionHandlingSpecs
     {
         private static readonly WhoAreYouException who_are_you_exception = new WhoAreYouException();
-        private static readonly NotAllowedException not_allowed_exception = new NotAllowedException();
+        private static readonly AccessException not_allowed_exception = new AccessException();
         private static readonly NotFoundException not_found_exception = new NotFoundException();
         private static readonly ServiceAvailabilityException service_availability_exception = new ServiceAvailabilityException();
         private static readonly Exception unexpected_exception = new Exception();
