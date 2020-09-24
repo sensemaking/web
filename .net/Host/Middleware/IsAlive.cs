@@ -23,7 +23,6 @@ namespace Sensemaking.Web.Host
                     context.Response.ContentType = $"{MediaType.Json}; charset=utf-8";
                     await context.Response.WriteAsync(new { status = "Service is up!" }.Serialize());
                 });
-
             });
             return app;
         }

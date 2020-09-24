@@ -68,11 +68,10 @@ namespace Sensemaking.Host.Web.Specs
     {
         public const string exception_throwing_url = "/throw";
         private static Exception exception;
-
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        protected override IApplicationBuilder AdditionalMiddleware(IApplicationBuilder app)
         {
-            base.Configure(app, env);
             app.UseEndpoints(endpoints => endpoints.MapGet(exception_throwing_url, context => throw exception));
+            return app;
         }
 
         public void CauseException(Exception exception) { ExceptionStartup.exception = exception; }

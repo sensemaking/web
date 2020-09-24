@@ -6,6 +6,7 @@ using System.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Http;
 using Sensemaking.Web.Api;
@@ -24,16 +25,9 @@ namespace Sensemaking.Web.Host
             return services;
         }
 
-        public static IApplicationBuilder MapHandlersToRoutes(this IApplicationBuilder app)
+        public static IApplicationBuilder MapHandlersToRoutes(this IApplicationBuilder app, Action<IEndpointRouteBuilder, IApplicationBuilder, RequestFactory> routeMapper)
         {
-            var requestFactory = app.ApplicationServices.GetRequiredService<RequestFactory>();
-            app.UseEndpoints(endpoints =>
-            {
-                app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, context => handler.Get(requestFactory, context)));
-                app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, context => handler.Delete(requestFactory, context)));
-                app.ApplicationServices.GetServices<IPutRequestHandler>().ForEach(handler => endpoints.MapPut(handler.Route, context => handler.Execute(requestFactory, context)));
-                app.ApplicationServices.GetServices<IRequestPostHandler>().ForEach(handler => endpoints.MapPost(handler.Route, context => handler.Execute(requestFactory, context)));
-            });
+            app.UseEndpoints(endpoints => routeMapper(endpoints, app, app.ApplicationServices.GetRequiredService<RequestFactory>()));
             return app;
         }
 

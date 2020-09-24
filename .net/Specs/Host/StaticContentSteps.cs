@@ -32,10 +32,10 @@ namespace Sensemaking.Host.Web.Specs
 
     public class StaticContentStartup : SpecificationStartup
     {
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        protected override IApplicationBuilder AdditionalMiddleware(IApplicationBuilder app)
         {
-            base.Configure(app, env);
             app.ServeStaticContent();
+            return app;
         }
     }
 }
