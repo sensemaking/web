@@ -13,7 +13,17 @@ namespace Sensemaking.Bdd.Web
         protected static readonly IServiceProvider services;
         protected static FlurlClient client;
 
-        protected JsonResponse the_response;
+        private JsonResponse response;
+        protected JsonResponse the_response {
+            get
+            {
+                if (response == null)
+                    throw the_exception;
+
+                return response;
+            }
+            set => response = value;
+        }
         protected U the_response_body<U>() => (the_response as JsonResponse<U>).Body;
 
         protected ProblemException the_problem_exception;
