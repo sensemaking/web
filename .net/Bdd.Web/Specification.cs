@@ -1,14 +1,13 @@
 using System;
-using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Microsoft.AspNetCore.TestHost;
-using NSubstitute.ClearExtensions;
 using Sensemaking.Http.Json.Client;
+using Sensemaking.Web.Host;
 
 namespace Sensemaking.Bdd.Web
 {
-    public abstract partial class Specification<T> : Specification where T : FakeStartup, new()
+    public abstract partial class Specification<T> : Specification where T : ApiStartup, new()
     {
         protected static readonly T startup;
         protected static readonly IServiceProvider services;
@@ -32,12 +31,6 @@ namespace Sensemaking.Bdd.Web
             base.before_each();
             the_response = null;
             the_problem_exception = null;
-        }
-
-        protected override void after_each()
-        {
-            startup.SubstituteLogger.ClearSubstitute();
-            base.after_all();
         }
 
         protected override void trying(Action action)

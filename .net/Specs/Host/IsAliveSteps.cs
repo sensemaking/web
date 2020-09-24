@@ -11,8 +11,7 @@ namespace Sensemaking.Host.Web.Specs
 {
     public partial class IsAliveSpecs
     {
-        private static readonly Alert alert =
-            AlertFactory.ServiceUnavailable(new MonitorInfo("Monitor", "For alert", "Some Instance"), "We is down");
+        private static readonly Alert alert = AlertFactory.ServiceUnavailable(new MonitorInfo("Monitor", "For alert", "Some Instance"), "We is down");
 
         private void monitor_has_full_service()
         {
@@ -45,7 +44,7 @@ namespace Sensemaking.Host.Web.Specs
         public string Status { get; private set; }
     }
 
-    public class IsAliveStartup : FakeStartup
+    public class IsAliveStartup : SpecificationStartup
     {
         protected override IMonitorServices ServiceMonitor { get; } = Substitute.For<IMonitorServices>();
 

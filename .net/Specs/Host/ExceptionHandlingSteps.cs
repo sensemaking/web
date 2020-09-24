@@ -32,6 +32,12 @@ namespace Sensemaking.Host.Web.Specs
             startup.SubstituteLogger.When(l => l.Error(Arg.Any<string>())).Do(c => logged_alert = c.Arg<string>());
         }
 
+        protected override void after_each()
+        {
+            base.after_each();
+            startup.SubstituteLogger.ClearSubstitute();
+        }
+
         private void a_(Exception exception)
         {
             startup.CauseException(exception);
@@ -58,7 +64,7 @@ namespace Sensemaking.Host.Web.Specs
         }
     }
 
-    public class ExceptionStartup : FakeStartup
+    public class ExceptionStartup : SpecificationStartup
     {
         public const string exception_throwing_url = "/throw";
         private static Exception exception;

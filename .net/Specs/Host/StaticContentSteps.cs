@@ -30,7 +30,7 @@ namespace Sensemaking.Host.Web.Specs
         }
     }
 
-    public class StaticContentStartup : FakeStartup
+    public class StaticContentStartup : SpecificationStartup
     {
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
