@@ -39,9 +39,15 @@ namespace Sensemaking.Web.Host
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
                 .RequireJsonAcceptance()
-            .Routing()
+            .Routing();
+            this.AddMiddleware(app)
                 .MapHandlersToRoutes()
                 .AddIsAlive();
+        }
+
+        public virtual IApplicationBuilder AddMiddleware(IApplicationBuilder app)
+        {
+            return app;
         }
     }
 
