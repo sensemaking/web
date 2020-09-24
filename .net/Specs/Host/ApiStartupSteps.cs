@@ -39,8 +39,8 @@ namespace Sensemaking.Host.Web.Specs
 
         private void it_monitors_them()
         {
-            services.GetRequiredService<IMonitorServices>().Info.Name.should_be(SpecificationStartup.Name);
-            ServiceNotification.Notifier.Monitor.Dependencies.Single().should_be(SpecificationStartup.Dependency);
+            services.GetRequiredService<IMonitorServices>().Info.Name.should_be(startup.FakeMonitor.Info.Name);
+            ServiceNotification.Notifier.Monitor.Dependencies.Single().should_be(startup.FakeMonitor.Dependencies.Single());
             services.GetRequiredService<IMonitorServices>().should_be(ServiceNotification.Notifier.Monitor);
         }
 
