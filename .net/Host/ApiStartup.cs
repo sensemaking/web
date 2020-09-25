@@ -49,9 +49,9 @@ namespace Sensemaking.Web.Host
                 .AddIsAlive();
         }
 
-        public virtual void Configure() { }
+        public virtual void ConfigureApplication() { }
 
-        protected virtual IApplicationBuilder AdditionalMiddleware(IApplicationBuilder app) { return app;  }
+        protected virtual IApplicationBuilder AdditionalMiddleware(IApplicationBuilder app) { return app; }
 
         protected virtual void MapHandlersToEndpoints(IEndpointRouteBuilder endpoints, IApplicationBuilder app, RequestFactory requestFactory)
         {
