@@ -33,7 +33,7 @@ namespace Sensemaking.Web.Host
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            this.Configure();
+            this.ConfigureApplication();
 
             app
                 .UseLogger(Logger)
