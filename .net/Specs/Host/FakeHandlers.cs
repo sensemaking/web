@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
+using Microsoft.AspNetCore.Http.Features;
 using Sensemaking.Web.Api;
+using Sensemaking.Web.Host;
 
 namespace Sensemaking.Host.Web.Specs
 {
@@ -10,11 +12,30 @@ namespace Sensemaking.Host.Web.Specs
     {
         public static readonly string RouteKey = "routeKey";
         public static readonly string QueryKey = "queryKey";
+        public static readonly string PipelineKey = "pipelineKey";
 
         public static void Verify(Request request)
         {
-            if(!request.Values.ContainsKey(RouteKey) || !request.Values.ContainsKey(QueryKey))
-                throw new ValidationException("Route values or query string were not provided.");
+            if (!request.Values.ContainsKey(RouteKey) || !request.Values.ContainsKey(QueryKey) || !request.Values.ContainsKey(PipelineKey))
+                throw new ValidationException("Route values, query string value or pipeline values were not provided.");
+        }
+    }
+
+    public class FakeFeature
+    {
+        public FakeFeature(string value)
+        {
+            Value = value;
+        }
+
+        public string Value { get; }
+    }
+
+    public class FakeRequestFactory : RequestFactory
+    {
+        protected override IDictionary<string, object> GetAdditionalValuesFrom(IFeatureCollection features)
+        {
+            return new Dictionary<string, object> { { FakeKeys.PipelineKey, features.Get<FakeFeature>().Value } };
         }
     }
 
@@ -22,14 +43,16 @@ namespace Sensemaking.Host.Web.Specs
     {
         public readonly struct Response
         {
-            public Response(string queryValue, string routeValue)
+            public Response(string queryValue, string routeValue, string pipelineValue)
             {
                 QueryValue = queryValue;
                 RouteValue = routeValue;
+                PipelineValue = pipelineValue;
             }
 
             public string QueryValue { get; }
             public string RouteValue { get; }
+            public string PipelineValue { get; }
         }
 
         public static readonly string Url = "/get";
@@ -38,7 +61,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public async Task<object> HandleAsync(Request request)
         {
-            return await Task.FromResult( new Response(request[FakeKeys.QueryKey].ToString(), request[FakeKeys.RouteKey].ToString()));
+            return await Task.FromResult(new Response(request[FakeKeys.QueryKey].ToString(), request[FakeKeys.RouteKey].ToString(), request[FakeKeys.PipelineKey].ToString()));
         }
     }
 
@@ -53,7 +76,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             FakeKeys.Verify(request);
 
-            if(payload.Content.IsNullOrEmpty())
+            if (payload.Content.IsNullOrEmpty())
                 throw new ValidationException("Payload was not provided.");
 
             return await Task.FromResult(ResponseStatusCode);
@@ -86,7 +109,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             FakeKeys.Verify(request);
 
-            if(payload.Content.IsNullOrEmpty())
+            if (payload.Content.IsNullOrEmpty())
                 throw new ValidationException("Payload was not provided.");
 
             return await Task.FromResult(ResponseStatusCode);

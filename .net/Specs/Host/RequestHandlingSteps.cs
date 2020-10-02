@@ -1,14 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
-using Sensemaking.Bdd.Web;
-using Sensemaking.Http.Json.Client;
-using Sensemaking.Web.Api;
 using Sensemaking.Web.Host;
 
 namespace Sensemaking.Host.Web.Specs
@@ -30,6 +23,8 @@ namespace Sensemaking.Host.Web.Specs
         private void a_route_value() { }
 
         private void a_query_value() { }
+
+        private void a_pipeline_injected_value() { }
 
         private void a_payload()
         {
@@ -76,6 +71,7 @@ namespace Sensemaking.Host.Web.Specs
             it_is_ok();
             the_response_body<FakeGetter.Response>().QueryValue.should_be(the_query_value);
             the_response_body<FakeGetter.Response>().RouteValue.should_be(the_route_value);
+            the_response_body<FakeGetter.Response>().PipelineValue.should_be(startup.PipelineValue);
         }
 
         private void the_put_handler_processes_the_request()
@@ -107,6 +103,8 @@ namespace Sensemaking.Host.Web.Specs
 
     public class RequestHandlingStartup : SpecificationStartup
     {
+        public string PipelineValue = "SomePipelineValue";
+
         public bool OnlyFakeFactoryRegistered { get; private set;  }
 
         public override void ConfigureServices(IServiceCollection services)
@@ -116,7 +114,18 @@ namespace Sensemaking.Host.Web.Specs
             var exceptionHandlers = services.BuildServiceProvider().GetServices<RequestFactory>().ToArray();
             OnlyFakeFactoryRegistered = exceptionHandlers.Count() == 1 && exceptionHandlers.All(h => h.GetType() == typeof(FakeRequestFactory));
         }
+
+        protected override IApplicationBuilder AdditionalMiddleware(IApplicationBuilder app)
+        {
+            app.Use((context, next) =>
+            {
+                context.Features.Set(new FakeFeature(PipelineValue));
+                return next();
+            });
+
+            return app;
+        }
     }
 
-    public class FakeRequestFactory : RequestFactory { }
+
 }
