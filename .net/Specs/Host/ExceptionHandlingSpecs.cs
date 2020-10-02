@@ -16,7 +16,6 @@ namespace Sensemaking.Host.Web.Specs
             Then(the_custom_handler_is_used);
         }
 
-
         [Test]
         public void who_are_you_exception_causes_not_authorised_problem()
         {

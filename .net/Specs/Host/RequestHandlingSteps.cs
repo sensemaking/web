@@ -1,11 +1,15 @@
-﻿using System.Net;
+﻿using System;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
 using Sensemaking.Bdd.Web;
 using Sensemaking.Http.Json.Client;
 using Sensemaking.Web.Api;
+using Sensemaking.Web.Host;
 
 namespace Sensemaking.Host.Web.Specs
 {
@@ -40,6 +44,8 @@ namespace Sensemaking.Host.Web.Specs
 
         private void a_post_handler_for_the_url() { }
 
+        private void a_custom_request_factory() { }
+
         private void getting()
         {
             get<FakeGetter.Response>(GenerateUrl(FakeGetter.Url));
@@ -58,6 +64,11 @@ namespace Sensemaking.Host.Web.Specs
         private void posting()
         {
             post(GenerateUrl(FakePoster.Url), the_payload);
+        }
+
+        private void making_a_request()
+        {
+            getting();
         }
 
         private void the_get_handler_processes_the_request()
@@ -86,5 +97,26 @@ namespace Sensemaking.Host.Web.Specs
         {
             return $"{url}/{the_route_value}?{FakeKeys.QueryKey}={the_query_value}";
         }
+
+        private void the_custom_factory_is_used()
+        {
+            startup.OnlyFakeFactoryRegistered.should_be_true();
+        }
     }
+
+
+    public class RequestHandlingStartup : SpecificationStartup
+    {
+        public bool OnlyFakeFactoryRegistered { get; private set;  }
+
+        public override void ConfigureServices(IServiceCollection services)
+        {
+            base.ConfigureServices(services);
+            services.ProvideRequestCreation(new FakeRequestFactory());
+            var exceptionHandlers = services.BuildServiceProvider().GetServices<RequestFactory>().ToArray();
+            OnlyFakeFactoryRegistered = exceptionHandlers.Count() == 1 && exceptionHandlers.All(h => h.GetType() == typeof(FakeRequestFactory));
+        }
+    }
+
+    public class FakeRequestFactory : RequestFactory { }
 }
