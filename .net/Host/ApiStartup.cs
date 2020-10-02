@@ -25,6 +25,7 @@ namespace Sensemaking.Web.Host
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddExceptionHandler(new ExceptionHandler())
                 .AddLogger(Logger)
                 .AddMonitor(ServiceMonitor)
                 .AddRequestFactory(new RequestFactory())

@@ -12,23 +12,21 @@ using Serilog;
 
 namespace Sensemaking.Web.Host
 {
-    public static class ExceptionHandler
+    public static class ExceptionHandling
     {
+        public static IServiceCollection AddExceptionHandler(this IServiceCollection services, ExceptionHandler handler)
+        {
+            services.AddSingleton(handler);
+            return services;
+        }
+
         public static IApplicationBuilder MapExceptionsToProblems(this IApplicationBuilder app)
         {
             app.UseExceptionHandler(error => error.Run(context =>
             {
+                var exceptionHandler = app.ApplicationServices.GetRequiredService<ExceptionHandler>();
                 var feature = context.Features.Get<IExceptionHandlerFeature>();
-                var (statusCode, problem) = feature.Error switch
-                {
-                    WhoAreYouException _ => (HttpStatusCode.Unauthorized, Problem.Empty),
-                    AccessException _ => (HttpStatusCode.Forbidden, Problem.Empty),
-                    NotFoundException _ => (HttpStatusCode.NotFound, Problem.Empty),
-                    ServiceAvailabilityException _ => (HttpStatusCode.ServiceUnavailable, Problem.Empty),
-                    ValidationException ex => (HttpStatusCode.BadRequest, new Problem("The request could not be correctly validated.", ex.Errors)),
-                    ConflictException ex => (HttpStatusCode.Conflict, new Problem("Fulfilling the request would cause a conflict.", ex.Errors)),
-                    _ => (HttpStatusCode.InternalServerError, Problem.Empty)
-                };
+                var (statusCode, problem) = exceptionHandler.Handle(feature.Error);
                 context.Response.StatusCode = (int)statusCode;
 
                 if(statusCode == HttpStatusCode.InternalServerError)
@@ -42,6 +40,23 @@ namespace Sensemaking.Web.Host
             }));
 
             return app;
+        }
+    }
+
+    public class ExceptionHandler
+    {
+        public (HttpStatusCode, Problem) Handle(Exception exception)
+        {
+            return exception switch
+            {
+                WhoAreYouException _ => (HttpStatusCode.Unauthorized, Problem.Empty),
+                AccessException _ => (HttpStatusCode.Forbidden, Problem.Empty),
+                NotFoundException _ => (HttpStatusCode.NotFound, Problem.Empty),
+                ServiceAvailabilityException _ => (HttpStatusCode.ServiceUnavailable, Problem.Empty),
+                ValidationException ex => (HttpStatusCode.BadRequest, new Problem("The request could not be correctly validated.", ex.Errors)),
+                ConflictException ex => (HttpStatusCode.Conflict, new Problem("Fulfilling the request would cause a conflict.", ex.Errors)),
+                _ => (HttpStatusCode.InternalServerError, Problem.Empty)
+            };
         }
     }
 }
