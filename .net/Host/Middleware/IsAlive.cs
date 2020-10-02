@@ -10,7 +10,7 @@ namespace Sensemaking.Web.Host
 {
     public static class IsAlive
     {
-        public static IApplicationBuilder AddIsAlive(this IApplicationBuilder app)
+        internal static IApplicationBuilder AddIsAlive(this IApplicationBuilder app)
         {
             app.UseEndpoints(endpoints =>
             {

@@ -4,17 +4,17 @@ using Serilog;
 
 namespace Sensemaking.Web.Host
 {
-    public static class Logger
+    internal static class Logger
     {
-        public static IServiceCollection AddLogger(this IServiceCollection services, ILogger logger)
+        internal static IServiceCollection ProvideLogging(this IServiceCollection services, ILogger logger)
         {
             services.AddSingleton(logger);
             return services;
         }
 
-        public static IApplicationBuilder UseLogger(this IApplicationBuilder app, ILogger logger)
+        internal static IApplicationBuilder UseLogger(this IApplicationBuilder app)
         {
-            Logging.Configure(logger);
+            Logging.Configure(app.ApplicationServices.GetRequiredService<ILogger>());
             return app;
         }
     } 

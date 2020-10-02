@@ -25,10 +25,10 @@ namespace Sensemaking.Web.Host
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddExceptionHandler(new ExceptionHandler())
-                .AddLogger(Logger)
-                .AddMonitor(ServiceMonitor)
-                .AddRequestFactory(new RequestFactory())
+                .ProvideLogging(Logger)
+                .ProvideExceptionHandling(new ExceptionHandler())
+                .ProvideMonitoring(ServiceMonitor)
+                .ProvideRequestCreation(new RequestFactory())
                 .AutoRegisterHandlers();
         }
 
@@ -37,9 +37,9 @@ namespace Sensemaking.Web.Host
             this.ConfigureApplication();
 
             app
-                .UseLogger(Logger)
+                .UseLogger()
                 .MapExceptionsToProblems()
-                .ScheduleStatusNotification(app.ApplicationServices.GetRequiredService<IMonitorServices>(), Period.FromSeconds(20))
+                .ScheduleStatusNotification(Period.FromSeconds(20))
             .Request()
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
@@ -56,21 +56,18 @@ namespace Sensemaking.Web.Host
 
         protected virtual void MapHandlersToEndpoints(IEndpointRouteBuilder endpoints, IApplicationBuilder app, RequestFactory requestFactory)
         {
-            app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, context => handler.Get(requestFactory, context)));
-            app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, context => handler.Delete(requestFactory, context)));
-            app.ApplicationServices.GetServices<IPutRequestHandler>().ForEach(handler => endpoints.MapPut(handler.Route, context => handler.Execute(requestFactory, context)));
-            app.ApplicationServices.GetServices<IRequestPostHandler>().ForEach(handler => endpoints.MapPost(handler.Route, context => handler.Execute(requestFactory, context)));
+            Handling.DefaultEndpointMapper(endpoints, app, requestFactory);
         }
     }
 
     internal static class Extensions
     {
-        public static IApplicationBuilder AddMiddleware(this IApplicationBuilder app, Func<IApplicationBuilder, IApplicationBuilder> addMiddleware)
+        internal static IApplicationBuilder AddMiddleware(this IApplicationBuilder app, Func<IApplicationBuilder, IApplicationBuilder> addMiddleware)
         {
             return addMiddleware(app);
         }
 
-        public static IApplicationBuilder Request(this IApplicationBuilder app) { return app; }
-        public static IApplicationBuilder Routing(this IApplicationBuilder app) { return app.UseRouting(); }
+        internal static IApplicationBuilder Request(this IApplicationBuilder app) { return app; }
+        internal static IApplicationBuilder Routing(this IApplicationBuilder app) { return app.UseRouting(); }
     }
 }

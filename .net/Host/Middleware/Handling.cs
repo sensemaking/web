@@ -13,9 +13,9 @@ using Sensemaking.Web.Api;
 
 namespace Sensemaking.Web.Host
 {
-    public static class Handlers
+    public static class Handling
     {
-        public static IServiceCollection AutoRegisterHandlers(this IServiceCollection services)
+        internal static IServiceCollection AutoRegisterHandlers(this IServiceCollection services)
         {
             services.Scan(scan => scan.FromApplicationDependencies()
                 .AddClasses(classes => classes.AssignableTo<IHandleGetRequests>()).As<IHandleGetRequests>()
@@ -25,10 +25,18 @@ namespace Sensemaking.Web.Host
             return services;
         }
 
-        public static IApplicationBuilder MapHandlersToRoutes(this IApplicationBuilder app, Action<IEndpointRouteBuilder, IApplicationBuilder, RequestFactory> routeMapper)
+        internal static IApplicationBuilder MapHandlersToRoutes(this IApplicationBuilder app, Action<IEndpointRouteBuilder, IApplicationBuilder, RequestFactory> routeMapper)
         {
             app.UseEndpoints(endpoints => routeMapper(endpoints, app, app.ApplicationServices.GetRequiredService<RequestFactory>()));
             return app;
+        }
+
+        internal static void DefaultEndpointMapper(IEndpointRouteBuilder endpoints, IApplicationBuilder app, RequestFactory requestFactory)
+        {
+            app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, context => handler.Get(requestFactory, context)));
+            app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, context => handler.Delete(requestFactory, context)));
+            app.ApplicationServices.GetServices<IPutRequestHandler>().ForEach(handler => endpoints.MapPut(handler.Route, context => handler.Execute(requestFactory, context)));
+            app.ApplicationServices.GetServices<IRequestPostHandler>().ForEach(handler => endpoints.MapPost(handler.Route, context => handler.Execute(requestFactory, context)));
         }
 
         public static async Task Get(this IHandleGetRequests handler, RequestFactory requestFactory, HttpContext context)
@@ -50,12 +58,12 @@ namespace Sensemaking.Web.Host
             await context.Response.CompleteAsync();
         }
 
-        public static async Task<HttpStatusCode> Execute(this IRequestCommandHandler handler, Request request, object payload)
+        private static async Task<HttpStatusCode> Execute(this IRequestCommandHandler handler, Request request, object payload)
         {
             return await (handler.GetType().GetMethod("HandleAsync")!.Invoke(handler, System.Reflection.BindingFlags.DoNotWrapExceptions, null, new[] { request, payload }, null) as Task<HttpStatusCode>)!;
         }
 
-        public static async Task<object> PayloadFor(this HttpContext context, IRequestCommandHandler handler)
+        private static async Task<object> PayloadFor(this HttpContext context, IRequestCommandHandler handler)
         {
             var payloadType = handler.GetType().GetInterfaces().Single(x => x.Name == typeof(IRequestCommandHandler<>).Name).GenericTypeArguments.Single();
             using var reader = new StreamReader(context.Request.Body);

@@ -5,17 +5,17 @@ using Sensemaking.Host.Monitoring;
 
 namespace Sensemaking.Web.Host
 {
-    public static class ServiceNotification
+    internal static class ServiceNotification
     {
-        public static IServiceCollection AddMonitor(this IServiceCollection services, IMonitorServices serviceMonitor)
+        internal static IServiceCollection ProvideMonitoring(this IServiceCollection services, IMonitorServices serviceMonitor)
         {
             services.AddSingleton(serviceMonitor);
             return services;
         }
 
-        public static IApplicationBuilder ScheduleStatusNotification(this IApplicationBuilder app, IMonitorServices monitor, Period heartbeat)
+        internal static IApplicationBuilder ScheduleStatusNotification(this IApplicationBuilder app, Period heartbeat)
         {
-            Notifier = new ServiceStatusNotifier(monitor, heartbeat);
+            Notifier = new ServiceStatusNotifier(app.ApplicationServices.GetRequiredService<IMonitorServices>(), heartbeat);
             return app;
         }
 

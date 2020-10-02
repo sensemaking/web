@@ -14,18 +14,18 @@ namespace Sensemaking.Web.Host
 {
     public static class ExceptionHandling
     {
-        public static IServiceCollection AddExceptionHandler(this IServiceCollection services, ExceptionHandler handler)
+        public static IServiceCollection ProvideExceptionHandling(this IServiceCollection services, ExceptionHandler handler)
         {
             services.AddSingleton(handler);
             return services;
         }
 
-        public static IApplicationBuilder MapExceptionsToProblems(this IApplicationBuilder app)
+        internal static IApplicationBuilder MapExceptionsToProblems(this IApplicationBuilder app)
         {
             app.UseExceptionHandler(error => error.Run(context =>
             {
-                var exceptionHandler = app.ApplicationServices.GetRequiredService<ExceptionHandler>();
                 var feature = context.Features.Get<IExceptionHandlerFeature>();
+                var exceptionHandler = app.ApplicationServices.GetRequiredService<ExceptionHandler>();
                 var (statusCode, problem) = exceptionHandler.Handle(feature.Error);
                 context.Response.StatusCode = (int)statusCode;
 

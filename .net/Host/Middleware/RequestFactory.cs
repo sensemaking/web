@@ -39,7 +39,7 @@ namespace Sensemaking.Web.Host
 
     public static class RequestFactoryExtensions
     {
-        public static IServiceCollection AddRequestFactory(this IServiceCollection services, RequestFactory factory)
+        public static IServiceCollection ProvideRequestCreation(this IServiceCollection services, RequestFactory factory)
         {
             services.AddSingleton(factory);
             return services;
