@@ -9,6 +9,15 @@ namespace Sensemaking.Host.Web.Specs
     public partial class ExceptionHandlingSpecs : Specification<ExceptionStartup>
     {
         [Test]
+        public void custom_exception_handlers_replace_the_default_exception_handler()
+        {
+            Given(a_custom_exception_handler);
+            When(handling_a_request);
+            Then(the_custom_handler_is_used);
+        }
+
+
+        [Test]
         public void who_are_you_exception_causes_not_authorised_problem()
         {
             Given(() => a_(who_are_you_exception));

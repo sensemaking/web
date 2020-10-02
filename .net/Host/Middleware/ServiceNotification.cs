@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
 
@@ -9,7 +10,7 @@ namespace Sensemaking.Web.Host
     {
         internal static IServiceCollection ProvideMonitoring(this IServiceCollection services, IMonitorServices serviceMonitor)
         {
-            services.AddSingleton(serviceMonitor);
+            services.Replace(ServiceDescriptor.Singleton(serviceMonitor));
             return services;
         }
 

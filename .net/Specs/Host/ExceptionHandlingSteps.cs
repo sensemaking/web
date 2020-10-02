@@ -1,7 +1,10 @@
 using System;
+using System.Linq;
+using System.Net;
 using System.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using Sensemaking.Bdd;
@@ -39,6 +42,8 @@ namespace Sensemaking.Host.Web.Specs
             startup.SubstituteLogger.ClearSubstitute();
         }
 
+        private void a_custom_exception_handler() { }
+
         private void a_(Exception exception)
         {
             startup.CauseException(exception);
@@ -52,6 +57,11 @@ namespace Sensemaking.Host.Web.Specs
         private void handling_a_request()
         {
            trying(() => get<object>(ExceptionStartup.exception_throwing_url));
+        }
+
+        private void the_custom_handler_is_used()
+        {
+            startup.OnlyFakeHandlerRegistered.should_be_true();
         }
 
         public void it_has_no_content_type()
@@ -69,6 +79,16 @@ namespace Sensemaking.Host.Web.Specs
     {
         public const string exception_throwing_url = "/throw";
         private static Exception exception;
+        public bool OnlyFakeHandlerRegistered { get; private set;  }
+
+        public override void ConfigureServices(IServiceCollection services)
+        {
+            base.ConfigureServices(services);
+            services.ProvideExceptionHandling(new FakeExceptionHandler());
+            var exceptionHandlers = services.BuildServiceProvider().GetServices<ExceptionHandler>().ToArray();
+            OnlyFakeHandlerRegistered = exceptionHandlers.Count() == 1 && exceptionHandlers.All(h => h.GetType() == typeof(FakeExceptionHandler));
+        }
+
         protected override IApplicationBuilder AdditionalMiddleware(IApplicationBuilder app)
         {
             app.UseEndpoints(endpoints => endpoints.MapGet(exception_throwing_url, context => throw exception));
@@ -76,5 +96,9 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         public void CauseException(Exception exception) { ExceptionStartup.exception = exception; }
+    }
+
+    public class FakeExceptionHandler : ExceptionHandler
+    {
     }
 }

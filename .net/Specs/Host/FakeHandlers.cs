@@ -14,9 +14,10 @@ namespace Sensemaking.Host.Web.Specs
         public static void Verify(Request request)
         {
             if(!request.Values.ContainsKey(RouteKey) || !request.Values.ContainsKey(QueryKey))
-                throw new ValidationException("Route values or query string were not provided.");
+                throw new Exception("Route values or query string were not provided.");
         }
     }
+
     public class FakeGetter : IHandleGetRequests
     {
         public readonly struct Response

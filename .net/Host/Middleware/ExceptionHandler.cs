@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
 using Sensemaking.Monitoring;
@@ -16,7 +17,7 @@ namespace Sensemaking.Web.Host
     {
         public static IServiceCollection ProvideExceptionHandling(this IServiceCollection services, ExceptionHandler handler)
         {
-            services.AddSingleton(handler);
+            services.Replace(ServiceDescriptor.Singleton(handler));
             return services;
         }
 
