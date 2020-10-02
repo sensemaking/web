@@ -3,7 +3,7 @@ using Sensemaking.Bdd.Web;
 
 namespace Sensemaking.Host.Web.Specs
 {
-    public partial class RoutingSpecs : Specification<SpecificationStartup>
+    public partial class RequestHandlingSpecs : Specification<SpecificationStartup>
     {
         [Test]
         public void get_requests_are_handled()

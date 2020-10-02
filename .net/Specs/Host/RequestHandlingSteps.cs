@@ -9,7 +9,7 @@ using Sensemaking.Web.Api;
 
 namespace Sensemaking.Host.Web.Specs
 {
-    public partial class RoutingSpecs
+    public partial class RequestHandlingSpecs
     {
         private const string the_route_value = "route_value";
         private const string the_query_value = "query_value";
@@ -62,8 +62,9 @@ namespace Sensemaking.Host.Web.Specs
 
         private void the_get_handler_processes_the_request()
         {
-            the_response.Status.should_be(HttpStatusCode.OK);
-            the_response_body<FakeGetter.Response>().should_be(FakeGetter.TheResponse);
+            it_is_ok();
+            the_response_body<FakeGetter.Response>().QueryValue.should_be(the_query_value);
+            the_response_body<FakeGetter.Response>().RouteValue.should_be(the_route_value);
         }
 
         private void the_put_handler_processes_the_request()

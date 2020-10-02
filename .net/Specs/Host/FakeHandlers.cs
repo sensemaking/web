@@ -22,23 +22,23 @@ namespace Sensemaking.Host.Web.Specs
     {
         public readonly struct Response
         {
-            public Response(string content)
+            public Response(string queryValue, string routeValue)
             {
-                Content = content;
+                QueryValue = queryValue;
+                RouteValue = routeValue;
             }
 
-            public string Content { get; }
+            public string QueryValue { get; }
+            public string RouteValue { get; }
         }
 
         public static readonly string Url = "/get";
-        public static Response TheResponse = new Response("Anything will do");
 
         public string Route => $"{Url}/{{{FakeKeys.RouteKey}}}";
 
         public async Task<object> HandleAsync(Request request)
         {
-            FakeKeys.Verify(request);
-            return await Task.FromResult(TheResponse);
+            return await Task.FromResult( new Response(request[FakeKeys.QueryKey].ToString(), request[FakeKeys.RouteKey].ToString()));
         }
     }
 
