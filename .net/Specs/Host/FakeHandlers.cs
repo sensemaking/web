@@ -14,7 +14,7 @@ namespace Sensemaking.Host.Web.Specs
         public static void Verify(Request request)
         {
             if(!request.Values.ContainsKey(RouteKey) || !request.Values.ContainsKey(QueryKey))
-                throw new Exception("Route values or query string were not provided.");
+                throw new ValidationException("Route values or query string were not provided.");
         }
     }
 
@@ -54,7 +54,7 @@ namespace Sensemaking.Host.Web.Specs
             FakeKeys.Verify(request);
 
             if(payload.Content.IsNullOrEmpty())
-                throw new Exception("Payload was not provided.");
+                throw new ValidationException("Payload was not provided.");
 
             return await Task.FromResult(ResponseStatusCode);
         }
@@ -87,7 +87,7 @@ namespace Sensemaking.Host.Web.Specs
             FakeKeys.Verify(request);
 
             if(payload.Content.IsNullOrEmpty())
-                throw new Exception("Payload was not provided.");
+                throw new ValidationException("Payload was not provided.");
 
             return await Task.FromResult(ResponseStatusCode);
         }
