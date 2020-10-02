@@ -22,6 +22,7 @@ namespace Sensemaking.Host.Web.Specs
         private static readonly ServiceAvailabilityException service_availability_exception = new ServiceAvailabilityException();
         private static readonly Exception unexpected_exception = new Exception();
         private static readonly ValidationException validation_exception = new ValidationException("That ain't so good.", "And neither is this.", "Nor this.");
+        private static readonly SerializationException serialization_exception = new SerializationException("Cannot serialize.", "It's all going wrong.");
         private static readonly ConflictException conflict_exception = new ConflictException("Thingy caused a conflict.");
         private string logged_alert;
 

@@ -52,9 +52,9 @@ namespace Sensemaking.Bdd.Web
             problem.should_have_problem(HttpStatusCode.InternalServerError);
         }
 
-        public static void should_be_bad_request(this ProblemException problem, params string[] errors)
+        public static void should_be_bad_request(this ProblemException problem, string problemTitle, params string[] errors)
         {
-            problem.should_have_problem(HttpStatusCode.BadRequest, "The request could not be correctly validated.", errors);
+            problem.should_have_problem(HttpStatusCode.BadRequest, problemTitle, errors);
         }
 
         public static void should_be_conflict(this ProblemException problem, params string[] errors)

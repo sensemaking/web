@@ -54,7 +54,15 @@ namespace Sensemaking.Host.Web.Specs
         {
             Given(() => an_(validation_exception));
             When(handling_a_request);
-            Then(() => it_is_a_bad_request(validation_exception.Errors));
+            Then(() => it_is_a_bad_request("The request could not be correctly validated.", validation_exception.Errors));
+        }
+
+        [Test]
+        public void serilaization_exception_causes_bad_request_detailing_the_problem()
+        {
+            Given(() => an_(serialization_exception));
+            When(handling_a_request);
+            Then(() => it_is_a_bad_request("The request could not be correctly serialized.", serialization_exception.Errors));
         }
 
         [Test]

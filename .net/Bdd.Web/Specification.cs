@@ -114,9 +114,9 @@ namespace Sensemaking.Bdd.Web
             the_problem_exception.should_be_internal_error();
         }
 
-        public void it_is_a_bad_request(params string[] erros)
+        public void it_is_a_bad_request(string problemTitle, params string[] errors)
         {
-            the_problem_exception.should_be_bad_request(erros);
+            the_problem_exception.should_be_bad_request(problemTitle, errors);
         }
 
         public void it_is_a_conflict(params string[] messages)

@@ -54,6 +54,7 @@ namespace Sensemaking.Web.Host
                 NotFoundException _ => (HttpStatusCode.NotFound, Problem.Empty),
                 ServiceAvailabilityException _ => (HttpStatusCode.ServiceUnavailable, Problem.Empty),
                 ValidationException ex => (HttpStatusCode.BadRequest, new Problem("The request could not be correctly validated.", ex.Errors)),
+                SerializationException ex => (HttpStatusCode.BadRequest, new Problem("The request could not be correctly serialized.", ex.Errors)),
                 ConflictException ex => (HttpStatusCode.Conflict, new Problem("Fulfilling the request would cause a conflict.", ex.Errors)),
                 _ => (HttpStatusCode.InternalServerError, Problem.Empty)
             };
