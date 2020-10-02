@@ -26,10 +26,10 @@ namespace Sensemaking.Web.Host
             {
                 var feature = context.Features.Get<IExceptionHandlerFeature>();
                 var exceptionHandler = app.ApplicationServices.GetRequiredService<ExceptionHandler>();
-                var (statusCode, problem) = exceptionHandler.Handle(feature.Error);
-                context.Response.StatusCode = (int)statusCode;
+                var (statusCode, problem) = exceptionHandler.HandleException(feature.Error);
+                context.Response.StatusCode = (int) statusCode;
 
-                if(statusCode == HttpStatusCode.InternalServerError)
+                if (statusCode == HttpStatusCode.InternalServerError)
                     Log.Logger.Error(AlertFactory.UnknownErrorOccured(app.ApplicationServices.GetRequiredService<IMonitorServices>().Info, feature.Error).Serialize());
 
                 if (problem == Problem.Empty)
@@ -45,19 +45,59 @@ namespace Sensemaking.Web.Host
 
     public class ExceptionHandler
     {
-        public (HttpStatusCode, Problem) Handle(Exception exception)
+        public (HttpStatusCode, Problem) HandleException(Exception exception)
         {
             return exception switch
             {
-                WhoAreYouException _ => (HttpStatusCode.Unauthorized, Problem.Empty),
-                AccessException _ => (HttpStatusCode.Forbidden, Problem.Empty),
-                NotFoundException _ => (HttpStatusCode.NotFound, Problem.Empty),
-                ServiceAvailabilityException _ => (HttpStatusCode.ServiceUnavailable, Problem.Empty),
-                ValidationException ex => (HttpStatusCode.BadRequest, new Problem("The request could not be correctly validated.", ex.Errors)),
-                SerializationException ex => (HttpStatusCode.BadRequest, new Problem("The request could not be correctly serialized.", ex.Errors)),
-                ConflictException ex => (HttpStatusCode.Conflict, new Problem("Fulfilling the request would cause a conflict.", ex.Errors)),
-                _ => (HttpStatusCode.InternalServerError, Problem.Empty)
+                WhoAreYouException ex => Handle(ex),
+                AccessException ex => Handle(ex),
+                NotFoundException ex => Handle(ex),
+                ServiceAvailabilityException ex => Handle(ex),
+                ValidationException  ex => Handle(ex),
+                SerializationException ex => Handle(ex),
+                ConflictException ex => Handle(ex),
+                _ => Handle(exception),
             };
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(WhoAreYouException ex)
+        {
+            return (HttpStatusCode.Unauthorized, Problem.Empty);
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(AccessException ex)
+        {
+            return (HttpStatusCode.Forbidden, Problem.Empty);
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(NotFoundException ex)
+        {
+            return (HttpStatusCode.NotFound, Problem.Empty);
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(ServiceAvailabilityException ex)
+        {
+            return (HttpStatusCode.ServiceUnavailable, Problem.Empty);
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(ValidationException ex)
+        {
+            return (HttpStatusCode.BadRequest, new Problem("The request could not be correctly validated.", ex.Errors));
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(SerializationException ex)
+        {
+            return (HttpStatusCode.BadRequest, new Problem("The request could not be correctly serialized.", ex.Errors));
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(ConflictException ex)
+        {
+            return (HttpStatusCode.Conflict, new Problem("Fulfilling the request would cause a conflict.", ex.Errors));
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(Exception ex)
+        {
+            return (HttpStatusCode.InternalServerError, Problem.Empty);
         }
     }
 }
