@@ -34,7 +34,7 @@ namespace Sensemaking.Web.Host
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            this.ConfigureApplication();
+            this.ConfigureApplication(app);
 
             app
                 .UseLogger()
@@ -50,7 +50,7 @@ namespace Sensemaking.Web.Host
                 .AddIsAlive();
         }
 
-        public virtual void ConfigureApplication() { }
+        public virtual void ConfigureApplication(IApplicationBuilder app) { }
 
         protected virtual IApplicationBuilder AdditionalMiddleware(IApplicationBuilder app) { return app; }
 
