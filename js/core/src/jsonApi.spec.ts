@@ -36,11 +36,7 @@ describe(`Methods`, () => {
         server.use(mock.get(url, successfulWhen(callDetail)))
         await get(url); return expect(callDetail.wasCalled).toBeTruthy()
     })
-
-    test(`fun and games`, () => {
-
-    })
-
+    
     test(`GET returns null when response has no content`, async () => {
         server.use(mock.get(url, (_, res, ctx) => res(ctx.status(200))))
         return expect(await get(url)).toBeNull()
