@@ -16,7 +16,7 @@ namespace Sensemaking.Host.Web.Specs
             configuration["TheAppSetting"].should_be("TheValue");
         }
 
-        private void further_configuration_is_provided()
+        private void any_further_configuration_is_provided()
         {
             var configuration = Sensemaking.Web.Host.HostBuilder.Create<SpecificationStartup>(
                     Array.Empty<string>(),

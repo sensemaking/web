@@ -15,7 +15,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void allows_for_further_configuration()
         {
-            Then(further_configuration_is_provided);
+            Then(any_further_configuration_is_provided);
         }
     }
 }
