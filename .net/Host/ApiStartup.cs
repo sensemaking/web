@@ -4,6 +4,7 @@ using System.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Sensemaking.Host.Monitoring;
@@ -14,12 +15,14 @@ namespace Sensemaking.Web.Host
 {
     public abstract class ApiStartup
     {
+        protected IConfiguration Configuration { get; private set; }
         protected abstract IMonitorServices ServiceMonitor { get; }
         protected abstract ILogger Logger { get; }
 
         protected ApiStartup()
         {
             Serialization.Configure();
+            Configuration = null!;
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
@@ -34,7 +37,8 @@ namespace Sensemaking.Web.Host
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            this.ConfigureApplication(app);
+            ConfigureApplication(app);
+            Configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
 
             app
                 .UseLogger()

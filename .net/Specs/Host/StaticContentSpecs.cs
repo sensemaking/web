@@ -8,7 +8,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void serves_index_on_root()
         {
-            When(requsting_the_root);
+            When(requesting_the_root);
             Then(it_provides_the_index);
         }
     }

@@ -3,6 +3,7 @@ using System.Reflection;
 using Flurl.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Sensemaking.Bdd;
 using Sensemaking.Bdd.Web;
 using Sensemaking.Web.Host;
@@ -19,7 +20,7 @@ namespace Sensemaking.Host.Web.Specs
             html = null;
         }
 
-        private void requsting_the_root()
+        private void requesting_the_root()
         {
             html = client.Request("/").GetAsync().Result.Content.ReadAsStringAsync().Result;
         }
