@@ -31,6 +31,7 @@ namespace Sensemaking.Bdd.Web
 
         static Specification()
         {
+            FlurlHttp.GlobalSettings.AllowedHttpStatusRange = "*";
             startup = (T) Activator.CreateInstance(typeof(T), new ConfigurationBuilder().Build() as IConfiguration);
             var factory = new WebApplicationFactory(startup).WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot("./Host"));
             client = new FlurlClient(factory.CreateClient());
