@@ -4,6 +4,7 @@ using System.Net;
 using System.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
@@ -77,6 +78,8 @@ namespace Sensemaking.Host.Web.Specs
 
     public class ExceptionStartup : SpecificationStartup
     {
+        public ExceptionStartup(IConfiguration configuration) : base(configuration) { }
+
         public const string exception_throwing_url = "/throw";
         private static Exception exception;
         public bool OnlyFakeHandlerRegistered { get; private set;  }

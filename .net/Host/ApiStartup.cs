@@ -19,10 +19,10 @@ namespace Sensemaking.Web.Host
         protected abstract IMonitorServices ServiceMonitor { get; }
         protected abstract ILogger Logger { get; }
 
-        protected ApiStartup()
+        protected ApiStartup(IConfiguration configuration)
         {
             Serialization.Configure();
-            Configuration = null!;
+            Configuration = configuration;
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
@@ -38,7 +38,6 @@ namespace Sensemaking.Web.Host
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             ConfigureApplication(app);
-            Configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
 
             app
                 .UseLogger()

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using Sensemaking.Bdd;
@@ -46,6 +47,8 @@ namespace Sensemaking.Host.Web.Specs
 
     public class IsAliveStartup : SpecificationStartup
     {
+        public IsAliveStartup(IConfiguration configuration) : base(configuration) { }
+
         protected override IMonitorServices ServiceMonitor { get; } = Substitute.For<IMonitorServices>();
 
         public override void ConfigureServices(IServiceCollection services)

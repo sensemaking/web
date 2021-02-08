@@ -33,6 +33,8 @@ namespace Sensemaking.Host.Web.Specs
 
     public class StaticContentStartup : SpecificationStartup
     {
+        public StaticContentStartup(IConfiguration configuration) : base(configuration) { }
+
         protected override IApplicationBuilder AdditionalMiddleware(IApplicationBuilder app)
         {
             app.ServeStaticContent();

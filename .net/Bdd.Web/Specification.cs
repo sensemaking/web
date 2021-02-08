@@ -1,14 +1,14 @@
 using System;
 using Flurl;
 using Flurl.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Sensemaking.Http.Json.Client;
 using Sensemaking.Web.Host;
 
 namespace Sensemaking.Bdd.Web
 {
-    public abstract partial class Specification<T> : Specification where T : ApiStartup, new()
+    public abstract partial class Specification<T> : Specification where T : ApiStartup
     {
         protected static readonly T startup;
         protected static readonly IServiceProvider services;
@@ -31,7 +31,7 @@ namespace Sensemaking.Bdd.Web
 
         static Specification()
         {
-            startup = new T();
+            startup = (T) Activator.CreateInstance(typeof(T), new ConfigurationBuilder().Build() as IConfiguration);
             var factory = new WebApplicationFactory(startup).WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot("./Host"));
             client = new FlurlClient(factory.CreateClient());
             services = factory.Services;

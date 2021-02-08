@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
 using Sensemaking.Web.Host;
@@ -103,6 +104,8 @@ namespace Sensemaking.Host.Web.Specs
 
     public class RequestHandlingStartup : SpecificationStartup
     {
+        public RequestHandlingStartup(IConfiguration configuration) : base(configuration) { }
+
         public string PipelineValue = "SomePipelineValue";
 
         public bool OnlyFakeFactoryRegistered { get; private set;  }
