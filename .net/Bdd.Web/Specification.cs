@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Flurl;
 using Flurl.Http;
 using Microsoft.AspNetCore.TestHost;
@@ -31,11 +32,13 @@ namespace Sensemaking.Bdd.Web
 
         static Specification()
         {
-            FlurlHttp.GlobalSettings.AllowedHttpStatusRange = "*";
-            startup = (T) Activator.CreateInstance(typeof(T), new ConfigurationBuilder().Build() as IConfiguration);
+            startup = (T)Activator.CreateInstance(typeof(T), new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", false, true).Build() as IConfiguration);
+
             var factory = new WebApplicationFactory(startup).WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot("./Host"));
-            client = new FlurlClient(factory.CreateClient());
             services = factory.Services;
+
+            FlurlHttp.GlobalSettings.AllowedHttpStatusRange = "*";
+            client = new FlurlClient(factory.CreateClient());
         }
 
         protected override void before_each()
