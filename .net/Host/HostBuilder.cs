@@ -20,7 +20,7 @@ namespace Sensemaking.Web.Host
             return CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    config.AddJsonFile("appsettings.json", false, true);
+                    config.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", false, true);
                     builder(config);
                 })
                 .ConfigureLogging(logging => logging.ClearProviders())
