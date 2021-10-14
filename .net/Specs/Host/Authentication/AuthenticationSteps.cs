@@ -49,7 +49,7 @@ namespace Sensemaking.Web.Host.Specs.Authentication
 
     public class AllowUnautheticatedGetHandler : IHandleGetRequests
     {
-        public bool AllowUnauthenicatedUsers() => true;
+        public bool AllowUnauthenicatedUsers => true;
         
         public const string Url = "/get_allowing_unauthenticated_users";
         public string Route => Url;
@@ -58,7 +58,7 @@ namespace Sensemaking.Web.Host.Specs.Authentication
 
     public class AllowUnautheticatedPostHandler : IHandlePostRequests<object>
     {
-        public bool AllowUnauthenicatedUsers() => true;
+        public bool AllowUnauthenicatedUsers => true;
 
         public const string Url = "/post_allowing_unauthenticated_users";
         public string Route => Url;
@@ -67,7 +67,7 @@ namespace Sensemaking.Web.Host.Specs.Authentication
 
     public class AllowUnautheticatedPutHandler : IHandlePutRequests<object>
     {
-        public bool AllowUnauthenicatedUsers() => true;
+        public bool AllowUnauthenicatedUsers => true;
 
         public const string Url = "/put_allowing_unauthenticated_users";
         public string Route => Url;
@@ -76,7 +76,7 @@ namespace Sensemaking.Web.Host.Specs.Authentication
 
     public class AllowUnautheticatedDeleteHandler : IHandleDeleteRequests
     {
-        public bool AllowUnauthenicatedUsers() => true;
+        public bool AllowUnauthenicatedUsers => true;
 
         public const string Url = "/delete_allowing_unauthenticated_users";
         public string Route => Url;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,16 +16,7 @@ namespace Sensemaking.Web.Host
         {
             this.settings = settings;
         }
-
-        protected override IEnumerable<KeyValuePair<string, string>> GetConfiguration()
-        {
-            return new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("Auth0:Domain", settings.Domain),
-                new KeyValuePair<string, string>("Auth0:Audience", settings.Audience)
-            };
-        }
-
+        
         protected override void RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

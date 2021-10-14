@@ -9,9 +9,7 @@ namespace Sensemaking.Web.Host
     public class None : IAuthenticateUsers
     {
         internal None() { }
-
-        IEnumerable<KeyValuePair<string, string>> IAuthenticateUsers.ApplyConfiguration() { return Enumerable.Empty<KeyValuePair<string, string>>(); }
-
+        
         void IAuthenticateUsers.RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthorization(options => { options.AddPolicy(AuthorizationPolicies.NoAuthorization.Name, AuthorizationPolicies.NoAuthorization.Policy); });

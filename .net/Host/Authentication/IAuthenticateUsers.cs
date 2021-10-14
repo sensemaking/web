@@ -8,8 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Sensemaking.Web.Host
 {
     public interface IAuthenticateUsers
-    {
-        internal IEnumerable<KeyValuePair<string, string>> ApplyConfiguration();
+    {        
         internal void RegisterServices(IServiceCollection services, IConfiguration configuration);
         internal void Use(IApplicationBuilder app);
     }
@@ -32,11 +31,6 @@ namespace Sensemaking.Web.Host
 
     public abstract class AuthenticationBase : IAuthenticateUsers
     {
-        IEnumerable<KeyValuePair<string, string>> IAuthenticateUsers.ApplyConfiguration()
-        {
-            return GetConfiguration();
-        }
-
         void IAuthenticateUsers.RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
             RegisterServices(services, configuration);
@@ -52,8 +46,7 @@ namespace Sensemaking.Web.Host
             app.UseAuthentication();
             app.UseAuthorization();
         }
-
-        protected abstract IEnumerable<KeyValuePair<string, string>> GetConfiguration();
+                
         protected abstract void RegisterServices(IServiceCollection services, IConfiguration configuration);
     }
 

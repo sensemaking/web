@@ -22,7 +22,6 @@ namespace Sensemaking.Web.Host
         protected ApiStartup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Configuration = configuration.Apply(Authentication.ApplyConfiguration());
             Serialization.Configure();
         }
 
@@ -67,11 +66,6 @@ namespace Sensemaking.Web.Host
 
     internal static class Extensions
     {
-        public static IConfiguration Apply(this IConfiguration configuration, IEnumerable<KeyValuePair<string, string>> settings)
-        {
-            return new ConfigurationBuilder().AddConfiguration(configuration).AddInMemoryCollection(settings).Build();
-        }
-
         internal static IApplicationBuilder AddMiddleware(this IApplicationBuilder app, Func<IApplicationBuilder, IApplicationBuilder> addMiddleware)
         {
             return addMiddleware(app);

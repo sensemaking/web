@@ -72,7 +72,7 @@ namespace Sensemaking.Web.Host
 
         private static void ApplyAuthorizationPolicy(this IEndpointConventionBuilder builder, IHandleRequests handler)
         {
-            if (handler.AllowUnauthenicatedUsers())
+            if (handler.AllowUnauthenicatedUsers)
                 builder.RequireAuthorization(AuthorizationPolicies.NoAuthorization.Name);
         }
     }
