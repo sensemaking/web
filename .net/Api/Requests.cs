@@ -1,48 +1,61 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Sensemaking.Web.Api
 {
-    public class Request
+    public class Request : ReadOnlyDictionary<string, object>
     {
-        public Request(IDictionary<string, object> values)
-        {
-            Values = new ReadOnlyDictionary<string, object>(values);
-        }
-
-        public object this[string key] => Values[key];
-        public IReadOnlyDictionary<string, object> Values { get; }
+        public Request(IDictionary<string, object> dictionary) : base(dictionary) { }
     }
 
-    public interface IHandleGetRequests
+    public interface IHandleRequests
     {
-        string Route { get; }  
+        string Route { get; }
+        bool AllowUnauthenicatedUsers() => false;
+    }
+
+    public interface IHandleGetRequests : IHandleRequests
+    {        
         Task<object> HandleAsync(Request request);
     }
 
-    public interface IHandleDeleteRequests 
-    {
-        string Route { get; }  
+    public interface IHandleDeleteRequests : IHandleRequests
+    {        
         Task<HttpStatusCode> HandleAsync(Request request);
     }
 
-    public interface IRequestCommandHandler
-    {
-        string Route { get; }
-    }
-
-    public interface IRequestCommandHandler<in T> : IRequestCommandHandler
+    public interface IRequestCommandHandler<in T> : IHandleRequests
     {
         Task<HttpStatusCode> HandleAsync(Request request, T payload);
     }
 
-    public interface IPutRequestHandler : IRequestCommandHandler {}
-    public interface IRequestPostHandler : IRequestCommandHandler {}
+    public interface IPutRequestHandler : IHandleRequests { }
+    public interface IRequestPostHandler : IHandleRequests { }
 
     public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> { }
 
     public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T> { }
+
+    public static class Requests
+    {
+        public const string UserKey = "AuthenticatedUser";
+
+        public static bool IsAuthenticated(this Request request)
+        {
+            return request.ContainsKey(UserKey);
+        }
+
+        public static ClaimsPrincipal User(this Request request)
+        {
+            if (!request.ContainsKey(UserKey))
+                throw new Exception("You cannot retrieve the user from an unauthenticated request.");
+
+            return (ClaimsPrincipal)request[UserKey];
+        }
+    }
 }
 

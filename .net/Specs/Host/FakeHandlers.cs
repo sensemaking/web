@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Sensemaking.Web.Api;
 using Sensemaking.Web.Host;
@@ -16,7 +17,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public static void Verify(Request request)
         {
-            if (!request.Values.ContainsKey(RouteKey) || !request.Values.ContainsKey(QueryKey) || !request.Values.ContainsKey(PipelineKey))
+            if (!request.ContainsKey(RouteKey) || !request.ContainsKey(QueryKey) || !request.ContainsKey(PipelineKey))
                 throw new ValidationException("Route values, query string value or pipeline values were not provided.");
         }
     }
@@ -33,9 +34,9 @@ namespace Sensemaking.Host.Web.Specs
 
     public class FakeRequestFactory : RequestFactory
     {
-        protected override IDictionary<string, object> GetAdditionalValuesFrom(IFeatureCollection features)
+        protected override IDictionary<string, object> GetAdditionalValuesFrom(HttpContext context)
         {
-            return new Dictionary<string, object> { { FakeKeys.PipelineKey, features.Get<FakeFeature>().Value } };
+            return new Dictionary<string, object> { { FakeKeys.PipelineKey,context.Features.Get<FakeFeature>().Value } };
         }
     }
 

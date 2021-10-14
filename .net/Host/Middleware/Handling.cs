@@ -33,10 +33,10 @@ namespace Sensemaking.Web.Host
 
         internal static void DefaultEndpointMapper(IEndpointRouteBuilder endpoints, IApplicationBuilder app, RequestFactory requestFactory)
         {
-            app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, context => handler.Get(requestFactory, context)));
-            app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, context => handler.Delete(requestFactory, context)));
-            app.ApplicationServices.GetServices<IPutRequestHandler>().ForEach(handler => endpoints.MapPut(handler.Route, context => handler.Execute(requestFactory, context)));
-            app.ApplicationServices.GetServices<IRequestPostHandler>().ForEach(handler => endpoints.MapPost(handler.Route, context => handler.Execute(requestFactory, context)));
+            app.ApplicationServices.GetServices<IHandleGetRequests>().ForEach(handler => endpoints.MapGet(handler.Route, context => handler.Get(requestFactory, context)).ApplyAuthorizationPolicy(handler));
+            app.ApplicationServices.GetServices<IHandleDeleteRequests>().ForEach(handler => endpoints.MapDelete(handler.Route, context => handler.Delete(requestFactory, context)).ApplyAuthorizationPolicy(handler));
+            app.ApplicationServices.GetServices<IPutRequestHandler>().ForEach(handler => endpoints.MapPut(handler.Route, context => handler.Execute(requestFactory, context)).ApplyAuthorizationPolicy(handler));
+            app.ApplicationServices.GetServices<IRequestPostHandler>().ForEach(handler => endpoints.MapPost(handler.Route, context => handler.Execute(requestFactory, context)).ApplyAuthorizationPolicy(handler));
         }
 
         public static async Task Get(this IHandleGetRequests handler, RequestFactory requestFactory, HttpContext context)
@@ -52,22 +52,28 @@ namespace Sensemaking.Web.Host
             await context.Response.CompleteAsync();
         }
 
-        public static async Task Execute(this IRequestCommandHandler handler, RequestFactory requestFactory, HttpContext context)
+        public static async Task Execute(this IHandleRequests handler, RequestFactory requestFactory, HttpContext context)
         {
             context.Response.StatusCode = (int) await handler.Execute(requestFactory.Create(context), await context.PayloadFor(handler));
             await context.Response.CompleteAsync();
         }
 
-        private static async Task<HttpStatusCode> Execute(this IRequestCommandHandler handler, Request request, object payload)
+        private static async Task<HttpStatusCode> Execute(this IHandleRequests handler, Request request, object payload)
         {
             return await (handler.GetType().GetMethod("HandleAsync")!.Invoke(handler, System.Reflection.BindingFlags.DoNotWrapExceptions, null, new[] { request, payload }, null) as Task<HttpStatusCode>)!;
         }
 
-        private static async Task<object> PayloadFor(this HttpContext context, IRequestCommandHandler handler)
+        private static async Task<object> PayloadFor(this HttpContext context, IHandleRequests handler)
         {
             var payloadType = handler.GetType().GetInterfaces().Single(x => x.Name == typeof(IRequestCommandHandler<>).Name).GenericTypeArguments.Single();
             using var reader = new StreamReader(context.Request.Body);
             return (await reader.ReadToEndAsync()).Deserialize(payloadType);
+        }
+
+        private static void ApplyAuthorizationPolicy(this IEndpointConventionBuilder builder, IHandleRequests handler)
+        {
+            if (handler.AllowUnauthenicatedUsers())
+                builder.RequireAuthorization(AuthorizationPolicies.NoAuthorization.Name);
         }
     }
 }

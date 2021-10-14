@@ -16,9 +16,10 @@ namespace Sensemaking.Web.Host
             {
                 GetQueryValueFrom(context),
                 GetRouteValuesFrom(context),
-                GetAdditionalValuesFrom(context.Features)
+                GetUser(context),
+                GetAdditionalValuesFrom(context)
             };
-            
+
             return new Request(dictionaries.Merge());
         }
 
@@ -32,7 +33,12 @@ namespace Sensemaking.Web.Host
             return context.Request.RouteValues;
         }
 
-        protected virtual IDictionary<string, object> GetAdditionalValuesFrom(IFeatureCollection features)
+        private static IDictionary<string, object> GetUser(HttpContext context)
+        {
+            return context.User.Identity.IsAuthenticated ? new Dictionary<string, object> { { Requests.UserKey, context.User } } : new Dictionary<string, object>();
+        }
+
+        protected virtual IDictionary<string, object> GetAdditionalValuesFrom(HttpContext context)
         {
             return new Dictionary<string, object>();
         }
