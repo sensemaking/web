@@ -26,9 +26,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.20" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.13.1" />
     <PackageReference Include="Scrutor" Version="3.2.2" />
-    <PackageReference Include="Sensemaking.Host" Version="1.0.131" />
-    <PackageReference Include="Sensemaking.Http" Version="1.0.131" />
-    <PackageReference Include="Sensemaking.Serialization" Version="1.0.131" />
+    <PackageReference Include="Sensemaking.Host" Version="1.0.137" />
+    <PackageReference Include="Sensemaking.Http" Version="1.0.137" />
+    <PackageReference Include="Sensemaking.Serialization" Version="1.0.137" />
   </ItemGroup>
 
   <ItemGroup>
