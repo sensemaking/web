@@ -15,7 +15,7 @@ namespace Sensemaking.Web.Api
     public interface IHandleRequests
     {
         string Route { get; }
-        bool AllowUnauthenicatedUsers { get => false; }
+        bool AllowUnauthenicatedUsers => false;
     }
 
     public interface IHandleGetRequests : IHandleRequests

@@ -16,6 +16,7 @@ namespace Sensemaking.Web.Host
             {
                 GetQueryValueFrom(context),
                 GetRouteValuesFrom(context),
+                GetHeaderValuesFrom(context),
                 GetUser(context),
                 GetAdditionalValuesFrom(context)
             };
@@ -26,6 +27,11 @@ namespace Sensemaking.Web.Host
         private static IDictionary<string, object> GetQueryValueFrom(HttpContext context)
         {
             return context.Request.Query.ToDictionary(x => x.Key, x => x.Value.First() as object);
+        }
+
+        private static IDictionary<string, object> GetHeaderValuesFrom(HttpContext context)
+        {
+            return context.Request.Headers.ToDictionary(x => x.Key, x => x.Value.First() as object);
         }
 
         private static IDictionary<string, object> GetRouteValuesFrom(HttpContext context)

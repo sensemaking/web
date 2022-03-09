@@ -11,8 +11,9 @@ namespace Sensemaking.Host.Web.Specs
 {
     public static class FakeKeys
     {
-        public static readonly string RouteKey = "routeKey";
         public static readonly string QueryKey = "queryKey";
+        public static readonly string RouteKey = "routeKey";
+        public static readonly string HeaderKey = "headerKey";
         public static readonly string PipelineKey = "pipelineKey";
 
         public static void Verify(Request request)
@@ -44,15 +45,17 @@ namespace Sensemaking.Host.Web.Specs
     {
         public readonly struct Response
         {
-            public Response(string queryValue, string routeValue, string pipelineValue)
+            public Response(string queryValue, string routeValue, string headerValue, string pipelineValue)
             {
                 QueryValue = queryValue;
                 RouteValue = routeValue;
+                HeaderValue = headerValue;
                 PipelineValue = pipelineValue;
             }
 
             public string QueryValue { get; }
             public string RouteValue { get; }
+            public string HeaderValue { get; }
             public string PipelineValue { get; }
         }
 
@@ -62,7 +65,7 @@ namespace Sensemaking.Host.Web.Specs
 
         public async Task<object> HandleAsync(Request request)
         {
-            return await Task.FromResult(new Response(request[FakeKeys.QueryKey].ToString(), request[FakeKeys.RouteKey].ToString(), request[FakeKeys.PipelineKey].ToString()));
+            return await Task.FromResult(new Response(request[FakeKeys.QueryKey].ToString(), request[FakeKeys.RouteKey].ToString(),request[FakeKeys.HeaderKey].ToString(), request[FakeKeys.PipelineKey].ToString()));
         }
     }
 
