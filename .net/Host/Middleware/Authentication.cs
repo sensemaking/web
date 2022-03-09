@@ -9,7 +9,6 @@ namespace Sensemaking.Web.Host
         internal static IServiceCollection ProvideAuthentication(this IServiceCollection services, IAuthenticateUsers authentication, IConfiguration configuration)
         {
             authentication.RegisterServices(services, configuration);
-
             return services;
         }
 

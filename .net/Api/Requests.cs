@@ -54,7 +54,7 @@ namespace Sensemaking.Web.Api
             if (!request.ContainsKey(UserKey))
                 throw new Exception("You cannot retrieve the user from an unauthenticated request.");
 
-            return (ClaimsPrincipal)request[UserKey];
+            return (ClaimsPrincipal) request[UserKey];
         }
     }
 }
