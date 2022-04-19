@@ -13,6 +13,7 @@ using Sensemaking.Bdd.Web;
 using Sensemaking.Http;
 using Sensemaking.Http.Json.Client;
 using Sensemaking.Monitoring;
+using Sensemaking.Web.Api;
 using Sensemaking.Web.Host;
 using Serilog;
 

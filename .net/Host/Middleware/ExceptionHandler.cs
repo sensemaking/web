@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
 using Sensemaking.Monitoring;
+using Sensemaking.Web.Api;
 using Serilog;
 
 namespace Sensemaking.Web.Host

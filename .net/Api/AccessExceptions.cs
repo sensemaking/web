@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sensemaking.Web.Host
+namespace Sensemaking.Web.Api
 {
     public class WhoAreYouException : Exception { }
 
