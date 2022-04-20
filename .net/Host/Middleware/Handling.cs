@@ -6,6 +6,7 @@ using System.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Http;
@@ -58,16 +59,17 @@ namespace Sensemaking.Web.Host
             await context.Response.CompleteAsync();
         }
 
-        private static async Task<HttpStatusCode> Execute(this IHandleRequests handler, Request request, object payload)
+        private static async Task<HttpStatusCode> Execute(this IHandleRequests handler, Request request, IAmAPayload payload)
         {
-            return await (handler.GetType().GetMethod("HandleAsync")!.Invoke(handler, System.Reflection.BindingFlags.DoNotWrapExceptions, null, new[] { request, payload }, null) as Task<HttpStatusCode>)!;
+            payload.Validate();
+            return await (handler.GetType().GetMethod("HandleAsync")!.Invoke(handler, System.Reflection.BindingFlags.DoNotWrapExceptions, null, new object[] { request, payload }, null) as Task<HttpStatusCode>)!;
         }
 
-        private static async Task<object> PayloadFor(this HttpContext context, IHandleRequests handler)
+        private static async Task<IAmAPayload> PayloadFor(this HttpContext context, IHandleRequests handler)
         {
             var payloadType = handler.GetType().GetInterfaces().Single(x => x.Name == typeof(IRequestCommandHandler<>).Name).GenericTypeArguments.Single();
             using var reader = new StreamReader(context.Request.Body);
-            return (await reader.ReadToEndAsync()).Deserialize(payloadType);
+            return ((await reader.ReadToEndAsync()).Deserialize(payloadType) as IAmAPayload)!;
         }
 
         private static void ApplyAuthorizationPolicy(this IEndpointConventionBuilder builder, IHandleRequests handler)

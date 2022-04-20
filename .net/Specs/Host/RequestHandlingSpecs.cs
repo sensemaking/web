@@ -33,6 +33,15 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         [Test]
+        public void put_payloads_are_validated()
+        {
+            Given(a_url);
+            And(an_invalid_payload);
+            When(() => trying(putting));
+            Then(() => it_is_a_bad_request("The request could not be correctly validated.", FakePayload.ValidationError));
+        }
+
+        [Test]
         public void delete_requests_are_handled()
         {
             Given(a_url);
@@ -57,6 +66,15 @@ namespace Sensemaking.Host.Web.Specs
             And(a_post_handler_for_the_url);
             When(posting);
             Then(the_post_handler_processes_the_request);
+        }
+
+        [Test]
+        public void post_payloads_are_validated()
+        {
+            Given(a_url);
+            And(an_invalid_payload);
+            When(() => trying(posting));
+            Then(() => it_is_a_bad_request("The request could not be correctly validated.", FakePayload.ValidationError));
         }
 
         [Test]

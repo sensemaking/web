@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sensemaking.Bdd;
-using Sensemaking.Http.Json.Client;
 using Sensemaking.Web.Host;
 
 namespace Sensemaking.Host.Web.Specs
@@ -34,6 +33,11 @@ namespace Sensemaking.Host.Web.Specs
         private void a_payload()
         {
             the_payload = new FakePayload("The payload contents");
+        }
+
+        private void an_invalid_payload()
+        {
+            the_payload = new FakePayload("Who cares? We are failing validation anyway.", true);
         }
 
         private void a_get_handler_for_the_url() { }
