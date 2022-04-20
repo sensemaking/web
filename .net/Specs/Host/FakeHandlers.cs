@@ -120,7 +120,7 @@ namespace Sensemaking.Host.Web.Specs
         }
     }
 
-    public class FakePayload
+    public class FakePayload : IAmAPayload
     {
         public FakePayload(string content)
         {
@@ -128,5 +128,7 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         public string Content { get; private set; }
+        
+        public void Validate() { }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace Sensemaking.Web.Api
 {
@@ -28,7 +29,9 @@ namespace Sensemaking.Web.Api
         Task<HttpStatusCode> HandleAsync(Request request);
     }
 
-    public interface IRequestCommandHandler<in T> : IHandleRequests
+    public interface IAmAPayload { void Validate(); }
+
+    public interface IRequestCommandHandler<in T> : IHandleRequests where T : IAmAPayload
     {
         Task<HttpStatusCode> HandleAsync(Request request, T payload);
     }
@@ -36,9 +39,9 @@ namespace Sensemaking.Web.Api
     public interface IPutRequestHandler : IHandleRequests { }
     public interface IRequestPostHandler : IHandleRequests { }
 
-    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> { }
+    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> where T : IAmAPayload { } 
 
-    public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T> { }
+    public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T> where T : IAmAPayload { }
 
     public static class Requests
     {
