@@ -120,22 +120,13 @@ namespace Sensemaking.Host.Web.Specs
         }
     }
 
-    public class FakePayload : IAmAPayload
+    public class FakePayload 
     {
-        public FakePayload(string content, bool failValidation = false)
+        public FakePayload(string content)
         {
             Content = content;
-            FailValidation = failValidation;
         }
 
         public string Content { get; private set; }
-        public bool FailValidation { get; private set; }
-
-        public const string ValidationError = "It's all gone horribly wrong!";
-        public void Validate()
-        {
-            if(FailValidation)
-                Validation.BasedOn(errors => errors.Add(ValidationError)); 
-        }
     }
 }

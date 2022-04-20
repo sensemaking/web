@@ -35,11 +35,6 @@ namespace Sensemaking.Host.Web.Specs
             the_payload = new FakePayload("The payload contents");
         }
 
-        private void an_invalid_payload()
-        {
-            the_payload = new FakePayload("Who cares? We are failing validation anyway.", true);
-        }
-
         private void a_get_handler_for_the_url() { }
 
         private void a_put_handler_for_the_url() { }

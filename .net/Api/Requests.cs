@@ -29,9 +29,7 @@ namespace Sensemaking.Web.Api
         Task<HttpStatusCode> HandleAsync(Request request);
     }
 
-    public interface IAmAPayload { void Validate(); }
-
-    public interface IRequestCommandHandler<in T> : IHandleRequests where T : IAmAPayload
+    public interface IRequestCommandHandler<in T> : IHandleRequests 
     {
         Task<HttpStatusCode> HandleAsync(Request request, T payload);
     }
@@ -39,9 +37,9 @@ namespace Sensemaking.Web.Api
     public interface IPutRequestHandler : IHandleRequests { }
     public interface IRequestPostHandler : IHandleRequests { }
 
-    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> where T : IAmAPayload { } 
+    public interface IHandlePutRequests<in T> : IPutRequestHandler, IRequestCommandHandler<T> { }
 
-    public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T> where T : IAmAPayload { }
+    public interface IHandlePostRequests<in T> : IRequestPostHandler, IRequestCommandHandler<T> { }
 
     public static class Requests
     {

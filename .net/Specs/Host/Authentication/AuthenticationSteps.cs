@@ -56,23 +56,22 @@ namespace Sensemaking.Web.Host.Specs.Authentication
         public async Task<object> HandleAsync(Request request) { return await Task.FromResult("Wibble"); }
     }
 
-    public class AuthenticationPayload : IAmAPayload { public void Validate() { } }
-    public class AllowUnautheticatedPostHandler : IHandlePostRequests<AuthenticationPayload>
+    public class AllowUnautheticatedPostHandler : IHandlePostRequests<object>
     {
         public bool AllowUnauthenicatedUsers => true;
 
         public const string Url = "/post_allowing_unauthenticated_users";
         public string Route => Url;
-        public async Task<HttpStatusCode> HandleAsync(Request request, AuthenticationPayload payload) { return await Task.FromResult(HttpStatusCode.OK); }
+        public async Task<HttpStatusCode> HandleAsync(Request request, object payload) { return await Task.FromResult(HttpStatusCode.OK); }
     }
 
-    public class AllowUnautheticatedPutHandler : IHandlePutRequests<AuthenticationPayload>
+    public class AllowUnautheticatedPutHandler : IHandlePutRequests<object>
     {
         public bool AllowUnauthenicatedUsers => true;
 
         public const string Url = "/put_allowing_unauthenticated_users";
         public string Route => Url;
-        public async Task<HttpStatusCode> HandleAsync(Request request, AuthenticationPayload payload) { return await Task.FromResult(HttpStatusCode.OK); }
+        public async Task<HttpStatusCode> HandleAsync(Request request, object payload) { return await Task.FromResult(HttpStatusCode.OK); }
     }
 
     public class AllowUnautheticatedDeleteHandler : IHandleDeleteRequests

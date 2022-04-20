@@ -40,7 +40,7 @@ namespace Sensemaking.Web.Host.Specs.Authentication
         public void posts_that_allow_unauthenticated_users_authorize_unauthenticated_users()
         {
             Given(an_unauthenticated_http_request);
-            When(() => post(AllowUnautheticatedPostHandler.Url, new AuthenticationPayload()));
+            When(() => post(AllowUnautheticatedPostHandler.Url, new {}));
             Then(it_is_ok);
         }
 
@@ -48,7 +48,7 @@ namespace Sensemaking.Web.Host.Specs.Authentication
         public void puts_that_allow_unauthenticated_users_authorize_unauthenticated_users()
         {
             Given(an_unauthenticated_http_request);
-            When(() => put(AllowUnautheticatedPutHandler.Url, new AuthenticationPayload()));
+            When(() => put(AllowUnautheticatedPutHandler.Url, new {}));
             Then(it_is_ok);
         }
 
