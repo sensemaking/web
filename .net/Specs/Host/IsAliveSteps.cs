@@ -3,16 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using Sensemaking.Bdd;
-using Sensemaking.Bdd.Web;
 using Sensemaking.Host.Monitoring;
-using Sensemaking.Http.Json.Client;
 using Sensemaking.Monitoring;
 
 namespace Sensemaking.Host.Web.Specs
 {
     public partial class IsAliveSpecs
     {
-        private static readonly Alert alert = AlertFactory.ServiceUnavailable(new MonitorInfo("Monitor", "For alert", "Some Instance"), "We is down");
+        private static readonly MonitoringAlert alert = AlertFactory.ServiceUnavailable(new MonitorInfo("Monitor", "For alert", "Some Instance"), "We is down");
 
         private void monitor_has_full_service()
         {

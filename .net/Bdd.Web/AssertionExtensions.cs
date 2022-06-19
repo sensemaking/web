@@ -69,7 +69,7 @@ namespace Sensemaking.Bdd.Web
 
             problem.Status.should_be(code);
             if (errors.None())
-                problem.HasProblem().should_be_false();
+                problem.Problem.Errors.should_be_empty();
             else
             {
                 problem.Problem.Title.should_be(problemTitle);

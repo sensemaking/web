@@ -17,7 +17,7 @@ namespace Sensemaking.Web.Host.Specs.Authentication
 
         private void it_serves_static_content()
         {
-            client.Request("/").GetAsync().Result.StatusCode.should_be(HttpStatusCode.OK);
+            client.Request("/").GetAsync().Result.ResponseMessage.StatusCode.should_be(HttpStatusCode.OK);
         }
 
         private void it_is_challenged()

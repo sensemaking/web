@@ -40,7 +40,7 @@ namespace Sensemaking.Web.Host
         {
             ConfigureApplication(app);
             app
-                .UseLogger()
+                .UseLogger(ServiceMonitor)
                 .MapExceptionsToProblems()
                 .ScheduleStatusNotification(Period.FromSeconds(20))
             .Request()

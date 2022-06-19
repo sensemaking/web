@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Sensemaking.Bdd.Web;
 using Sensemaking.Host.Monitoring;
@@ -54,7 +55,7 @@ namespace Sensemaking.Host.Web.Specs
             Given(() => an_(unexpected_exception));
             When(handling_a_request);
             Then(it_is_an_internal_error);
-            And(() => it_logs(AlertFactory.UnknownErrorOccured(services.GetRequiredService<IMonitorServices>().Info, unexpected_exception)));
+            And(() => it_logs(new Alert<Exception>("UnexpectedException", unexpected_exception)));
         }
 
         [Test]

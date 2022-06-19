@@ -1,21 +1,16 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Serialization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using Sensemaking.Bdd;
-using Sensemaking.Bdd.Web;
-using Sensemaking.Http;
 using Sensemaking.Http.Json.Client;
 using Sensemaking.Monitoring;
 using Sensemaking.Web.Api;
 using Sensemaking.Web.Host;
-using Serilog;
 
 namespace Sensemaking.Host.Web.Specs
 {
@@ -29,14 +24,6 @@ namespace Sensemaking.Host.Web.Specs
         private static readonly ValidationException validation_exception = new ValidationException("That ain't so good.", "And neither is this.", "Nor this.");
         private static readonly SerializationException serialization_exception = new SerializationException("Cannot serialize.", "It's all going wrong.");
         private static readonly ConflictException conflict_exception = new ConflictException("Thingy caused a conflict.");
-        private string logged_alert;
-
-        protected override void before_each()
-        {
-            base.before_each();
-            logged_alert = null;
-            startup.SubstituteLogger.When(l => l.Error(Arg.Any<string>())).Do(c => logged_alert = c.Arg<string>());
-        }
 
         protected override void after_each()
         {
@@ -71,9 +58,9 @@ namespace Sensemaking.Host.Web.Specs
             the_problem_exception.Headers.ValueFor("Content-Type").should_be_empty();
         }
 
-        private void it_logs(Alert alert)
+        private void it_logs(Alert<Exception> alert)
         {
-            logged_alert.should_be(alert.Serialize());
+            startup.SubstituteLogger.should_have_logged_as_error(alert);
         }
     }
 

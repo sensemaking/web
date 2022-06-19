@@ -22,7 +22,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void requesting_the_root()
         {
-            html = client.Request("/").GetAsync().Result.Content.ReadAsStringAsync().Result;
+            html = client.Request("/").GetAsync().Result.ResponseMessage.Content.ReadAsStringAsync().Result;
         }
 
         private void it_provides_the_index()

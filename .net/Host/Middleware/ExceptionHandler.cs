@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Sensemaking.Host.Monitoring;
 using Sensemaking.Http;
 using Sensemaking.Monitoring;
 using Sensemaking.Web.Api;
@@ -32,7 +31,7 @@ namespace Sensemaking.Web.Host
                 context.Response.StatusCode = (int) statusCode;
 
                 if (statusCode == HttpStatusCode.InternalServerError)
-                    Log.Logger.Error(AlertFactory.UnknownErrorOccured(app.ApplicationServices.GetRequiredService<IMonitorServices>().Info, feature.Error).Serialize());
+                    Log.Logger.Error(new Alert<Exception>("UnexpectedException", feature.Error));
 
                 if (problem == Problem.Empty)
                     return context.Response.CompleteAsync();
