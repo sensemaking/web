@@ -34,6 +34,7 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         [Test]
+ 
         public void not_found_exception_causes_not_found_problem()
         {
             Given(() => a_(not_found_exception));
