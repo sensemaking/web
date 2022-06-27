@@ -34,14 +34,11 @@ namespace Sensemaking.Web.Host
             return context.Request.Headers.ToDictionary(x => x.Key, x => x.Value.First() as object);
         }
 
-        private static IDictionary<string, object> GetRouteValuesFrom(HttpContext context)
-        {
-            return context.Request.RouteValues;
-        }
+        private static IDictionary<string, object> GetRouteValuesFrom(HttpContext context) => context.Request.RouteValues!;
 
         private static IDictionary<string, object> GetUser(HttpContext context)
         {
-            return context.User.Identity.IsAuthenticated ? new Dictionary<string, object> { { Requests.UserKey, context.User } } : new Dictionary<string, object>();
+            return (context.User.Identity?.IsAuthenticated ?? false) ? new Dictionary<string, object> { { Requests.UserKey, context.User } } : new Dictionary<string, object>();
         }
 
         protected virtual IDictionary<string, object> GetAdditionalValuesFrom(HttpContext context)

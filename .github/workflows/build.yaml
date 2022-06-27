@@ -7,9 +7,9 @@ jobs:
     - name: Pull
       uses: actions/checkout@v2
     - name: Install .Net Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: '6.0.x'
         source-url: https://nuget.pkg.github.com/sensemaking/index.json
       env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

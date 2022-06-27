@@ -1,30 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Sensemaking.Bdd.Web</AssemblyName>
-    <RootNamespace>Sensemaking.Bdd.Web</RootNamespace>
-    <Description>BDD support for Web Api's</Description>
-    <RepositoryUrl>https://github.com/sensemaking/web.git</RepositoryUrl>
-    <Version Condition=" '$(GITHUB_RUN_NUMBER)' != '' ">1.0.$(GITHUB_RUN_NUMBER)</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<OutputPath>bin\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<AssemblyName>Sensemaking.Bdd.Web</AssemblyName>
+		<RootNamespace>Sensemaking.Bdd.Web</RootNamespace>
+		<Description>BDD support for Web Api's</Description>
+		<RepositoryUrl>https://github.com/sensemaking/web.git</RepositoryUrl>
+		<Version Condition=" '$(GITHUB_RUN_NUMBER)' != '' ">1.0.$(GITHUB_RUN_NUMBER)</Version>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.6" />
+		<PackageReference Include="Sensemaking.Bdd" Version="1.0.155" />
+		<PackageReference Include="Sensemaking.Http.Json.Client" Version="1.0.155" />
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.8" />
-    <PackageReference Include="Sensemaking.Bdd" Version="1.0.155" />
-    <PackageReference Include="Sensemaking.Http.Json.Client" Version="1.0.155" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Host\Host.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Host\Host.csproj" />
+	</ItemGroup>
 
 </Project>

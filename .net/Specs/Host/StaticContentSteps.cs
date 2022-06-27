@@ -27,7 +27,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void it_provides_the_index()
         {
-            html.should_be(File.ReadAllText($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/../../public/index.html"));
+            html.should_be(File.ReadAllText($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/../public/index.html"));
         }
     }
 

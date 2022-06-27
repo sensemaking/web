@@ -1,38 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Sensemaking.Web.Host</AssemblyName>
-    <RootNamespace>Sensemaking.Web.Host</RootNamespace>
-    <Nullable>enable</Nullable>
-    <Description>Startup and Middleware for Json Api</Description>
-    <RepositoryUrl>https://github.com/sensemaking/web.git</RepositoryUrl>
-    <Version Condition=" '$(GITHUB_RUN_NUMBER)' != '' ">1.0.$(GITHUB_RUN_NUMBER)</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<OutputPath>bin\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<AssemblyName>Sensemaking.Web.Host</AssemblyName>
+		<RootNamespace>Sensemaking.Web.Host</RootNamespace>
+		<Nullable>enable</Nullable>
+		<Description>Startup and Middleware for Json Api</Description>
+		<RepositoryUrl>https://github.com/sensemaking/web.git</RepositoryUrl>
+		<Version Condition=" '$(GITHUB_RUN_NUMBER)' != '' ">1.0.$(GITHUB_RUN_NUMBER)</Version>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
-  </PropertyGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" Version="6.0.0" />
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.20.0" />
+		<PackageReference Include="Scrutor" Version="4.2.0" />
+		<PackageReference Include="Sensemaking.Host" Version="1.0.155" />
+		<PackageReference Include="Sensemaking.Http" Version="1.0.155" />
+		<PackageReference Include="Sensemaking.Serialization" Version="1.0.155" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" Version="3.1.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.20" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.13.1" />
-    <PackageReference Include="Scrutor" Version="3.2.2" />
-    <PackageReference Include="Sensemaking.Host" Version="1.0.155" />
-    <PackageReference Include="Sensemaking.Http" Version="1.0.155" />
-    <PackageReference Include="Sensemaking.Serialization" Version="1.0.155" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Api\Api.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Api\Api.csproj" />
+	</ItemGroup>
 
 </Project>

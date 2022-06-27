@@ -23,22 +23,26 @@ namespace Sensemaking.Web.Host
 
         internal static IApplicationBuilder MapExceptionsToProblems(this IApplicationBuilder app)
         {
-            app.UseExceptionHandler(error => error.Run(context =>
+            app.UseExceptionHandler(new ExceptionHandlerOptions
             {
-                var feature = context.Features.Get<IExceptionHandlerFeature>();
-                var exceptionHandler = app.ApplicationServices.GetRequiredService<ExceptionHandler>();
-                var (statusCode, problem) = exceptionHandler.HandleException(feature.Error);
-                context.Response.StatusCode = (int) statusCode;
+                AllowStatusCode404Response = true,
+                ExceptionHandler = context =>
+                {
+                    var feature = context.Features.Get<IExceptionHandlerFeature>()!;
+                    var exceptionHandler = app.ApplicationServices.GetRequiredService<ExceptionHandler>();
+                    var (statusCode, problem) = exceptionHandler.HandleException(feature.Error);
+                    context.Response.StatusCode = (int)statusCode;
 
-                if (statusCode == HttpStatusCode.InternalServerError)
-                    Log.Logger.Error(new Alert<Exception>("UnexpectedException", feature.Error));
+                    if (statusCode == HttpStatusCode.InternalServerError)
+                        Log.Logger.Error(new Alert<Exception>("UnexpectedException", feature.Error));
 
-                if (problem == Problem.Empty)
-                    return context.Response.CompleteAsync();
+                    if (problem == Problem.Empty)
+                        return context.Response.CompleteAsync();
 
-                context.Response.ContentType = MediaType.JsonProblem;
-                return context.Response.WriteAsync(problem.Serialize());
-            }));
+                    context.Response.ContentType = MediaType.JsonProblem;
+                    return context.Response.WriteAsync(problem.Serialize());
+                }
+            });
 
             return app;
         }
@@ -54,7 +58,7 @@ namespace Sensemaking.Web.Host
                 AccessException ex => Handle(ex),
                 NotFoundException ex => Handle(ex),
                 ServiceAvailabilityException ex => Handle(ex),
-                ValidationException  ex => Handle(ex),
+                ValidationException ex => Handle(ex),
                 SerializationException ex => Handle(ex),
                 ConflictException ex => Handle(ex),
                 _ => Handle(exception),
