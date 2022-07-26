@@ -128,6 +128,11 @@ namespace Sensemaking.Bdd.Web
         {
             the_problem_exception.should_be_conflict(messages);
         }
+
+        public void it_is_unavailable_for_legal_reasons(params string[] messages)
+        {
+            the_problem_exception.should_be_unavailable_for_legal_reasons(messages);
+        }
     }
 
     public static class Extensions

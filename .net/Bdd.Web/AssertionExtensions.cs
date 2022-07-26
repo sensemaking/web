@@ -62,6 +62,11 @@ namespace Sensemaking.Bdd.Web
             problem.should_have_problem(HttpStatusCode.Conflict, "Fulfilling the request would cause a conflict.", errors);
         }
 
+        public static void should_be_unavailable_for_legal_reasons(this ProblemException problem, params string[] errors)
+        {
+            problem.should_have_problem(HttpStatusCode.UnavailableForLegalReasons, "Fulfilling the request would be illegal.", errors);
+        }
+
         public static void should_have_problem(this ProblemException problem, HttpStatusCode code, string problemTitle = "", params string[] errors)
         {
             if (problem == null)

@@ -84,6 +84,14 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         [Test]
+        public void legal_exception_causes_unavailable_for_legal_reasons_detailing_the_problem()
+        {
+            Given(() => an_(legal_exception));
+            When(handling_a_request);
+            Then(() => it_is_unavailable_for_legal_reasons(legal_exception.Errors));
+        }
+
+        [Test]
         public void problems_without_details_have_no_content_type()
         {
             Given(() => a_(not_allowed_exception));

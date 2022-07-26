@@ -24,6 +24,7 @@ namespace Sensemaking.Host.Web.Specs
         private static readonly ValidationException validation_exception = new ValidationException("That ain't so good.", "And neither is this.", "Nor this.");
         private static readonly SerializationException serialization_exception = new SerializationException("Cannot serialize.", "It's all going wrong.");
         private static readonly ConflictException conflict_exception = new ConflictException("Thingy caused a conflict.");
+        private static readonly LegalException legal_exception = new LegalException("Law breaker detected.");
 
         protected override void after_each()
         {

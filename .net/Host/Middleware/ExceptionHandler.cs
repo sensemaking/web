@@ -61,6 +61,7 @@ namespace Sensemaking.Web.Host
                 ValidationException ex => Handle(ex),
                 SerializationException ex => Handle(ex),
                 ConflictException ex => Handle(ex),
+                LegalException ex => Handle(ex),
                 _ => Handle(exception),
             };
         }
@@ -98,6 +99,11 @@ namespace Sensemaking.Web.Host
         protected virtual (HttpStatusCode, Problem) Handle(ConflictException ex)
         {
             return (HttpStatusCode.Conflict, new Problem("Fulfilling the request would cause a conflict.", ex.Errors));
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(LegalException ex)
+        {
+            return (HttpStatusCode.UnavailableForLegalReasons, new Problem("Fulfilling the request would be illegal.", ex.Errors));
         }
 
         protected virtual (HttpStatusCode, Problem) Handle(Exception ex)
