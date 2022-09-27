@@ -20,7 +20,7 @@ namespace Sensemaking.Web.Host
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
-                options.Authority = $"https://{settings.Domain}";
+                options.Authority = $"https://{settings.Domain}/";
                 options.TokenValidationParameters = new TokenValidationParameters { 
                     ValidAudience = settings.Audience,
                     ValidIssuer = settings.Domain,
