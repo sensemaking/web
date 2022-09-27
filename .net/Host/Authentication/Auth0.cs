@@ -21,7 +21,6 @@ namespace Sensemaking.Web.Host
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.Authority = $"https://{settings.Domain}";
-                //options.Audience = settings.Audience;
                 options.TokenValidationParameters = new TokenValidationParameters { 
                     ValidAudience = settings.Audience,
                     ValidIssuer = settings.Domain,
