@@ -15,22 +15,19 @@ namespace Sensemaking.Web.Host
         {
             this.settings = settings;
         }
-        
+
         protected override void RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
-                options.Authority = $"https://{settings.Domain}/";
-                options.TokenValidationParameters = new TokenValidationParameters { 
-                    ValidAudience = settings.Audience,
-                    ValidIssuer = settings.Domain,
-                    NameClaimType = ClaimTypes.NameIdentifier 
-                };
+                options.Authority = settings.Domain;
+                options.Audience = settings.Audience;
+                options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = ClaimTypes.NameIdentifier };
             });
         }
 
         public readonly struct Settings
-        {   
+        {
             public static Settings Empty = new Settings();
 
             public string Domain { get; }
@@ -47,7 +44,7 @@ namespace Sensemaking.Web.Host
 
                 Domain = domain;
                 Audience = audience;
-            }            
+            }
         }
 
         public bool Equals(Auth0 that)
