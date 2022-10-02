@@ -42,7 +42,7 @@ namespace Sensemaking.Web.Host
             app
                 .UseLogger(ServiceMonitor)
                 .MapExceptionsToProblems()
-                .ScheduleStatusNotification(Period.FromSeconds(20))
+                .ScheduleStatusNotification(Period.FromMinutes(1))
             .Request()
                 .UseHttpsRedirection()
                 .RejectNonTls2OrHigher()
