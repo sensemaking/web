@@ -44,9 +44,9 @@ namespace Sensemaking.Host.Web.Specs
             services.GetRequiredService<IMonitorServices>().should_be(ServiceNotification.Notifier.Monitor);
         }
 
-        private void it_notifies_every_20_seconds()
+        private void it_notifies_every_1_minute()
         {
-            ServiceNotification.Notifier.Heartbeat.Seconds.should_be(20);
+            ServiceNotification.Notifier.Heartbeat.Minutes.should_be(1);
         }
     }
 

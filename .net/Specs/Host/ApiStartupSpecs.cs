@@ -22,12 +22,12 @@ namespace Sensemaking.Host.Web.Specs
         }
 
         [Test]
-        public void notifies_of_service_status_every_20_seconds()
+        public void notifies_of_service_status_every_1_minute()
         {
             Given(service_has_started);
             And(it_has_dependencies);
             Then(it_monitors_them);
-            And(it_notifies_every_20_seconds);
+            And(it_notifies_every_1_minute);
         }
 
         [Test]
