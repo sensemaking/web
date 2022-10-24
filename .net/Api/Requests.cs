@@ -34,6 +34,7 @@ namespace Sensemaking.Web.Api
         Task<HttpStatusCode> HandleAsync(Request request, T payload);
     }
 
+    public class NoBody { }
     public interface IPutRequestHandler : IHandleRequests { }
     public interface IRequestPostHandler : IHandleRequests { }
 
