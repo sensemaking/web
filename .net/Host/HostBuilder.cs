@@ -24,7 +24,7 @@ namespace Sensemaking.Web.Host
                     builder(config);
                 })
                 .ConfigureLogging(logging => logging.ClearProviders())
-                .ConfigureWebHostDefaults(builder => builder.UseStartup<T>())
+                .ConfigureWebHostDefaults(b => b.UseStartup<T>())
                 .ConfigureWebHost(b => b.UseWebRoot("public"));
         }
     }
