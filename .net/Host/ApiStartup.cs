@@ -45,7 +45,6 @@ namespace Sensemaking.Web.Host
                 .ScheduleStatusNotification(Period.FromMinutes(1))
             .Request()
                 .UseHttpsRedirection()
-                .ForceWww()
                 .RejectNonTls2OrHigher()
                 .RequireJsonAcceptance()
             .Routing()
