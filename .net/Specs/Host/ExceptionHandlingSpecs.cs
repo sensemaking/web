@@ -20,7 +20,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void who_are_you_exception_causes_not_authorised_problem()
         {
-            Given(() => a_(who_are_you_exception));
+            Given(a_(who_are_you_exception));
             When(handling_a_request);
             Then(it_is_unauthorised);
         }
@@ -28,24 +28,31 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void not_allowed_exception_causes_forbidden_error_problem()
         {
-            Given(() => a_(not_allowed_exception));
+            Given(a_(not_allowed_exception));
             When(handling_a_request);
             Then(it_is_forbidden);
         }
 
         [Test]
- 
         public void not_found_exception_causes_not_found_problem()
         {
-            Given(() => a_(not_found_exception));
+            Given(a_(not_found_exception));
             When(handling_a_request);
             Then(it_is_not_found);
         }
 
         [Test]
+        public void too_late_exception_causes_gone_problem()
+        {
+            Given(a_(too_late_exception));
+            When(handling_a_request);
+            Then(it_is_gone);
+        }
+
+        [Test]
         public void service_unavailable_exception_causes_service_unavailable_problem()
         {
-            Given(() => a_(service_availability_exception));
+            Given(a_(service_availability_exception));
             When(handling_a_request);
             Then(it_is_service_unavailable);
         }
@@ -53,7 +60,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void unexpected_exception_causes_internal_server_error_problem()
         {
-            Given(() => an_(unexpected_exception));
+            Given(an_(unexpected_exception));
             When(handling_a_request);
             Then(it_is_an_internal_error);
             And(() => it_logs(new Alert<Exception>("UnexpectedException", unexpected_exception)));
@@ -62,7 +69,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void validation_exception_causes_bad_request_detailing_the_problem()
         {
-            Given(() => an_(validation_exception));
+            Given(a_(validation_exception));
             When(handling_a_request);
             Then(() => it_is_a_bad_request("The request could not be correctly validated.", validation_exception.Errors));
         }
@@ -70,7 +77,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void serilaization_exception_causes_bad_request_detailing_the_problem()
         {
-            Given(() => an_(serialization_exception));
+            Given(a_(serialization_exception));
             When(handling_a_request);
             Then(() => it_is_a_bad_request("The request could not be correctly serialized.", serialization_exception.Errors));
         }
@@ -78,7 +85,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void conflict_exception_causes_conflict_detailing_the_problem()
         {
-            Given(() => an_(conflict_exception));
+            Given(a_(conflict_exception));
             When(handling_a_request);
             Then(() => it_is_a_conflict(conflict_exception.Errors));
         }
@@ -86,7 +93,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void legal_exception_causes_unavailable_for_legal_reasons_detailing_the_problem()
         {
-            Given(() => an_(legal_exception));
+            Given(a_(legal_exception));
             When(handling_a_request);
             Then(() => it_is_unavailable_for_legal_reasons(legal_exception.Errors));
         }
@@ -94,7 +101,7 @@ namespace Sensemaking.Host.Web.Specs
         [Test]
         public void problems_without_details_have_no_content_type()
         {
-            Given(() => a_(not_allowed_exception));
+            Given(a_(not_allowed_exception));
             When(handling_a_request);
             Then(it_has_no_content_type);
         }

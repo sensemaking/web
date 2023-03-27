@@ -27,6 +27,11 @@ namespace Sensemaking.Bdd.Web
             problem.should_have_problem(HttpStatusCode.NotFound);
         }
 
+        public static void should_be_gone(this ProblemException problem)
+        {
+            problem.should_have_problem(HttpStatusCode.Gone);
+        }
+
         public static void should_be_forbidden(this ProblemException problem)
         {
             problem.should_have_problem(HttpStatusCode.Forbidden);

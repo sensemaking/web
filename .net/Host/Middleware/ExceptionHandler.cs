@@ -57,6 +57,7 @@ namespace Sensemaking.Web.Host
                 WhoAreYouException ex => Handle(ex),
                 AccessException ex => Handle(ex),
                 NotFoundException ex => Handle(ex),
+                TooLateException ex => Handle(ex),
                 ServiceAvailabilityException ex => Handle(ex),
                 ValidationException ex => Handle(ex),
                 SerializationException ex => Handle(ex),
@@ -79,6 +80,11 @@ namespace Sensemaking.Web.Host
         protected virtual (HttpStatusCode, Problem) Handle(NotFoundException ex)
         {
             return (HttpStatusCode.NotFound, Problem.Empty);
+        }
+
+        protected virtual (HttpStatusCode, Problem) Handle(TooLateException ex)
+        {
+            return (HttpStatusCode.Gone, Problem.Empty);
         }
 
         protected virtual (HttpStatusCode, Problem) Handle(ServiceAvailabilityException ex)

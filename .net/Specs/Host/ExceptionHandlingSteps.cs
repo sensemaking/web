@@ -19,6 +19,7 @@ namespace Sensemaking.Host.Web.Specs
         private static readonly WhoAreYouException who_are_you_exception = new WhoAreYouException();
         private static readonly AccessException not_allowed_exception = new AccessException();
         private static readonly NotFoundException not_found_exception = new NotFoundException();
+        private static readonly TooLateException too_late_exception = new TooLateException();
         private static readonly ServiceAvailabilityException service_availability_exception = new ServiceAvailabilityException();
         private static readonly Exception unexpected_exception = new Exception();
         private static readonly ValidationException validation_exception = new ValidationException("That ain't so good.", "And neither is this.", "Nor this.");
@@ -34,14 +35,14 @@ namespace Sensemaking.Host.Web.Specs
 
         private void a_custom_exception_handler() { }
 
-        private void a_(Exception exception)
+        private Action a_(Exception exception)
         {
-            startup.CauseException(exception);
+            return () => startup.CauseException(exception);
         }
 
-        private void an_(Exception exception)
+        private Action an_(Exception exception)
         {
-            a_(exception);
+            return a_(exception);
         }
 
         private void handling_a_request()

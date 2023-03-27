@@ -109,6 +109,11 @@ namespace Sensemaking.Bdd.Web
             the_problem_exception.should_be_not_found();
         }
 
+        public void it_is_gone()
+        {
+            the_problem_exception.should_be_gone();
+        }
+
         public void it_is_service_unavailable()
         {
             the_problem_exception.should_be_service_unavailable();
