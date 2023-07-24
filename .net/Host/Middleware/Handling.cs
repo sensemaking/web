@@ -18,11 +18,13 @@ namespace Sensemaking.Web.Host
     {
         internal static IServiceCollection AutoRegisterHandlers(this IServiceCollection services)
         {
+            var uniqueOnly = new UniqueRegistrationStrategy();
+
             services.Scan(scan => scan.FromApplicationDependencies()
-                .AddClasses(classes => classes.AssignableTo<IHandleGetRequests>()).As<IHandleGetRequests>()
-                .AddClasses(classes => classes.AssignableTo<IHandleDeleteRequests>()).As<IHandleDeleteRequests>()
-                .AddClasses(classes => classes.AssignableTo(typeof(IHandlePutRequests<>))).AsImplementedInterfaces()
-                .AddClasses(classes => classes.AssignableTo(typeof(IHandlePostRequests<>))).AsImplementedInterfaces());
+                .AddClasses(classes => classes.AssignableTo<IHandleGetRequests>()).As<IHandleGetRequests>().UsingRegistrationStrategy(uniqueOnly)
+                .AddClasses(classes => classes.AssignableTo<IHandleDeleteRequests>()).As<IHandleDeleteRequests>().UsingRegistrationStrategy(uniqueOnly)
+                .AddClasses(classes => classes.AssignableTo(typeof(IHandlePutRequests<>))).AsImplementedInterfaces().UsingRegistrationStrategy(uniqueOnly)
+                .AddClasses(classes => classes.AssignableTo(typeof(IHandlePostRequests<>))).AsImplementedInterfaces().UsingRegistrationStrategy(uniqueOnly));
 
             return services;
         }
@@ -76,6 +78,17 @@ namespace Sensemaking.Web.Host
         {
             if (handler.AllowUnauthenicatedUsers)
                 builder.RequireAuthorization(AuthorizationPolicies.NoAuthorization.Name);
+        }
+
+        private class UniqueRegistrationStrategy : RegistrationStrategy
+        {
+            public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+            {
+                if (!services.Any(x => x.ServiceType == descriptor.ServiceType && x.ImplementationType == descriptor.ImplementationType))
+                {
+                    services.Add(descriptor);
+                }
+            }
         }
     }
 }
