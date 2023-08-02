@@ -18,9 +18,9 @@ namespace Sensemaking.Host.Web.Specs
 
         private void it_has_dependencies() { }
 
-        private void requesting(string accepts)
+        private Action requesting(string accepts)
         {
-            trying(() => get<object>("is-alive", ("Accept", accepts)));
+            return trying(getting<object>("is-alive", ("Accept", accepts)));
         }
 
         private void pre_tls12_protocols_are_refused()

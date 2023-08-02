@@ -16,10 +16,11 @@ namespace Sensemaking.Bdd.Web
         protected static FlurlClient client;
 
         private JsonResponse response;
-        protected JsonResponse the_response {
+        protected JsonResponse the_response
+        {
             get
             {
-                if (response == null)
+                if(response == null)
                     throw the_exception;
 
                 return response;
@@ -32,7 +33,7 @@ namespace Sensemaking.Bdd.Web
 
         static Specification()
         {
-            startup = (T)Activator.CreateInstance(typeof(T), new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", false, true).Build() as IConfiguration);
+            startup = (T) Activator.CreateInstance(typeof(T), new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", false, true).Build() as IConfiguration);
 
             var factory = new WebApplicationFactory(startup).WithWebHostBuilder(b => b.UseSolutionRelativeContentRoot("./Host"));
             services = factory.Services;
@@ -48,30 +49,36 @@ namespace Sensemaking.Bdd.Web
             the_problem_exception = null;
         }
 
-        protected override void trying(Action action)
+        protected override Action trying(Action action)
         {
-            base.trying(action);
-            the_problem_exception = the_exception as ProblemException;
+            return () =>
+            {
+                base.trying(action)();
+                the_problem_exception = the_exception as ProblemException;
+            };
         }
 
-        protected virtual void get<U>(string url, params (string Name, string Value)[] headers)
+        protected virtual Action getting<U>(string url, params (string Name, string Value)[] headers)
         {
-            the_response = client.GetAsync<U>(url, headers).Result;
+            return () =>
+            {
+                the_response = client.Get<U>(url, headers).Result;
+            };
         }
 
-        protected virtual void put(string url, object payload, params (string Name, string Value)[] headers)
+        protected virtual Action putting(string url, object payload, params (string Name, string Value)[] headers)
         {
-            the_response = client.PutAsync(url, payload, headers).Result;
+            return () => the_response = client.Put(url, payload, headers).Result;
         }
 
-        protected virtual void delete(string url, params (string Name, string Value)[] headers)
+        protected virtual Action deleting(string url, params (string Name, string Value)[] headers)
         {
-            the_response = client.DeleteAsync(url, headers).Result;
+            return () => the_response = client.Delete(url, headers).Result;
         }
 
-        protected virtual void post(string url, object payload, params (string Name, string Value)[] headers)
+        protected virtual Action posting(string url, object payload, params (string Name, string Value)[] headers)
         {
-            the_response = client.PostAsync(url, payload, headers).Result;
+            return () => the_response = client.Post(url, payload, headers).Result;
         }
 
         public void it_is_ok()
@@ -124,19 +131,19 @@ namespace Sensemaking.Bdd.Web
             the_problem_exception.should_be_internal_error();
         }
 
-        public void it_is_a_bad_request(string problemTitle, params string[] errors)
+        public Action it_is_a_bad_request(string problemTitle, params string[] errors)
         {
-            the_problem_exception.should_be_bad_request(problemTitle, errors);
+            return () => the_problem_exception.should_be_bad_request(problemTitle, errors);
         }
 
-        public void it_is_a_conflict(params string[] messages)
+        public Action it_is_a_conflict(params string[] messages)
         {
-            the_problem_exception.should_be_conflict(messages);
+            return () => the_problem_exception.should_be_conflict(messages);
         }
 
-        public void it_is_unavailable_for_legal_reasons(params string[] messages)
+        public Action it_is_unavailable_for_legal_reasons(params string[] messages)
         {
-            the_problem_exception.should_be_unavailable_for_legal_reasons(messages);
+            return () => the_problem_exception.should_be_unavailable_for_legal_reasons(messages);
         }
     }
 

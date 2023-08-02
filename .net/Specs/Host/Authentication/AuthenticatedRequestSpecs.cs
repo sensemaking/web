@@ -36,8 +36,8 @@ namespace Sensemaking.Web.Host.Specs.Authentication
             scenario(() =>
             {
                 Given(an_unauthenticated_http_context);
-                When(() => trying(accessing_the_requests_user));
-                Then(() => informs<Exception>("You cannot retrieve the user from an unauthenticated request."));
+                When(trying(accessing_the_requests_user));
+                Then(informs<Exception>("You cannot retrieve the user from an unauthenticated request."));
             });
         }
     }

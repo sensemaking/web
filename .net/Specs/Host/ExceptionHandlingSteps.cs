@@ -47,7 +47,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void handling_a_request()
         {
-           trying(() => get<object>(ExceptionStartup.exception_throwing_url));
+           trying(getting<object>(ExceptionStartup.exception_throwing_url))();
         }
 
         private void the_custom_handler_is_used()
@@ -60,9 +60,9 @@ namespace Sensemaking.Host.Web.Specs
             the_problem_exception.Headers.ValueFor("Content-Type").should_be_empty();
         }
 
-        private void it_logs(Alert<Exception> alert)
+        private Action it_logs(Alert<Exception> alert)
         {
-            startup.SubstituteLogger.should_have_logged_as_error(alert);
+            return () => startup.SubstituteLogger.should_have_logged_as_error(alert);
         }
     }
 

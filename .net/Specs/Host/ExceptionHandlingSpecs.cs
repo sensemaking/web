@@ -63,7 +63,7 @@ namespace Sensemaking.Host.Web.Specs
             Given(an_(unexpected_exception));
             When(handling_a_request);
             Then(it_is_an_internal_error);
-            And(() => it_logs(new Alert<Exception>("UnexpectedException", unexpected_exception)));
+            And(it_logs(new Alert<Exception>("UnexpectedException", unexpected_exception)));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             Given(a_(validation_exception));
             When(handling_a_request);
-            Then(() => it_is_a_bad_request("The request could not be correctly validated.", validation_exception.Errors));
+            Then(it_is_a_bad_request("The request could not be correctly validated.", validation_exception.Errors));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             Given(a_(serialization_exception));
             When(handling_a_request);
-            Then(() => it_is_a_bad_request("The request could not be correctly serialized.", serialization_exception.Errors));
+            Then(it_is_a_bad_request("The request could not be correctly serialized.", serialization_exception.Errors));
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             Given(a_(conflict_exception));
             When(handling_a_request);
-            Then(() => it_is_a_conflict(conflict_exception.Errors));
+            Then(it_is_a_conflict(conflict_exception.Errors));
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace Sensemaking.Host.Web.Specs
         {
             Given(a_(legal_exception));
             When(handling_a_request);
-            Then(() => it_is_unavailable_for_legal_reasons(legal_exception.Errors));
+            Then(it_is_unavailable_for_legal_reasons(legal_exception.Errors));
         }
 
         [Test]

@@ -36,14 +36,14 @@ namespace Sensemaking.Host.Web.Specs
             scenario(() =>
             {
                 Given(service_has_started);
-                When(() => requesting("*/*"));
+                When(requesting("*/*"));
                 Then(it_is_ok);
             });
 
             scenario(() =>
             {
                 Given(service_has_started);                
-                When(() => requesting("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"));
+                When(requesting("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"));
                 Then(it_is_ok);
             });
         }
@@ -52,7 +52,7 @@ namespace Sensemaking.Host.Web.Specs
         public void accepts_requests_that_do_not_specify_what_they_accept()
         {
             Given(service_has_started);
-            When(() => requesting(""));
+            When(requesting(""));
             Then(it_is_ok);
         }
 
@@ -60,7 +60,7 @@ namespace Sensemaking.Host.Web.Specs
         public void accepts_requests_that_accept_json()
         {
             Given(service_has_started);
-            When(() => requesting(MediaType.Json));
+            When(requesting(MediaType.Json));
             Then(it_is_ok);
         }
 
@@ -68,7 +68,7 @@ namespace Sensemaking.Host.Web.Specs
         public void accepts_requests_that_accept_json_sub_types()
         {
             Given(service_has_started);
-            When(() => requesting(MediaType.Siren));
+            When(requesting(MediaType.Siren));
             Then(it_is_ok);
         }
 
@@ -76,7 +76,7 @@ namespace Sensemaking.Host.Web.Specs
         public void refuses_requests_that_are_neither_json_nor_html()
         {
             Given(service_has_started);
-            When(() => requesting("application/xml"));
+            When(requesting("application/xml"));
             Then(it_is_not_acceptable);
         }
     }

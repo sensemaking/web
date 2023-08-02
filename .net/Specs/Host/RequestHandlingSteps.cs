@@ -48,25 +48,25 @@ namespace Sensemaking.Host.Web.Specs
         private void getting()
         {
             var (url, header) = generate_request(FakeGetter.Url);
-            get<FakeGetter.Response>(url, header);
+            getting<FakeGetter.Response>(url, header)();
         }
 
         private void putting()
         {
             var (url, header) = generate_request(FakePutter.Url);
-            put(url, the_payload, header);
+            putting(url, the_payload, header)();
         }
 
         private void deleting()
         {
             var (url, header) = generate_request(FakeDeleter.Url);
-            delete(url, header);
+            deleting(url, header)();
         }
 
         private void posting()
         {
             var (url, header) = generate_request(FakePoster.Url);
-            post(url, the_payload, header);
+            posting(url, the_payload, header)();
         }
 
         private void making_a_request()
