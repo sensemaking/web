@@ -49,21 +49,15 @@ namespace Sensemaking.Bdd.Web
             the_problem_exception = null;
         }
 
-        protected override Action trying(Action action)
+        protected override void trying(Action action)
         {
-            return () =>
-            {
-                base.trying(action)();
-                the_problem_exception = the_exception as ProblemException;
-            };
+            base.trying(action);
+            the_problem_exception = the_exception as ProblemException;
         }
 
         protected virtual Action getting<U>(string url, params (string Name, string Value)[] headers)
         {
-            return () =>
-            {
-                the_response = client.Get<U>(url, headers).Result;
-            };
+            return () => the_response = client.Get<U>(url, headers).Result;
         }
 
         protected virtual Action putting(string url, object payload, params (string Name, string Value)[] headers)

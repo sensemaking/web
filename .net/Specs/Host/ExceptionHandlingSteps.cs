@@ -47,7 +47,7 @@ namespace Sensemaking.Host.Web.Specs
 
         private void handling_a_request()
         {
-           trying(getting<object>(ExceptionStartup.exception_throwing_url))();
+           trying(getting<object>(ExceptionStartup.exception_throwing_url));
         }
 
         private void the_custom_handler_is_used()

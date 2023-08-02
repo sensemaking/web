@@ -9,7 +9,7 @@ namespace Sensemaking.Web.Host.Specs.Authentication
         public void unauthenticated_users_are_challenged()
         {
             Given(an_unauthenticated_http_request);
-            When(trying(getting<dynamic>(AuthenticatedEndpointHandler.Url)));
+            When(() => trying(getting<dynamic>(AuthenticatedEndpointHandler.Url)));
             Then(it_is_challenged);
         }
 
