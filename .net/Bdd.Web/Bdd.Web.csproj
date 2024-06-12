@@ -15,8 +15,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.9" />
-		<PackageReference Include="Sensemaking.Bdd" Version="1.0.204" />
-		<PackageReference Include="Sensemaking.Http.Json.Client" Version="1.0.204" />
+		<PackageReference Include="Sensemaking.Bdd" Version="1.0.209" />
+		<PackageReference Include="Sensemaking.Http.Json.Client" Version="1.0.209" />
 	</ItemGroup>
 
 	<ItemGroup>

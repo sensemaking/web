@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 
 namespace Sensemaking.Web.Api
 {
